@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>百鲸咨询 - 咨询师管理后台</title>
+  <!-- 引入Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Font Awesome图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- 引入谷歌字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#F2C94C',
+            secondary: '#1A202C',
+            dark: '#0F172A',
+            light: '#F8FAFC',
+            neutral: '#E2E8F0',
+          },
+          fontFamily: {
+            sans: ['Noto Sans SC', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .form-input-focus {
+        @apply focus:ring-2 focus:ring-primary/50 focus:border-primary;
+      }
+    }
+    
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background-color: theme('colors.light');
+    }
+    
+    .login-card {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+    }
+    
+    .btn-submit {
+      @apply bg-primary hover:bg-primary/90 text-dark font-semibold py-3 px-6 rounded-md transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 w-full;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <img src="logo.png" alt="百鲸咨询" class="h-16 mx-auto mb-4">
+      <h1 class="text-2xl font-bold text-secondary">咨询师管理后台</h1>
+      <p class="text-secondary/60 mt-2">专业 · 落地 · 共赢</p>
+    </div>
+    
+    <!-- 登录表单 -->
+    <div class="bg-white rounded-xl p-8 login-card border border-neutral/20">
+      <form id="loginForm">
+        <div class="mb-6">
+          <label for="phone" class="block text-secondary font-medium mb-2">
+            <i class="fas fa-phone text-primary mr-2"></i>手机号
+          </label>
+          <input 
+            type="tel" 
+            id="phone" 
+            name="phone" 
+            placeholder="请输入登录手机号"
+            class="w-full px-4 py-3 border border-neutral rounded-md text-secondary form-input-focus outline-none transition-all"
+            required
+            pattern="^1[3-9]\d{9}$"
+          >
+        </div>
+        
+        <div class="mb-8">
+          <label for="password" class="block text-secondary font-medium mb-2">
+            <i class="fas fa-lock text-primary mr-2"></i>密码
+          </label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="请输入登录密码"
+            class="w-full px-4 py-3 border border-neutral rounded-md text-secondary form-input-focus outline-none transition-all"
+            required
+            minlength="6"
+          >
+        </div>
+        
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-sign-in-alt mr-2"></i>登录系统
+        </button>
+        
+        <!-- 错误提示 -->
+        <div id="errorMsg" class="mt-4 text-red-500 text-center hidden">
+          <i class="fas fa-exclamation-circle mr-1"></i>
+          <span>手机号或密码错误</span>
+        </div>
+      </form>
+    </div>
+    
+    <!-- 版权信息 -->
+    <div class="text-center mt-8 text-secondary/60 text-sm">
+      &copy; 2024 百鲸咨询 版权所有
+    </div>
+  </div>
+
+  <script>
+    // 登录表单处理
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const phone = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+      
+      // 模拟登录验证（实际项目中替换为API请求）
+      if (phone && password) {
+        // 存储登录状态
+        localStorage.setItem('consultantLoggedIn', 'true');
+        localStorage.setItem('consultantPhone', phone);
+        
+        // 跳转到管理后台
+        window.location.href = 'dashboard.html';
+      } else {
+        // 显示错误提示
+        document.getElementById('errorMsg').classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('errorMsg').classList.add('hidden');
+        }, 3000);
+      }
+    });
+    
+    // 检查是否已登录
+    if (localStorage.getItem('consultantLoggedIn') === 'true') {
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

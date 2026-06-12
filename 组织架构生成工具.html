@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏢 组织架构图生成工具 </title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Tabulator 表格库 -->
+    <link href="https://cdn.jsdelivr.net/npm/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#3b82f6' },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        .mermaid-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 2rem;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- 核心样式：黑框白底无箭头 (修复箭头问题) --- */
+        /* 使用 !important 强制覆盖内联样式 */
+        .mermaid .node rect {
+            fill: #ffffff !important;
+            stroke: #000000 !important;
+            stroke-width: 1.5px !important;
+            rx: 0 !important;
+            ry: 0 !important;
+        }
+        .mermaid .node .label {
+            color: #000000 !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 14px !important;
+            font-weight: 500;
+        }
+        .mermaid .node .label text {
+            fill: #000000 !important;
+        }
+        /* 确保路径没有箭头 */
+        .mermaid .edgePath path {
+            stroke: #000000 !important;
+            stroke-width: 1.5px !important;
+            fill: none !important;
+            marker: none !important;
+            marker-end: none !important;
+        }
+        /* 隐藏 marker 元素 */
+        .mermaid svg .marker {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">🏢 组织架构图生成工具</h1>
+            <p class="text-gray-600">直接在下方表格中编辑数据</p>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- 左侧操作区 -->
+            <aside class="lg:w-1/4 space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-xl font-semibold mb-4">📝 在线编辑表格</h2>
+                    <div id="table-container" class="h-96 border border-gray-300 rounded"></div>
+                    <div class="mt-4 text-sm text-gray-500 flex space-x-2">
+                        <button id="add-row" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">+ 添加一行</button>
+                        <button id="delete-row" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">- 删除选中行</button>
+                        <button id="reset-table" class="text-xs bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600">重置表格</button>
+                    </div>
+                    <button id="generate-btn" class="w-full mt-4 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition flex items-center justify-center">
+                        <i class="fa fa-cog mr-2"></i> 生成架构图
+                    </button>
+                </div>
+            </aside>
+
+            <!-- 右侧预览区 -->
+            <main class="lg:w-3/4">
+                <div class="bg-white p-6 rounded-lg shadow min-h-[500px] flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold">架构图预览</h2>
+                        <button id="export-png" class="bg-gray-800 text-white px-4 py-2 rounded text-sm hover:bg-gray-900 flex items-center disabled:opacity-50" disabled>
+                
+                    </div>
+                    
+                    <div id="chart-wrapper" class="flex-grow flex items-center justify-center bg-gray-50 rounded border border-dashed border-gray-300 relative">
+                        <p class="text-gray-400" id="placeholder-text">暂无图表，请点击生成</p>
+                        <div id="mermaid-container" class="mermaid-container hidden"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // 1. 初始化 Mermaid
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'base',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20,
+                nodeSpacing: 50,
+                rankSpacing: 60
+            },
+            securityLevel: 'loose'
+        });
+
+        // 2. 初始化表格
+        let tableData = [
+            { id: 1, 岗位名称: "总经理", 上级岗位: "" },
+            { id: 2, 岗位名称: "行政部经理", 上级岗位: "总经理" },
+            { id: 3, 岗位名称: "人事专员", 上级岗位: "行政部经理" },
+            { id: 4, 岗位名称: "财务部经理", 上级岗位: "总经理" },
+            { id: 5, 岗位名称: "出纳", 上级岗位: "财务部经理" }
+        ];
+
+        const table = new Tabulator("#table-container", {
+            data: tableData,
+            layout: "fitColumns",
+            columns: [
+                { title: "序号", field: "id", width: 50, headerSort: false },
+                { title: "岗位名称", field: "岗位名称", editor: "input", headerSort: false },
+                { title: "上级岗位", field: "上级岗位", editor: "input", headerSort: false }
+            ],
+            height: "100%",
+            selectable: true
+        });
+
+        // 3. 添加行
+        document.getElementById('add-row').addEventListener('click', () => {
+            const newRow = { id: table.getDataCount() + 1, 岗位名称: "", 上级岗位: "" };
+            table.addRow(newRow);
+        });
+
+        // 4. 删除选中行
+        document.getElementById('delete-row').addEventListener('click', () => {
+            const selectedRows = table.getSelectedData();
+            if (selectedRows.length === 0) {
+                alert("请先选中要删除的行");
+                return;
+            }
+            table.deleteRow(selectedRows.map(row => row.id));
+        });
+
+        // 5. 重置表格
+        document.getElementById('reset-table').addEventListener('click', () => {
+            table.replaceData([
+                { id: 1, 岗位名称: "总经理", 上级岗位: "" },
+                { id: 2, 岗位名称: "行政部经理", 上级岗位: "总经理" },
+                { id: 3, 岗位名称: "人事专员", 上级岗位: "行政部经理" },
+                { id: 4, 岗位名称: "财务部经理", 上级岗位: "总经理" },
+                { id: 5, 岗位名称: "出纳", 上级岗位: "财务部经理" }
+            ]);
+        });
+
+        // 6. 生成图表
+        document.getElementById('generate-btn').addEventListener('click', async () => {
+            const container = document.getElementById('mermaid-container');
+            const placeholder = document.getElementById('placeholder-text');
+            const btn = document.getElementById('generate-btn');
+
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 生成中...';
+            btn.disabled = true;
+
+            placeholder.classList.add('hidden');
+            container.classList.remove('hidden');
+            container.innerHTML = '';
+
+            // 获取表格数据并过滤空行
+            const rawData = table.getData();
+            const data = rawData.filter(row => row['岗位名称'] && row['岗位名称'].trim() !== '');
+
+            if (data.length === 0) {
+                alert("表格中没有有效的岗位数据");
+                btn.innerHTML = '<i class="fa fa-cog mr-2"></i> 生成架构图';
+                btn.disabled = false;
+                return;
+            }
+
+            const nodeMap = new Map();
+            data.forEach((row, index) => {
+                const name = row['岗位名称'].trim();
+                const parentName = row['上级岗位'] ? row['上级岗位'].trim() : '';
+                nodeMap.set(name, { id: `Node${index}`, label: name, parentName });
+            });
+
+            let mermaidCode = 'graph TB\n';
+            nodeMap.forEach(node => {
+                mermaidCode += `  ${node.id}["${node.label}"]\n`;
+            });
+            nodeMap.forEach(node => {
+                if (node.parentName) {
+                    const parent = nodeMap.get(node.parentName);
+                    if (parent) {
+                        mermaidCode += `  ${parent.id} --> ${node.id}\n`;
+                    }
+                }
+            });
+
+            try {
+                // Mermaid 渲染是异步的
+                const { svg } = await mermaid.render('mermaid-svg', mermaidCode);
+                container.innerHTML = svg;
+                document.getElementById('export-png').disabled = false;
+            } catch (error) {
+                container.innerHTML = `<p class="text-red-500">渲染错误: ${error.message}</p>`;
+            } finally {
+                btn.innerHTML = '<i class="fa fa-cog mr-2"></i> 生成架构图';
+                btn.disabled = false;
+            }
+        });
+
+        // 7. 导出 PNG (修复导出失败)
+        document.getElementById('export-png').addEventListener('click', async () => {
+            const container = document.getElementById('mermaid-container');
+            const svgEl = container.querySelector('svg'); // 确保选择器正确
+            
+            if (!svgEl) {
+                alert("没有图表可下载");
+                return;
+            }
+
+            const btn = document.getElementById('export-png');
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 下载中...';
+            btn.disabled = true;
+
+            try {
+                // html2canvas 需要传入包含 SVG 的容器或直接处理 SVG
+                // 由于直接处理 SVG 可能有跨域问题，我们截取包含它的 div
+                const canvas = await html2canvas(container, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    useCORS: true,
+                    logging: false
+                });
+
+                const link = document.createElement('a');
+                link.download = '组织架构图.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error(err);
+                alert('下载失败，请重试');
+            } finally {
+                btn.innerHTML = '<i class="fa fa-download mr-1"></i> 下载 PNG';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
+
+

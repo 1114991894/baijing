@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏢 股权架构图生成工具</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Tabulator 表格库 -->
+    <link href="https://cdn.jsdelivr.net/npm/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        .mermaid-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 2rem;
+            background: #ffffff;
+            border: 1px solid #e5e9eb;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- 核心样式：黑框白底无箭头 --- */
+        .mermaid .node rect {
+            fill: #ffffff !important;
+            stroke: #000000 !important;
+            stroke-width: 1.5px !important;
+            rx: 0 !important;
+            ry: 0 !important;
+        }
+        .mermaid .node .label {
+            color: #000000 !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 14px !important;
+            font-weight: 500;
+            white-space: pre-wrap !important;
+            text-align: center !important;
+        }
+        .mermaid .node .label text {
+            fill: #000000 !important;
+        }
+        .mermaid .edgePath path {
+            stroke: #000000 !important;
+            stroke-width: 1.5px !important;
+            fill: none !important;
+            marker: none !important;
+            marker-end: none !important;
+        }
+        .mermaid svg .marker {
+            display: none !important;
+        }
+
+        /* 表格样式 */
+        #table-container {
+            background-color: #ffffff !important;
+        }
+        .tabulator-header .tabulator-cell,
+        .tabulator-cell {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        /* 合计列颜色 */
+        .total-under-100 {
+            color: #16a34a !important;
+            font-weight: 600;
+        }
+        .total-over-100 {
+            color: #dc2626 !important;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">🏢 股权架构图生成工具</h1>
+            <p class="text-gray-600">直接在下方表格中编辑数据</p>
+        </header>
+
+        <!-- 上下结构布局 -->
+        <div class="flex flex-col space-y-6">
+            <!-- 上方：在线编辑表格 -->
+            <div class="bg-white p-6 rounded-lg shadow w-full">
+                <h2 class="text-xl font-semibold mb-4">📝 在线编辑表格</h2>
+                <div id="table-container" class="h-96 border border-gray-300 rounded"></div>
+                <div class="mt-4 text-sm text-gray-500 flex space-x-2">
+                    <button id="add-row" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">+ 添加一行</button>
+                    <button id="delete-row" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">- 删除选中行</button>
+                    <button id="reset-table" class="text-xs bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600">重置表格</button>
+                </div>
+                <button id="generate-btn" class="w-full mt-4 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition flex items-center justify-center">
+                    <i class="fa fa-cog mr-2"></i> 生成架构图
+                </button>
+            </div>
+
+            <!-- 下方：股权架构图预览 -->
+            <div class="bg-white p-6 rounded-lg shadow w-full min-h-[500px] flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">股权架构图预览</h2>
+                    <button id="export-png" class="bg-gray-800 text-white px-4 py-2 rounded text-sm hover:bg-gray-900 flex items-center disabled:opacity-50" disabled>
+                </div>
+                
+                <div id="chart-wrapper" class="flex-grow flex items-center justify-center bg-gray-50 rounded border border-dashed border-gray-300 relative">
+                    <p class="text-gray-400" id="placeholder-text">暂无图表，请点击生成</p>
+                    <div id="mermaid-container" class="mermaid-container hidden"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. 初始化 Mermaid
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'base',
+                flowchart: {
+                    useMaxWidth: true,
+                    htmlLabels: true,
+                    curve: 'basis',
+                    padding: 20,
+                    nodeSpacing: 50,
+                    rankSpacing: 60
+                },
+                securityLevel: 'loose'
+            });
+
+            // 计算每个主体公司的合计持股比例
+            function calculateCompanyTotalRatio(data) {
+                const companyTotals = {};
+                data.forEach(row => {
+                    const company = (row['主体公司'] || "").trim();
+                    const ratio = parseFloat(row['持股比例']) || 0;
+                    if (company) {
+                        companyTotals[company] = (companyTotals[company] || 0) + ratio;
+                    }
+                });
+                return companyTotals;
+            }
+
+            // 按主体公司排序
+            function sortTableByCompany(table) {
+                const data = table.getData();
+                data.sort((a, b) => {
+                    const c1 = (a['主体公司'] || "").trim();
+                    const c2 = (b['主体公司'] || "").trim();
+                    if (!c1 && c2) return 1;
+                    if (c1 && !c2) return -1;
+                    return c1.localeCompare(c2, 'zh-CN');
+                });
+                data.forEach((row, i) => row.id = i + 1);
+                table.replaceData(data);
+                updateTotalRatioColumn(table);
+            }
+
+            // 更新合计列
+            function updateTotalRatioColumn(table) {
+                const data = table.getData();
+                const totals = calculateCompanyTotalRatio(data);
+                data.forEach(row => {
+                    const c = (row['主体公司'] || "").trim();
+                    row['合计（%）'] = c ? totals[c] : "";
+                });
+                table.replaceData(data);
+                table.redraw();
+            }
+
+            // 初始化表格
+            let tableData = [
+                { id: 1, 股东: "", 主体公司: "", 出资额: "", 持股比例: "", "合计（%）": "" }
+            ];
+
+            const table = new Tabulator("#table-container", {
+                data: tableData,
+                layout: "fitColumns",
+                columns: [
+                    { 
+                        title: "序号", 
+                        field: "id", 
+                        width: 60, 
+                        headerSort: false, 
+                        hozAlign: "center", 
+                        headerHozAlign: "center" 
+                    },
+                    { 
+                        title: "股东", 
+                        field: "股东", 
+                        editor: "input", 
+                        headerSort: false, 
+                        hozAlign: "center", 
+                        headerHozAlign: "center" 
+                    },
+                    { 
+                        title: "主体公司", 
+                        field: "主体公司", 
+                        editor: "input", 
+                        headerSort: false, 
+                        hozAlign: "center", 
+                        headerHozAlign: "center",
+                        cellEdited: () => {
+                            sortTableByCompany(table);
+                            updateTotalRatioColumn(table);
+                        }
+                    },
+                    { 
+                        title: "出资额（单位 万元）", 
+                        field: "出资额", 
+                        editor: "number", 
+                        headerSort: false,
+                        hozAlign: "center", 
+                        headerHozAlign: "center",
+                        formatter: cell => cell.getValue() || ""
+                    },
+                    { 
+                        title: "持股比例（%）", 
+                        field: "持股比例", 
+                        editor: "number", 
+                        headerSort: false,
+                        hozAlign: "center", 
+                        headerHozAlign: "center",
+                        formatter: cell => {
+                            const v = cell.getValue();
+                            return v || v === 0 ? `${v}%` : "";
+                        },
+                        cellEdited: () => updateTotalRatioColumn(table)
+                    },
+                    { 
+                        title: "合计（%）", 
+                        field: "合计（%）", 
+                        headerSort: false,
+                        hozAlign: "center", 
+                        headerHozAlign: "center",
+                        formatter: cell => {
+                            const v = cell.getValue();
+                            if (v === "" || v == null) return "";
+                            const num = parseFloat(v);
+                            const txt = num.toFixed(2) + "%";
+                            if (num < 100) return `<span class="total-under-100">${txt}</span>`;
+                            if (num > 100) return `<span class="total-over-100">${txt}</span>`;
+                            return txt;
+                        }
+                    }
+                ],
+                height: "100%",
+                selectable: true,
+                rowFormatter: (row) => {
+                    row.update({ id: row.getPosition() });
+                }
+            });
+
+            // 添加行
+            document.getElementById('add-row').addEventListener('click', () => {
+                table.addRow({
+                    id: table.getDataCount() + 1,
+                    股东: "",
+                    主体公司: "",
+                    出资额: "",
+                    持股比例: "",
+                    "合计（%）": ""
+                }).then(() => {
+                    sortTableByCompany(table);
+                });
+            });
+
+            // 删除行
+            document.getElementById('delete-row').addEventListener('click', () => {
+                const selected = table.getSelectedRows();
+                if (selected.length === 0) return alert("请先选中要删除的行");
+                if (table.getDataCount() <= 1) return alert("至少保留一行");
+                table.deleteRows(selected).then(() => {
+                    sortTableByCompany(table);
+                });
+            });
+
+            // 重置
+            document.getElementById('reset-table').addEventListener('click', () => {
+                table.replaceData([
+                    { id: 1, 股东: "", 主体公司: "", 出资额: "", 持股比例: "", "合计（%）": "" }
+                ]);
+            });
+
+            // 生成图表
+            document.getElementById('generate-btn').addEventListener('click', async () => {
+                const container = document.getElementById('mermaid-container');
+                const placeholder = document.getElementById('placeholder-text');
+                const btn = document.getElementById('generate-btn');
+                const exportBtn = document.getElementById('export-png');
+
+                btn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 生成中...';
+                btn.disabled = true;
+                placeholder.classList.add('hidden');
+                container.classList.remove('hidden');
+                container.innerHTML = '';
+
+                const data = table.getData().filter(row => 
+                    (row['股东'] || "").trim() && (row['主体公司'] || "").trim()
+                );
+
+                if (data.length === 0) {
+                    container.innerHTML = `<p class="text-red-500">请填写股东和主体公司数据</p>`;
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa fa-cog mr-2"></i> 生成架构图';
+                    return;
+                }
+
+                let mermaidCode = 'graph TD\n';
+                const nodeMap = new Map();
+
+                data.forEach(row => {
+                    const shareholder = row['股东'].trim();
+                    const company = row['主体公司'].trim();
+                    const sid = `N_${shareholder.replace(/\W/g, '_')}`;
+                    const cid = `N_${company.replace(/\W/g, '_')}`;
+                    if (!nodeMap.has(sid)) mermaidCode += `  ${sid}["${shareholder}"]\n`;
+                    if (!nodeMap.has(cid)) mermaidCode += `  ${cid}["${company}"]\n`;
+                    nodeMap.set(sid, 1); nodeMap.set(cid, 1);
+
+                    const r = row['持股比例'];
+                    const a = row['出资额'];
+                    let label = "";
+                    if (r && a) label = `持股 ${r}%\\n出资 ${a}万元`;
+                    else if (r) label = `持股 ${r}%`;
+                    else if (a) label = `出资 ${a}万元`;
+
+                    if (label) mermaidCode += `  ${sid} -->|${label}| ${cid}\n`;
+                    else mermaidCode += `  ${sid} --> ${cid}\n`;
+                });
+
+                try {
+                    const { svg } = await mermaid.render('c', mermaidCode);
+                    container.innerHTML = svg;
+                    exportBtn.disabled = false;
+                } catch (e) {
+                    container.innerHTML = `<p class="text-red-500">生成错误：${e.message}</p>`;
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa fa-cog mr-2"></i> 生成架构图';
+                }
+            });
+
+            // 导出 PNG
+            document.getElementById('export-png').addEventListener('click', async () => {
+                const container = document.getElementById('mermaid-container');
+                if (!container.innerHTML) return alert("无图表可导出");
+                const btn = document.getElementById('export-png');
+                btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> 导出中...';
+                btn.disabled = true;
+
+                try {
+                    const canvas = await html2canvas(container, {
+                        backgroundColor: "#fff",
+                        scale: 2,
+                        useCORS: true
+                    });
+                    const a = document.createElement('a');
+                    a.download = '股权架构图.png';
+                    a.href = canvas.toDataURL('image/png');
+                    a.click();
+                } catch (e) {
+                    alert("导出失败");
+                } finally {
+                    btn.innerHTML = '<i class="fa fa-download"></i> 下载 PNG';
+                    btn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>战略目标解码工作台</title>
+    <style>
+        body { 
+            font-family: 'Microsoft YaHei', sans-serif; 
+            background: #f5f7fa; 
+            padding: 20px; 
+            color: #333; 
+            margin: 0; 
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        h1, h2 { 
+            color: #1a5dbb; 
+            text-align: center; 
+            margin: 15px 0; 
+        }
+        
+        /* 表头样式调整 */
+        .header-container {
+            display: flex;
+            align-items: center;        
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 0;
+        }
+        .header-title {
+            margin: 0;
+            font-size: 1.5em;
+            white-space: nowrap;
+        }
+        .year-input {
+            width: 80px;               
+            max-width: 80px;
+            padding: 5px; 
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #1a5dbb;
+            border-radius: 4px;
+            box-sizing: border-box;    
+        }
+
+        .intro { 
+            background: #eef3fa; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin-bottom: 20px; 
+            font-size: 14px; 
+            line-height: 1.6; 
+        }
+        .section { 
+            margin: 20px 0; 
+            border: 1px solid #e0e0e0; 
+            padding: 15px; 
+            border-radius: 5px; 
+            background: #fafafa; 
+        }
+        label { 
+            display: block; 
+            margin: 10px 0 5px; 
+            font-weight: bold; 
+            color: #1a5dbb; 
+        }
+        
+        /* 表格样式 */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 15px 0; 
+            table-layout: fixed; 
+        }
+        th, td { 
+            border: 1px solid #999; 
+            padding: 8px; 
+            text-align: center; 
+            vertical-align: middle; 
+        }
+        th { 
+            background-color: #f0f5ff; 
+            font-weight: bold; 
+        }
+        
+        /* 统一输入框样式 */
+        textarea, 
+        input[type="text"], 
+        input[type="number"],
+        select {
+            width: 100%; 
+            padding: 8px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            font-size: 14px; 
+            box-sizing: border-box; 
+        }
+        
+        /* 统一文本框高度 */
+        .fixed-height-textarea {
+            height: 102px !important; 
+            resize: vertical;
+            line-height: 1.5;
+            overflow: auto;
+        }
+        
+        /* 按钮样式 */
+        .btn { 
+            background: #1a5dbb; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            margin: 10px 5px; 
+        }
+        .btn:hover { 
+            background: #144a9e; 
+        }
+        
+        /* 操作按钮 */
+        .action-btn { 
+            padding: 5px 10px; 
+            font-size: 12px; 
+            margin: 0 2px; 
+        }
+        
+        /* 页脚 */
+        .footer { 
+            text-align: center; 
+            margin-top: 40px; 
+            color: #888; 
+            font-size: 12px; 
+            padding: 20px; 
+            border-top: 1px solid #eee;
+        }
+        
+        /* 业务容器 */
+        .business-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .business-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .business-row input[type="text"] {
+            flex: 2;
+        }
+        .business-row input[type="number"],
+        .business-row select {
+            flex: 1;
+        }
+        /* 百分比显示样式 */
+        .percentage-display {
+            margin-left: 5px; 
+            color: #1a5dbb; 
+            font-weight: bold; 
+            min-width: 20px; 
+            text-align: center;
+        }
+        
+        /* 新增：占比合计提示 */
+        .business-total {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        .total-warning {
+            color: #e74c3c;
+        }
+        .total-success {
+            color: #27ae60;
+        }
+        
+        /* 新增：提示框样式 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border-radius: 4px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        
+        /* 新增：必填项样式 */
+        .required {
+            color: #e74c3c;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="header-container">
+        <span class="header-title">战略目标解码</span>
+        <input type="number" id="year-input" class="year-input" value="2026">
+    </h1>
+    <p style="text-align: center; color: #666;">基于BLM模型构建 | 解码战略 | 对齐目标 | 落地执行</p>
+
+    <div class="intro">
+        <strong>使用说明：</strong>请按照从上到下的顺序填写以下模块。本工具旨在帮助您将宏观目标拆解为具体的行动计划。填写的数据会自动保存在本地，刷新页面不会丢失。
+    </div>
+
+    <!-- 第一步：目标与分解 -->
+    <div class="section">
+        <h2>第一步：目标与分解</h2>
+        
+        <label>1.1 主要业务:<span class="required">*</span></label>
+        <div id="business-container" class="business-container">
+            <div class="business-row">
+                <input type="text" placeholder="业务名称" required>
+                <input type="number" placeholder="占比" step="0.01" min="0" max="100" required>
+                <select required>
+                    <option value="">趋势(较往年)</option>
+                    <option value="上升">上升</option>
+                    <option value="下降">下降</option>
+                    <option value="下降">平行</option>
+                    <option value="新增">新增</option>
+                </select>
+                <button type="button" class="action-btn" onclick="addBusinessRowHandler()">+</button>
+            </div>
+        </div>
+        <div id="business-total" class="business-total">业务占比合计：0.00% <span>(请确保合计为100%)</span></div>
+
+        <label>1.2 目标分解:<span class="required">*</span></label>
+        <table id="target-table">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">业务名称</th>
+                    <th style="width: 40%;">金额 (万元)</th>
+                    <th style="width: 10%;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" placeholder="业务名称" required></td>
+                    <td><input type="number" placeholder="0.00" min="0" step="0.01" oninput="calculateTotal('target-table', 'target-total')" required></td>
+                    <td><button type="button" class="action-btn" onclick="addTableRowHandler('target-table', 'target-total')">+</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><strong>合计</strong></td>
+                    <td id="target-total">0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <label>1.3 成本目标:<span class="required">*</span></label>
+        <table id="cost-table">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">成本名称</th>
+                    <th style="width: 30%;">金额 (万元)</th>
+                    <th style="width: 20%;">责任部门</th>
+                    <th style="width: 10%;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" placeholder="成本项目" required></td>
+                    <td><input type="number" placeholder="0.00" min="0" step="0.01" oninput="calculateTotal('cost-table', 'cost-total')" required></td>
+                    <td><input type="text" placeholder="部门名称" required></td>
+                    <td><button type="button" class="action-btn" onclick="addTableRowHandler('cost-table', 'cost-total')">+</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><strong>合计</strong></td>
+                    <td id="cost-total">0.00</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- 第二步：市场与现状分析 -->
+    <div class="section">
+        <h2>第二步：市场与现状分析</h2>
+        
+        <label>2.1 市场分析:<span class="required">*</span></label>
+        <textarea rows="4" placeholder="例：行业趋势、竞争对手动态、客户需求变化..." class="fixed-height-textarea" required></textarea>
+        
+        <label>2.2 业务/管理增长点:<span class="required">*</span></label>
+        <textarea rows="4" placeholder="例：内部优势、可挖掘的增长机会..." class="fixed-height-textarea" required></textarea>
+        
+        <label>2.3 现状差距 (Gap):<span class="required">*</span></label>
+        <textarea rows="4" placeholder="例：当前状态与目标状态的具体差距..." class="fixed-height-textarea" required></textarea>
+    </div>
+
+    <!-- 第三步：关键任务 -->
+    <div class="section">
+        <h2>第三步：关键任务与行动举措</h2>
+        <table id="task-table">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">任务名称/战役</th>
+                    <th style="width: 50%;">具体行动举措</th>
+                    <th style="width: 10%;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><textarea placeholder="请输入任务名称" class="fixed-height-textarea" required></textarea></td>
+                    <td><textarea placeholder="请输入具体行动" class="fixed-height-textarea" required></textarea></td>
+                    <td><button type="button" class="action-btn" onclick="addTableRowHandler('task-table')">+</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 第四步：行动计划 -->
+    <div class="section">
+        <h2>第四步：行动计划与资源配置</h2>
+        <table id="action-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">责任主体 (Who)</th>
+                    <th style="width: 25%;">时间节点 (When)</th>
+                    <th style="width: 25%;">资源需求 (Resource)</th>
+                    <th style="width: 25%;">衡量指标 (KPI)</th>
+                    <th style="width: 10%;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><textarea placeholder="责任人/部门" class="fixed-height-textarea" required></textarea></td>
+                    <td><textarea placeholder="开始-结束时间" class="fixed-height-textarea" required></textarea></td>
+                    <td><textarea placeholder="预算/物资/人力" class="fixed-height-textarea" required></textarea></td>
+                    <td><textarea placeholder="量化指标" class="fixed-height-textarea" required></textarea></td>
+                    <td><button type="button" class="action-btn" onclick="addTableRowHandler('action-table')">+</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div style="text-align: center; margin: 30px 0;">
+        <button class="btn" onclick="saveData()">保存数据</button>
+        <button class="btn" onclick="clearAllData()" style="background: #e74c3c;">清空数据</button>
+    </div>
+
+
+<!-- 提示框 -->
+<div id="toast" class="toast"></div>
+
+<script>
+    // 全局变量
+    const STORAGE_KEY = 'strategy_decoding_data_2026';
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function () {
+        // 为初始业务行绑定事件
+        const initialInput = document.querySelector('#business-container .business-row input[type="number"]');
+        if (initialInput) {
+            initialInput.addEventListener('input', handleBusinessInput);
+        }
+        
+        // 计算初始业务占比合计
+        calculateBusinessTotal();
+        
+        // 从本地存储加载数据
+        loadData();
+        
+        // 年份变化时更新存储key
+        document.getElementById('year-input').addEventListener('change', function() {
+            updateStorageKey();
+            loadData();
+            showToast('已切换年份，加载对应数据');
+        });
+    });
+
+    // 更新存储Key
+    function updateStorageKey() {
+        const year = document.getElementById('year-input').value || '2026';
+        STORAGE_KEY = `strategy_decoding_data_${year}`;
+    }
+
+    // 添加业务行 
+    function addBusinessRowHandler() {
+        const container = document.getElementById('business-container');
+        const newRow = document.createElement('div');
+        newRow.className = 'business-row';
+        newRow.innerHTML = `
+            <input type="text" placeholder="业务名称" required>
+            <input type="number" placeholder="占比" step="0.01" min="0" max="100" required>
+            <select required>
+                <option value="">趋势(较往年)</option>
+                <option value="上升">上升</option>
+                <option value="下降">下降</option>
+                <option value="下降">平行</option>
+                <option value="新增">新增</option>
+            </select>
+            <button type="button" class="action-btn" onclick="removeRow(this)">-</button>
+        `;
+        container.appendChild(newRow);
+        
+        // 为新行绑定事件
+        const newInput = newRow.querySelector('input[type="number"]');
+        newInput.addEventListener('input', handleBusinessInput);
+        
+        // 重新计算合计
+        calculateBusinessTotal();
+    }
+
+    // 专门处理业务行的输入事件
+    function handleBusinessInput(e) {
+        if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
+            updatePercentageDisplay(e.target);
+            calculateBusinessTotal();
+        }
+    }
+
+    // 更新百分比显示
+    function updatePercentageDisplay(input) {
+        // 查找或创建显示元素
+        let span = input.parentNode.querySelector('.percentage-display');
+        if (!span) {
+            span = document.createElement('span');
+            span.className = 'percentage-display';
+            input.parentNode.insertBefore(span, input.nextSibling);
+        }
+        // 只显示 % 符号，如果输入框有值则显示，否则隐藏
+        span.textContent = input.value ? '%' : '';
+    }
+
+    // 计算业务占比合计
+    function calculateBusinessTotal() {
+        const container = document.getElementById('business-container');
+        const inputs = container.querySelectorAll('.business-row input[type="number"]');
+        let total = 0;
+        
+        inputs.forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        
+        const totalElement = document.getElementById('business-total');
+        totalElement.innerHTML = `业务占比合计：<span class="${total === 100 ? 'total-success' : 'total-warning'}">${total.toFixed(2)}%</span> ${total !== 100 ? '<span style="font-weight:normal;">(请确保合计为100%)</span>' : ''}`;
+        
+        return total;
+    }
+
+    // 删除行
+    function removeRow(button) {
+        const row = button.parentNode;
+        row.parentNode.removeChild(row);
+        
+        // 如果是业务行，重新计算占比
+        if (row.className === 'business-row') {
+            calculateBusinessTotal();
+        } else {
+            // 如果是表格行，重新计算合计
+            const table = button.closest('table');
+            if (table) {
+                const tableId = table.id;
+                if (tableId === 'target-table') calculateTotal(tableId, 'target-total');
+                if (tableId === 'cost-table') calculateTotal(tableId, 'cost-total');
+            }
+        }
+    }
+
+    // 通用：添加表格行
+    function addTableRowHandler(tableId, totalId) {
+        const table = document.getElementById(tableId);
+        const tbody = table.querySelector('tbody');
+        const newRow = tbody.insertRow();
+
+        const headers = table.querySelectorAll('thead th');
+        headers.forEach((header, index) => {
+            const cell = newRow.insertCell(index);
+            const headerText = header.textContent;
+
+            if (index === headers.length - 1) { 
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'action-btn';
+                btn.textContent = '-';
+                btn.onclick = function() { 
+                    table.deleteRow(newRow.rowIndex); 
+                    if(totalId) calculateTotal(tableId, totalId); 
+                };
+                cell.appendChild(btn);
+            } else {
+                let element;
+                const isNumber = headerText.includes('金额') || headerText.includes('目标');
+                const isTextarea = ['举措', '行动', '需求', '指标', '名称', '部门', '时间', '预算'].some(keyword => headerText.includes(keyword));
+
+                if (isNumber) {
+                    element = document.createElement('input');
+                    element.type = 'number';
+                    element.placeholder = '0.00';
+                    element.min = 0;
+                    element.step = 0.01;
+                    element.required = true;
+                    if(totalId) element.oninput = function(){ calculateTotal(tableId, totalId); };
+                } else if (isTextarea) {
+                    element = document.createElement('textarea');
+                    element.placeholder = getPlaceholder(headerText);
+                    element.className = 'fixed-height-textarea';
+                    element.required = true;
+                } else {
+                    element = document.createElement('input');
+                    element.type = 'text';
+                    element.placeholder = getPlaceholder(headerText);
+                    element.required = true;
+                }
+                cell.appendChild(element);
+            }
+        });
+        if(totalId) calculateTotal(tableId, totalId);
+    }
+
+    // 获取占位符文本
+    function getPlaceholder(text) {
+        const mappings = {
+            '业务': '业务名称',
+            '金额': '0.00',
+            '成本': '成本项目',
+            '部门': '部门名称',
+            '任务': '请输入任务名称',
+            '举措': '请输入具体行动',
+            '责任': '责任人/部门',
+            '时间': '开始-结束时间',
+            '资源': '预算/物资/人力',
+            '衡量': '量化指标',
+            'KPI': '量化指标'
+        };
+        for (const [key, value] of Object.entries(mappings)) {
+            if (text.includes(key)) return value;
+        }
+        return '';
+    }
+
+    // 通用计算表格总和
+    function calculateTotal(tableId, totalCellId) {
+        const table = document.getElementById(tableId);
+        const inputs = table.querySelectorAll('tbody input[type="number"]');
+        let total = 0;
+        inputs.forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        const totalCell = document.getElementById(totalCellId);
+        if (totalCell) {
+            totalCell.textContent = total.toFixed(2);
+        }
+    }
+
+    // 获取所有表单数据
+    function getAllData() {
+        // 验证业务占比
+        const businessTotal = calculateBusinessTotal();
+        if (businessTotal !== 100 && businessTotal > 0) {
+            showToast('业务占比合计不为100%，请检查！', 'error');
+            return null;
+        }
+        
+        const data = {
+            year: document.getElementById('year-input').value,
+            business: [],
+            target: [],
+            cost: [],
+            marketAnalysis: document.querySelectorAll('textarea')[0].value,
+            growthPoints: document.querySelectorAll('textarea')[1].value,
+            gapAnalysis: document.querySelectorAll('textarea')[2].value,
+            tasks: [],
+            actions: []
+        };
+
+        // 收集业务数据
+        const businessRows = document.querySelectorAll('#business-container .business-row');
+        businessRows.forEach(row => {
+            const inputs = row.querySelectorAll('input, select');
+            data.business.push({
+                name: inputs[0].value,
+                percentage: inputs[1].value,
+                trend: inputs[2].value
+            });
+        });
+
+        // 收集目标分解数据
+        const targetRows = document.querySelectorAll('#target-table tbody tr');
+        targetRows.forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            data.target.push({
+                name: inputs[0].value,
+                amount: inputs[1].value
+            });
+        });
+
+        // 收集成本目标数据
+        const costRows = document.querySelectorAll('#cost-table tbody tr');
+        costRows.forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            data.cost.push({
+                name: inputs[0].value,
+                amount: inputs[1].value,
+                department: inputs[2].value
+            });
+        });
+
+        // 收集关键任务数据
+        const taskRows = document.querySelectorAll('#task-table tbody tr');
+        taskRows.forEach((row, index) => {
+            const textareas = row.querySelectorAll('textarea');
+            data.tasks.push({
+                name: textareas[0].value,
+                actions: textareas[1].value
+            });
+        });
+
+        // 收集行动计划数据
+        const actionRows = document.querySelectorAll('#action-table tbody tr');
+        actionRows.forEach(row => {
+            const textareas = row.querySelectorAll('textarea');
+            data.actions.push({
+                who: textareas[0].value,
+                when: textareas[1].value,
+                resource: textareas[2].value,
+                kpi: textareas[3].value
+            });
+        });
+
+        return data;
+    }
+
+    // 保存数据到本地存储
+    function saveData() {
+        const data = getAllData();
+        if (!data) return;
+        
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            showToast('数据保存成功！');
+        } catch (e) {
+            showToast('保存失败：' + e.message, 'error');
+        }
+    }
+
+    // 从本地存储加载数据
+    function loadData() {
+        try {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            
+            if (data.year) {
+                document.getElementById('year-input').value = data.year;
+            }
+
+            // 加载业务数据
+            if (data.business && data.business.length > 0) {
+                const container = document.getElementById('business-container');
+                // 清空现有行（保留第一行）
+                while (container.children.length > 1) {
+                    container.removeChild(container.lastChild);
+                }
+                
+                // 填充第一行
+                const firstRow = container.querySelector('.business-row');
+                if (data.business[0]) {
+                    const inputs = firstRow.querySelectorAll('input, select');
+                    inputs[0].value = data.business[0].name || '';
+                    inputs[1].value = data.business[0].percentage || '';
+                    inputs[2].value = data.business[0].trend || '';
+                    updatePercentageDisplay(inputs[1]);
+                }
+                
+                // 添加并填充剩余行
+                for (let i = 1; i < data.business.length; i++) {
+                    addBusinessRowHandler();
+                    const rows = container.querySelectorAll('.business-row');
+                    const row = rows[rows.length - 1];
+                    const inputs = row.querySelectorAll('input, select');
+                    inputs[0].value = data.business[i].name || '';
+                    inputs[1].value = data.business[i].percentage || '';
+                    inputs[2].value = data.business[i].trend || '';
+                    updatePercentageDisplay(inputs[1]);
+                }
+            }
+
+            // 加载目标分解数据
+            loadTableData('target-table', data.target || [], ['name', 'amount']);
+            
+            // 加载成本目标数据
+            loadTableData('cost-table', data.cost || [], ['name', 'amount', 'department']);
+            
+            // 加载文本区域数据
+            const textareas = document.querySelectorAll('textarea');
+            if (textareas.length >= 3) {
+                textareas[0].value = data.marketAnalysis || '';
+                textareas[1].value = data.growthPoints || '';
+                textareas[2].value = data.gapAnalysis || '';
+            }
+            
+            // 加载关键任务数据
+            loadTableTextareaData('task-table', data.tasks || [], ['name', 'actions']);
+            
+            // 加载行动计划数据
+            loadTableTextareaData('action-table', data.actions || [], ['who', 'when', 'resource', 'kpi']);
+            
+            // 重新计算合计
+            calculateTotal('target-table', 'target-total');
+            calculateTotal('cost-table', 'cost-total');
+            calculateBusinessTotal();
+            
+        } catch (e) {
+            console.log('加载数据失败：', e);
+        }
+    }
+
+    // 加载表格输入框数据
+    function loadTableData(tableId, dataArray, fields) {
+        const table = document.getElementById(tableId);
+        const tbody = table.querySelector('tbody');
+        
+        // 清空现有行（保留第一行）
+        while (tbody.children.length > 1) {
+            tbody.deleteRow(-1);
+        }
+        
+        // 填充第一行
+        const firstRow = tbody.querySelector('tr');
+        if (dataArray[0]) {
+            const inputs = firstRow.querySelectorAll('input');
+            fields.forEach((field, index) => {
+                if (inputs[index]) {
+                    inputs[index].value = dataArray[0][field] || '';
+                }
+            });
+        }
+        
+        // 添加并填充剩余行
+        for (let i = 1; i < dataArray.length; i++) {
+            addTableRowHandler(tableId, tableId === 'target-table' ? 'target-total' : (tableId === 'cost-table' ? 'cost-total' : ''));
+            const rows = tbody.querySelectorAll('tr');
+            const row = rows[rows.length - 1];
+            const inputs = row.querySelectorAll('input');
+            fields.forEach((field, index) => {
+                if (inputs[index]) {
+                    inputs[index].value = dataArray[i][field] || '';
+                }
+            });
+        }
+    }
+
+    // 加载表格文本域数据
+    function loadTableTextareaData(tableId, dataArray, fields) {
+        const table = document.getElementById(tableId);
+        const tbody = table.querySelector('tbody');
+        
+        // 清空现有行（保留第一行）
+        while (tbody.children.length > 1) {
+            tbody.deleteRow(-1);
+        }
+        
+        // 填充第一行
+        const firstRow = tbody.querySelector('tr');
+        if (dataArray[0]) {
+            const textareas = firstRow.querySelectorAll('textarea');
+            fields.forEach((field, index) => {
+                if (textareas[index]) {
+                    textareas[index].value = dataArray[0][field] || '';
+                }
+            });
+        }
+        
+        // 添加并填充剩余行
+        for (let i = 1; i < dataArray.length; i++) {
+            addTableRowHandler(tableId);
+            const rows = tbody.querySelectorAll('tr');
+            const row = rows[rows.length - 1];
+            const textareas = row.querySelectorAll('textarea');
+            fields.forEach((field, index) => {
+                if (textareas[index]) {
+                    textareas[index].value = dataArray[i][field] || '';
+                }
+            });
+        }
+    }
+
+    // 导出数据为Excel格式（CSV）
+    function exportData() {
+        const data = getAllData();
+        if (!data) return;
+        
+        try {
+            // 构建CSV内容
+            let csvContent = `战略目标解码工作台_${data.year}\n\n`;
+            
+            // 业务数据
+            csvContent += "1.1 主要业务\n";
+            csvContent += "业务名称,占比(%),趋势\n";
+            data.business.forEach(item => {
+                csvContent += `${item.name || ''},${item.percentage || ''},${item.trend || ''}\n`;
+            });
+            
+            // 目标分解
+            csvContent += "\n1.2 目标分解\n";
+            csvContent += "业务名称,金额(万元)\n";
+            data.target.forEach(item => {
+                csvContent += `${item.name || ''},${item.amount || ''}\n`;
+            });
+            const targetTotal = document.getElementById('target-total').textContent;
+            csvContent += `合计,,${targetTotal}\n`;
+            
+            // 成本目标
+            csvContent += "\n1.3 成本目标\n";
+            csvContent += "成本名称,金额(万元),责任部门\n";
+            data.cost.forEach(item => {
+                csvContent += `${item.name || ''},${item.amount || ''},${item.department || ''}\n`;
+            });
+            const costTotal = document.getElementById('cost-total').textContent;
+            csvContent += `合计,,${costTotal},\n`;
+            
+            // 市场分析
+            csvContent += "\n2.1 市场分析\n";
+            csvContent += `${data.marketAnalysis || ''}\n`;
+            
+            csvContent += "\n2.2 业务/管理增长点\n";
+            csvContent += `${data.growthPoints || ''}\n`;
+            
+            csvContent += "\n2.3 现状差距 (Gap)\n";
+            csvContent += `${data.gapAnalysis || ''}\n`;
+            
+            // 关键任务
+            csvContent += "\n3.1 关键任务与行动举措\n";
+            csvContent += "任务名称/战役,具体行动举措\n";
+            data.tasks.forEach(item => {
+                csvContent += `${item.name || ''},${item.actions || ''}\n`;
+            });
+            
+            // 行动计划
+            csvContent += "\n4.1 行动计划与资源配置\n";
+            csvContent += "责任主体,时间节点,资源需求,衡量指标\n";
+            data.actions.forEach(item => {
+                csvContent += `${item.who || ''},${item.when || ''},${item.resource || ''},${item.kpi || ''}\n`;
+            });
+            
+            // 创建下载链接
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `战略目标解码_${data.year}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('导出成功！文件已下载');
+        } catch (e) {
+            showToast('导出失败：' + e.message, 'error');
+        }
+    }
+
+    // 清空所有数据
+    function clearAllData() {
+        if (confirm('确定要清空所有数据吗？此操作不可恢复！')) {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+                
+                // 清空表单
+                document.querySelectorAll('input, textarea, select').forEach(el => {
+                    el.value = '';
+                });
+                
+                // 重置表格（保留第一行）
+                ['target-table', 'cost-table', 'task-table', 'action-table'].forEach(tableId => {
+                    const tbody = document.querySelector(`#${tableId} tbody`);
+                    while (tbody.children.length > 1) {
+                        tbody.deleteRow(-1);
+                    }
+                });
+                
+                // 重置业务行（保留第一行）
+                const businessContainer = document.getElementById('business-container');
+                while (businessContainer.children.length > 1) {
+                    businessContainer.removeChild(businessContainer.lastChild);
+                }
+                
+                // 重置合计
+                calculateTotal('target-table', 'target-total');
+                calculateTotal('cost-table', 'cost-total');
+                calculateBusinessTotal();
+                
+                showToast('所有数据已清空');
+            } catch (e) {
+                showToast('清空失败：' + e.message, 'error');
+            }
+        }
+    }
+
+    // 显示提示框
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast show';
+        toast.style.background = type === 'error' ? '#e74c3c' : '#27ae60';
+        
+        setTimeout(() => {
+            toast.className = 'toast';
+        }, 3000);
+    }
+
+    // 兼容旧版浏览器的polyfill
+    if (!Array.prototype.forEach) {
+        Array.prototype.forEach = function(callback) {
+            for (let i = 0; i < this.length; i++) {
+                callback(this[i], i, this);
+            }
+        };
+    }
+</script>
+</body>
+</html>

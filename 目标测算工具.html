@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公司目标测算 (2026年)</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: #f4f6f9;
+            padding: 20px;
+        }
+        .calculator-wrapper {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .input-row {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .input-group {
+            flex: 1;
+            min-width: 200px;
+            margin: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        .result-grid {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .result-item {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+        .result-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .highlight {
+            background-color: #e8f4fc;
+        }
+        .unit {
+            font-size: 12px;
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-wrapper">
+    <!-- 修改标题 -->
+    <h2 style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+        公司目标测算（<span id="yearDisplay">2027</span>年）
+        <div style="font-size: 14px; color: #666; display: flex; align-items: center; gap: 5px;">
+            <label for="yearInput">修改年份：</label>
+            <input type="number" id="yearInput" value="2027" min="2000" max="2100" style="width: 80px; padding: 5px;">
+            <button id="updateYear" style="background-color: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">更新</button>
+        </div>
+    </h2>
+
+    <!-- 输入区域 -->
+    <div class="input-container">
+        <div class="input-row">
+            <div class="input-group">
+                <label>保底值 (万元)</label>
+                <input type="number" id="baodi" placeholder="请输入保底值" value="1000">
+            </div>
+            <div class="input-group">
+                <label>固定成本 (万元)</label>
+                <input type="number" id="fixedCost" placeholder="请输入固定成本" value="500">
+            </div>
+        </div>
+
+        <div class="input-row">
+            <div class="input-group">
+                <label>自然增长率 (%)</label>
+                <input type="number" id="naturalGrowth" placeholder="例如：3" value="3">
+            </div>
+            <div class="input-group">
+                <label>市场增长率 (%)</label>
+                <input type="number" id="marketGrowth" placeholder="例如：5" value="5">
+            </div>
+        </div>
+
+        <div class="input-row">
+            <div class="input-group">
+                <label>通货膨胀率 (%)</label>
+                <input type="number" id="inflation" placeholder="例如：2" value="2">
+            </div>
+            <div class="input-group">
+                <label>保值率 (%)</label>
+                <input type="number" id="inflationProofRate" placeholder="例如：2" value="2">
+            </div>
+        </div>
+
+        <div class="input-row">
+            <div class="input-group" style="grid-column: span 2;">
+                <label>股东期望值 (%)</label>
+                <input type="number" id="shareholder" placeholder="例如：10" value="10">
+            </div>
+        </div>
+    </div>
+
+    <!-- 结果展示区域 -->
+    <div class="result-grid">
+        <div class="result-item highlight">
+            <div class="result-label">营业目标</div>
+            <div id="revenueResult" class="result-value">计算中...</div>
+            <div class="unit">单位：万元</div>
+        </div>
+        <div class="result-item">
+            <div class="result-label">成本目标</div>
+            <div id="costResult" class="result-value">计算中...</div>
+            <div class="unit">单位：万元</div>
+        </div>
+        <div class="result-item highlight">
+            <div class="result-label">利润目标</div>
+            <div id="profitResult" class="result-value">计算中...</div>
+            <div class="unit">单位：万元</div>
+        </div>
+        <div class="result-item">
+            <div class="result-label">利润率</div>
+            <div id="marginResult" class="result-value">计算中...</div>
+        </div>
+    </div>
+
+
+<script>
+    // 获取所有 DOM 元素
+    const baodiInput = document.getElementById('baodi');
+    const fixedCostInput = document.getElementById('fixedCost');
+    const naturalGrowthInput = document.getElementById('naturalGrowth');
+    const marketGrowthInput = document.getElementById('marketGrowth');
+    const inflationInput = document.getElementById('inflation');
+    const inflationProofRateInput = document.getElementById('inflationProofRate');
+    const shareholderInput = document.getElementById('shareholder');
+
+    const revenueResult = document.getElementById('revenueResult');
+    const costResult = document.getElementById('costResult');
+    const profitResult = document.getElementById('profitResult');
+    const marginResult = document.getElementById('marginResult');
+
+    // 格式化数字函数
+    const formatNumber = (num) => {
+        return num.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    };
+
+    function performCalculation() {
+        // 1. 获取输入值 (单位：万元)
+        const baodi = parseFloat(baodiInput.value) || 0;
+        const fixedCost = parseFloat(fixedCostInput.value) || 0;
+        
+        // 2. 获取增长率并转换为小数
+        const naturalGrowth = ((parseFloat(naturalGrowthInput.value) || 0) / 100);
+        const marketGrowth = ((parseFloat(marketGrowthInput.value) || 0) / 100);
+        const inflation = ((parseFloat(inflationInput.value) || 0) / 100);
+        const inflationProofRate = ((parseFloat(inflationProofRateInput.value) || 0) / 100);
+        const shareholder = ((parseFloat(shareholderInput.value) || 0) / 100);
+
+        // ==========================================
+        // 3. 根据最新公式计算
+        // ==========================================
+
+        // 营业目标 = 保底值 * (1 + 自然增长率 + 股东期望值)
+        const revenueTarget = baodi * (1 + naturalGrowth + shareholder);
+
+        // 成本目标 = 固定成本 + (保底值 - 固定成本) * (1 + 市场增长率 + 通货膨胀率 + 保值率)
+        const costBase = baodi - fixedCost; 
+        const costGrowthFactor = 1 + marketGrowth + inflation + inflationProofRate;
+        const variableCost = costBase * costGrowthFactor;
+        const costTarget = fixedCost + variableCost;
+
+        // 4. 利润与利润率
+        const profitTarget = revenueTarget - costTarget;
+        const profitMargin = revenueTarget !== 0 ? (profitTarget / revenueTarget) * 100 : 0;
+
+        // 5. 更新页面显示
+        revenueResult.textContent = `${formatNumber(revenueTarget)}`;
+        costResult.textContent = `${formatNumber(costTarget)}`;
+        profitResult.textContent = `${formatNumber(profitTarget)}`;
+        marginResult.textContent = `${profitMargin.toFixed(2)}%`;
+    }
+
+    // 绑定输入事件
+    [baodiInput, fixedCostInput, naturalGrowthInput, marketGrowthInput, inflationInput, inflationProofRateInput, shareholderInput]
+        .forEach(input => input.addEventListener('input', performCalculation));
+
+    // 初始化
+    window.addEventListener('load', performCalculation);
+    
+    // 年份修改功能
+    document.getElementById('updateYear').addEventListener('click', function() {
+        const yearInput = document.getElementById('yearInput');
+        const yearDisplay = document.getElementById('yearDisplay');
+        const newYear = parseInt(yearInput.value);
+        
+        if (newYear >= 2000 && newYear <= 2100) {
+            yearDisplay.textContent = newYear;
+            document.title = `公司目标测算 (${newYear}年)`;
+            alert(`年份已更新为：${newYear}年`);
+        } else {
+            alert('请输入2000-2100之间的有效年份');
+            yearInput.value = yearDisplay.textContent;
+        }
+    });
+
+
+</body>
+</html>
