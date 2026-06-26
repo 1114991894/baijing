@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://baijingzixun.top/sitemap.xml
