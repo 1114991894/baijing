@@ -16,7 +16,7 @@
     <style>
         body { 
             font-family: 'Microsoft YaHei', sans-serif; 
-            background: #f5f7fa; 
+            background: #F4FAFF; 
             padding: 20px; 
             color: #333; 
             margin: 0; 
@@ -30,8 +30,8 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
         }
         h1, h2 { 
-            color: #1a5dbb; 
-            text-align: center; 
+            color: #083E78;
+            text-align: center;
             margin: 15px 0; 
         }
         
@@ -55,13 +55,13 @@
             padding: 5px; 
             text-align: center;
             font-size: 16px;
-            border: 1px solid #1a5dbb;
+            border: 1px solid #083E78;
             border-radius: 4px;
             box-sizing: border-box;    
         }
 
         .intro { 
-            background: #eef3fa; 
+            background: #F4FAFF; 
             padding: 15px; 
             border-radius: 5px; 
             margin-bottom: 20px; 
@@ -79,7 +79,7 @@
             display: block; 
             margin: 10px 0 5px; 
             font-weight: bold; 
-            color: #1a5dbb; 
+            color: #083E78;
         }
         
         /* 表格样式 */
@@ -96,7 +96,7 @@
             vertical-align: middle; 
         }
         th { 
-            background-color: #f0f5ff; 
+            background-color: #F4FAFF; 
             font-weight: bold; 
         }
         
@@ -123,7 +123,7 @@
         
         /* 按钮样式 */
         .btn { 
-            background: #1a5dbb; 
+            background: #083E78; 
             color: white; 
             padding: 10px 20px; 
             border: none; 
@@ -133,7 +133,7 @@
             margin: 10px 5px; 
         }
         .btn:hover { 
-            background: #144a9e; 
+            background: #062A50; 
         }
         
         /* 操作按钮 */
@@ -174,8 +174,8 @@
         /* 百分比显示样式 */
         .percentage-display {
             margin-left: 5px; 
-            color: #1a5dbb; 
-            font-weight: bold; 
+            color: #28B8A0;
+            font-weight: bold;
             min-width: 20px; 
             text-align: center;
         }
@@ -187,10 +187,10 @@
             color: #333;
         }
         .total-warning {
-            color: #e74c3c;
+            color: #083E78;
         }
         .total-success {
-            color: #27ae60;
+            color: #28B8A0;
         }
         
         /* 新增：提示框样式 */
@@ -368,7 +368,7 @@
     <!-- 操作按钮 -->
     <div style="text-align: center; margin: 30px 0;">
         <button class="btn" onclick="saveData()">保存数据</button>
-        <button class="btn" onclick="clearAllData()" style="background: #e74c3c;">清空数据</button>
+        <button class="btn" onclick="clearAllData()" style="background: #083E78;">清空数据</button>
     </div>
 
 
@@ -924,7 +924,7 @@
         const toast = document.getElementById('toast');
         toast.textContent = message;
         toast.className = 'toast show';
-        toast.style.background = type === 'error' ? '#e74c3c' : '#27ae60';
+        toast.style.background = type === 'error' ? '#e74c3c' : '#28B8A0';
         
         setTimeout(() => {
             toast.className = 'toast';
