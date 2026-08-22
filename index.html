@@ -399,8 +399,16 @@
   </header>
 
   <!-- 首页 Banner -->
-  <section id="banner" class="w-full">
-    <img src="home-banner.png" alt="百鲸咨询 - AI+管理变革，打造稳定核心竞争力企业，12年专注企业管理落地陪跑辅导" class="w-full h-[300px] sm:h-[420px] md:h-[560px] lg:h-[680px] object-cover object-center shadow-lg" loading="eager">
+  <section id="banner" class="w-full overflow-hidden">
+    <picture>
+      <source srcset="home-banner.svg" type="image/svg+xml">
+      <img src="home-banner.png"
+           alt="百鲸咨询 - AI+管理变革，打造稳定核心竞争力企业，12年专注企业管理落地陪跑辅导"
+           class="block w-full aspect-video object-cover object-center shadow-lg"
+           loading="eager"
+           width="1600"
+           height="900">
+    </picture>
   </section>
 
   <main>

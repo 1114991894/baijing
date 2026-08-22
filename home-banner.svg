@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#062451"/>
+      <stop offset="45%" stop-color="#083E78"/>
+      <stop offset="100%" stop-color="#0a4d92"/>
+    </linearGradient>
+    <radialGradient id="titleGlow" cx="32%" cy="42%" r="50%">
+      <stop offset="0%" stop-color="#28B8A0" stop-opacity="0.20"/>
+      <stop offset="55%" stop-color="#22C0E0" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M60 0L0 0 0 60" fill="none" stroke="#22C0E0" stroke-width="0.5" stroke-opacity="0.10"/>
+    </pattern>
+    <linearGradient id="accentLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#28B8A0" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#28B8A0" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#28B8A0" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="leap" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#28B8A0" stop-opacity="0"/>
+      <stop offset="55%" stop-color="#28B8A0" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#22C0E0" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="leap2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22C0E0" stop-opacity="0"/>
+      <stop offset="55%" stop-color="#22C0E0" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#28B8A0" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="ctaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#28B8A0"/>
+      <stop offset="100%" stop-color="#22C0E0"/>
+    </linearGradient>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&amp;display=swap');
+      .ff { font-family: 'Noto Sans SC', system-ui, sans-serif; }
+    </style>
+  </defs>
+
+  <!-- 背景层 -->
+  <rect width="1600" height="900" fill="url(#bgGrad)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect width="1600" height="900" fill="url(#titleGlow)"/>
+
+  <!-- 鲸跃大弧线：从左下横贯至右上 -->
+  <path d="M 180 860 Q 820 480, 1480 90"
+        fill="none"
+        stroke="url(#leap)"
+        stroke-width="100"
+        stroke-linecap="round"
+        opacity="0.16"/>
+  <path d="M 260 880 Q 900 520, 1540 170"
+        fill="none"
+        stroke="url(#leap2)"
+        stroke-width="26"
+        stroke-linecap="round"
+        opacity="0.25"/>
+
+  <!-- 装饰粒子（右侧视觉区密集） -->
+  <g>
+    <circle cx="1180" cy="150" r="2.5" fill="#28B8A0" opacity="0.7"/>
+    <circle cx="1320" cy="240" r="2" fill="#22C0E0" opacity="0.6"/>
+    <circle cx="1450" cy="180" r="2" fill="#28B8A0" opacity="0.7"/>
+    <circle cx="1250" cy="380" r="1.5" fill="#22C0E0" opacity="0.5"/>
+    <circle cx="1400" cy="330" r="2" fill="#28B8A0" opacity="0.6"/>
+    <circle cx="1520" cy="420" r="1.5" fill="#22C0E0" opacity="0.5"/>
+    <circle cx="1300" cy="560" r="2" fill="#28B8A0" opacity="0.6"/>
+    <circle cx="1450" cy="640" r="2" fill="#22C0E0" opacity="0.6"/>
+    <circle cx="1350" cy="760" r="1.5" fill="#28B8A0" opacity="0.5"/>
+    <circle cx="1520" cy="700" r="2" fill="#22C0E0" opacity="0.5"/>
+    <circle cx="1200" cy="680" r="1.5" fill="#28B8A0" opacity="0.5"/>
+    <circle cx="960" cy="120" r="1" fill="#FFFFFF" opacity="0.4"/>
+    <circle cx="1060" cy="300" r="1.5" fill="#22C0E0" opacity="0.5"/>
+    <circle cx="1550" cy="280" r="1" fill="#FFFFFF" opacity="0.4"/>
+    <circle cx="200" cy="200" r="2" fill="#22C0E0" opacity="0.5"/>
+    <circle cx="90" cy="400" r="1.5" fill="#28B8A0" opacity="0.4"/>
+  </g>
+
+  <!-- 网络连线（右侧 AI 主题） -->
+  <g opacity="0.22" stroke="#22C0E0" stroke-width="0.7" fill="none">
+    <line x1="1180" y1="150" x2="1320" y2="240"/>
+    <line x1="1320" y1="240" x2="1450" y2="180"/>
+    <line x1="1320" y1="240" x2="1250" y2="380"/>
+    <line x1="1250" y1="380" x2="1400" y2="330"/>
+    <line x1="1400" y1="330" x2="1520" y2="420"/>
+    <line x1="1250" y1="380" x2="1300" y2="560"/>
+    <line x1="1300" y1="560" x2="1450" y2="640"/>
+    <line x1="1450" y1="640" x2="1520" y2="700"/>
+    <line x1="1300" y1="560" x2="1200" y2="680"/>
+    <line x1="1180" y1="150" x2="1060" y2="300"/>
+  </g>
+
+  <!-- 顶部品牌区 -->
+  <g transform="translate(80, 84)">
+    <line x1="0" y1="0" x2="56" y2="0" stroke="#28B8A0" stroke-width="3"/>
+    <text x="0" y="42" class="ff" font-weight="700" font-size="34" fill="#FFFFFF" letter-spacing="8">百鲸咨询</text>
+    <text x="0" y="74" class="ff" font-weight="500" font-size="15" fill="#28B8A0" letter-spacing="5" opacity="0.9">BAIJING · 12 YEARS FOCUS</text>
+  </g>
+
+  <!-- 右上角装饰 -->
+  <g transform="translate(1520, 100)" text-anchor="end">
+    <text x="0" y="0" class="ff" font-weight="500" font-size="13" fill="#FFFFFF" opacity="0.55" letter-spacing="2">2026</text>
+    <line x1="-30" y1="14" x2="0" y2="14" stroke="#28B8A0" stroke-width="1" opacity="0.5"/>
+    <text x="0" y="42" class="ff" font-weight="500" font-size="13" fill="#FFFFFF" opacity="0.5" letter-spacing="3">ENTERPRISE</text>
+    <text x="0" y="60" class="ff" font-weight="500" font-size="13" fill="#FFFFFF" opacity="0.5" letter-spacing="3">MANAGEMENT</text>
+  </g>
+
+  <!-- 主标题：一行通排 AI+ 管理变革 -->
+  <g transform="translate(78, 368)">
+    <text x="0" y="0" class="ff" font-weight="900" font-size="152" fill="#28B8A0" letter-spacing="-2">AI+</text>
+    <text x="315" y="0" class="ff" font-weight="900" font-size="152" fill="#FFFFFF" letter-spacing="6">管理变革</text>
+  </g>
+
+  <!-- 副标题 -->
+  <g transform="translate(80, 452)">
+    <text class="ff" font-weight="700" font-size="42" fill="#22C0E0" letter-spacing="4">打造稳定核心竞争力企业</text>
+  </g>
+
+  <!-- 描述文字 -->
+  <g transform="translate(82, 514)">
+    <text class="ff" font-weight="400" font-size="23" fill="#FFFFFF" opacity="0.72" letter-spacing="2">12年专注企业管理落地陪跑辅导</text>
+  </g>
+
+  <!-- 装饰线 -->
+  <line x1="80" y1="556" x2="1000" y2="556" stroke="url(#accentLine)" stroke-width="1.5"/>
+
+  <!-- 服务标签 4x2 -->
+  <g transform="translate(80, 590)">
+    <g transform="translate(0, 0)">
+      <rect width="200" height="52" rx="26" fill="none" stroke="#22C0E0" stroke-width="1" stroke-opacity="0.45"/>
+      <text x="100" y="33" text-anchor="middle" class="ff" font-weight="500" font-size="20" fill="#FFFFFF" letter-spacing="2">战略定位</text>
+    </g>
+    <g transform="translate(212, 0)">
+      <rect width="200" height="52" rx="26" fill="none" stroke="#22C0E0" stroke-width="1" stroke-opacity="0.45"/>
+      <text x="100" y="33" text-anchor="middle" class="ff" font-weight="500" font-size="20" fill="#FFFFFF" letter-spacing="2">组织优化</text>
+    </g>
+    <g transform="translate(424, 0)">
+      <rect width="200" height="52" rx="26" fill="none" stroke="#22C0E0" stroke-width="1" stroke-opacity="0.45"/>
+      <text x="100" y="33" text-anchor="middle" class="ff" font-weight="500" font-size="20" fill="#FFFFFF" letter-spacing="2">薪酬管理</text>
+    </g>
+    <g transform="translate(636, 0)">
+      <rect width="200" height="52" rx="26" fill="none" stroke="#22C0E0" stroke-width="1" stroke-opacity="0.45"/>
+      <text x="100" y="33" text-anchor="middle" class="ff" font-weight="500" font-size="20" fill="#FFFFFF" letter-spacing="2">绩效考核</text>
+    </g>
+
+    <g transform="translate(0, 68)">
+      <rect width="200" height="52" rx="26" fill="none" stroke="#22C0E0" stroke-width="1" stroke-opacity="0.45"/>
+      <text x="100" y="33" text-anchor="middle" class="ff" font-weight="500" font-size="20" fill="#FFFFFF" letter-spacing="2">股权激励</text>
+    </g>
+    <g transform="translate(212, 68)">
+      <rect width="200" height="52" rx="26" fill="none" stroke="#22C0E0" stroke-width="1" stroke-opacity="0.45"/>
+      <text x="100" y="33" text-anchor="middle" class="ff" font-weight="500" font-size="20" fill="#FFFFFF" letter-spacing="2">合伙模式</text>
+    </g>
+    <g transform="translate(424, 68)">
+      <rect width="200" height="52" rx="26" fill="none" stroke="#22C0E0" stroke-width="1" stroke-opacity="0.45"/>
+      <text x="100" y="33" text-anchor="middle" class="ff" font-weight="500" font-size="20" fill="#FFFFFF" letter-spacing="2">人才体系</text>
+    </g>
+    <g transform="translate(636, 68)">
+      <rect width="200" height="52" rx="26" fill="#28B8A0" fill-opacity="0.18" stroke="#28B8A0" stroke-width="1.4"/>
+      <text x="100" y="33" text-anchor="middle" class="ff" font-weight="500" font-size="20" fill="#28B8A0" letter-spacing="1.5">AI 数字化</text>
+    </g>
+  </g>
+
+  <!-- CTA 按钮 -->
+  <g transform="translate(80, 776)">
+    <rect width="240" height="62" rx="31" fill="url(#ctaGrad)"/>
+    <text x="120" y="41" text-anchor="middle" class="ff" font-weight="700" font-size="24" fill="#062451" letter-spacing="2">了解详情  →</text>
+  </g>
+
+  <!-- 网站域名（CTA 右侧） -->
+  <g transform="translate(360, 815)">
+    <text x="0" y="0" class="ff" font-weight="500" font-size="15" fill="#FFFFFF" opacity="0.5" letter-spacing="3">BAIJINGZIXUN.TOP</text>
+  </g>
+
+  <!-- 右侧数据区：竖排三组 -->
+  <g transform="translate(1140, 0)">
+    <line x1="0" y1="230" x2="0" y2="680" stroke="#FFFFFF" stroke-width="0.5" stroke-opacity="0.18"/>
+
+    <g transform="translate(50, 290)">
+      <text x="0" y="0" class="ff" font-weight="900" font-size="66" fill="#28B8A0" letter-spacing="-1">1000+</text>
+      <text x="0" y="36" class="ff" font-weight="500" font-size="17" fill="#FFFFFF" opacity="0.65" letter-spacing="4">服务企业</text>
+    </g>
+
+    <g transform="translate(50, 445)">
+      <text x="0" y="0" class="ff" font-weight="900" font-size="66" fill="#22C0E0" letter-spacing="-1">12年</text>
+      <text x="0" y="36" class="ff" font-weight="500" font-size="17" fill="#FFFFFF" opacity="0.65" letter-spacing="4">行业深耕</text>
+    </g>
+
+    <g transform="translate(50, 600)">
+      <text x="0" y="0" class="ff" font-weight="900" font-size="66" fill="#28B8A0" letter-spacing="-1">30%+</text>
+      <text x="0" y="36" class="ff" font-weight="500" font-size="17" fill="#FFFFFF" opacity="0.65" letter-spacing="4">利润增长</text>
+    </g>
+  </g>
+
+  <!-- 底部装饰线 -->
+  <g transform="translate(80, 868)">
+    <line x1="0" y1="0" x2="40" y2="0" stroke="#28B8A0" stroke-width="2" opacity="0.7"/>
+  </g>
+</svg>
