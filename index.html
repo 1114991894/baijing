@@ -974,19 +974,19 @@
       empty.classList.add('hidden');
       const visible = articles.slice(0, currentArticleCount);
       container.innerHTML = visible.map(article => `
-        <article class="bg-white rounded-xl shadow-elevated card-gradient border border-neutral/20 overflow-hidden product-card">
-          <a href="article-detail.html?id=${article.id}" class="block">
+        <article class="bg-white rounded-xl shadow-elevated card-gradient border border-neutral/20 overflow-hidden product-card flex flex-col">
+          <a href="article-detail.html?id=${article.id}" class="block shrink-0">
             <img src="${article.cover_url || 'article-default-cover.svg'}" alt="${article.title}" class="w-full h-48 object-cover" loading="lazy">
           </a>
-          <div class="p-6">
-            <div class="flex items-center text-sm text-secondary/50 mb-3">
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center text-sm text-secondary/50 mb-3 shrink-0">
               <span><i class="far fa-calendar-alt mr-1"></i>${formatDate(article.created_at)}</span>
               <span class="mx-2">·</span>
               <span><i class="far fa-user mr-1"></i>${article.author || '百鲸咨询'}</span>
             </div>
-            <a href="article-detail.html?id=${article.id}" class="text-xl font-bold mb-3 text-secondary leading-snug hover:text-primary transition-colors block">${article.title}</a>
-            <p class="text-secondary/70 leading-relaxed mb-4 text-sm">${article.excerpt || ''}</p>
-            <a href="article-detail.html?id=${article.id}" class="text-accent hover:text-hover font-semibold text-sm inline-flex items-center gap-1 transition-colors">
+            <a href="article-detail.html?id=${article.id}" class="text-xl font-bold mb-3 text-secondary leading-snug hover:text-primary transition-colors block line-clamp-2">${article.title}</a>
+            <p class="text-secondary/70 leading-relaxed mb-4 text-sm line-clamp-3 flex-1">${article.excerpt || ''}</p>
+            <a href="article-detail.html?id=${article.id}" class="text-accent hover:text-hover font-semibold text-sm inline-flex items-center gap-1 transition-colors shrink-0 mt-auto">
               阅读更多 <i class="fas fa-arrow-right text-xs"></i>
             </a>
           </div>
