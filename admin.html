@@ -32,6 +32,7 @@
     .btn-edit { @apply text-accent hover:text-hover p-2 rounded-lg transition-all; }
     .form-input { @apply w-full px-4 py-2.5 border border-neutral/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all bg-white; }
     .editor:empty:before { content: attr(data-placeholder); color: #94a3b8; }
+    .editor a { color: #28B8A0; text-decoration: underline; font-weight: 500; }
     .table-row { @apply hover:bg-primary/5 transition-colors; }
     .toast { @apply fixed top-6 right-6 z-50 flex items-center gap-2 px-6 py-3 rounded-lg text-white shadow-xl transition-transform duration-300; transform: translateX(150%); }
     .toast.show { transform: translateX(0); }
@@ -202,6 +203,7 @@
                     <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="无序列表" data-cmd="ul"><i class="fas fa-list-ul"></i></button>
                     <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="有序列表" data-cmd="ol"><i class="fas fa-list-ol"></i></button>
                     <span class="w-px h-5 bg-neutral/30 mx-1"></span>
+                    <button type="button" id="insertLinkBtn" class="px-2 py-1 rounded hover:bg-primary/5 text-accent" title="插入超链接"><i class="fas fa-link"></i> 链接</button>
                     <button type="button" id="insertImgBtn" class="px-2 py-1 rounded hover:bg-primary/5 text-accent" title="插入图片（自动压缩≤100k）"><i class="fas fa-image"></i> 图片</button>
                     <input type="file" id="imgInput" accept="image/*" class="hidden">
                   </div>
@@ -335,6 +337,19 @@
         });
       });
       document.getElementById('insertImgBtn').addEventListener('click', () => document.getElementById('imgInput').click());
+      document.getElementById('insertLinkBtn').addEventListener('click', () => {
+        const url = prompt('请输入链接地址（需包含 http:// 或 https://）：');
+        if (!url) return;
+        const safeUrl = /^(https?:|mailto:)/i.test(url) ? url : 'https://' + url;
+        const contentEl = document.getElementById('articleContent');
+        contentEl.focus();
+        const sel = window.getSelection();
+        if (sel && sel.toString().trim()) {
+          document.execCommand('createLink', false, safeUrl);
+        } else {
+          document.execCommand('insertHTML', false, `<a href="${safeUrl}" target="_blank" rel="noopener">${safeUrl}</a>`);
+        }
+      });
       document.getElementById('imgInput').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;

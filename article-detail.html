@@ -21,6 +21,8 @@
     .prose p { line-height:1.9; margin:.6rem 0; }
     .prose ul, .prose ol { margin:.6rem 0 1rem 1.4rem; }
     .prose li { margin:.3rem 0; }
+    .prose a { color:#28B8A0; text-decoration:underline; font-weight:500; }
+    .prose a:hover { color:#22C0E0; }
   </style>
 </head>
 <body>
@@ -63,6 +65,7 @@
         <h1 class="text-3xl font-bold text-secondary mb-4">${escapeHtml(data.title)}</h1>
         ${data.excerpt ? `<p class="text-secondary/70 text-lg mb-6 border-l-4 border-accent pl-4">${escapeHtml(data.excerpt)}</p>` : ''}
         <div class="prose">${data.content || ''}</div>`;
+      box.querySelectorAll('.prose a').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
     })();
   </script>
 </body>
