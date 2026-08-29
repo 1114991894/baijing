@@ -167,7 +167,7 @@
                 </div>
               </div>
               <div>
-                <label class="block text-sm font-semibold text-secondary mb-1.5">封面图片（建议 16:9，在线裁剪并压缩 ≤100k）</label>
+                <label class="block text-sm font-semibold text-secondary mb-1.5">封面图片 <span class="text-red-500">*</span>（建议 16:9，在线裁剪并压缩 ≤100k）</label>
                 <div class="flex items-center gap-4">
                   <img id="coverPreview" class="w-20 h-20 rounded-lg object-cover border border-neutral/30 hidden" alt="封面预览">
                   <div class="flex flex-col gap-2">
@@ -507,8 +507,8 @@
       const excerpt = document.getElementById('articleExcerpt').value.trim();
       const content = document.getElementById('articleContent').innerHTML.trim();
       if (!title || !content) { showToast('请填写标题和内容', 'error'); return; }
-      const articleData = { title, author, featured, excerpt, content };
-      if (currentCoverUrl) articleData.cover_url = currentCoverUrl;
+      if (!currentCoverUrl) { showToast('请上传封面图片（必填）', 'error'); return; }
+      const articleData = { title, author, featured, excerpt, content, cover_url: currentCoverUrl };
       try {
         if (id) { await updateArticle(id, articleData); showToast('文章更新成功'); }
         else { await createArticle(articleData); showToast('文章创建成功'); }
