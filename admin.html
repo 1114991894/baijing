@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -165,7 +167,7 @@
                 </div>
               </div>
               <div>
-                <label class="block text-sm font-semibold text-secondary mb-1.5">封面图片（列表缩略图，自动压缩 ≤100k）</label>
+                <label class="block text-sm font-semibold text-secondary mb-1.5">封面图片（建议 16:9，在线裁剪并压缩 ≤100k）</label>
                 <div class="flex items-center gap-4">
                   <img id="coverPreview" class="w-20 h-20 rounded-lg object-cover border border-neutral/30 hidden" alt="封面预览">
                   <div class="flex flex-col gap-2">
@@ -236,6 +238,20 @@
         </div>
       </div>
 
+      <div id="cropModal" class="modal-overlay">
+        <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6">
+          <h3 class="text-lg font-bold text-secondary mb-1">裁剪封面图</h3>
+          <p class="text-xs text-secondary/50 mb-4">建议比例 16:9（宽 1280 × 高 720）。可拖动、缩放选取区域，确定后自动预览并压缩。</p>
+          <div class="bg-neutral/10 rounded-lg overflow-hidden" style="max-height:60vh;">
+            <img id="cropImage" class="block max-w-full">
+          </div>
+          <div class="flex gap-3 mt-5">
+            <button id="cropCancelBtn" class="flex-1 bg-neutral/20 hover:bg-neutral/30 text-secondary font-semibold py-2.5 rounded-lg transition-colors">取消</button>
+            <button id="cropConfirmBtn" class="flex-1 bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 rounded-lg transition-colors">确定裁剪</button>
+          </div>
+        </div>
+      </div>
+
       <div id="toast" class="toast"><i class="fas fa-check-circle"></i><span id="toastMsg">操作成功</span></div>
     </main>
   </div>
@@ -249,6 +265,7 @@
     let currentEditingId = null;
     let deletingArticleId = null;
     let currentCoverUrl = null;
+    let cropper = null;
     let listenersBound = false;
 
     document.addEventListener('DOMContentLoaded', () => { setupAuthListeners(); checkSession(); });
@@ -329,15 +346,13 @@
         e.target.value = '';
       });
       document.getElementById('coverBtn').addEventListener('click', () => document.getElementById('coverInput').click());
-      document.getElementById('coverInput').addEventListener('change', async (e) => {
+      document.getElementById('coverInput').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        try {
-          currentCoverUrl = await compressImageToDataUrl(file, 100);
-          const prev = document.getElementById('coverPreview');
-          prev.src = currentCoverUrl; prev.classList.remove('hidden');
-          document.getElementById('coverRemoveBtn').classList.remove('hidden');
-        } catch (err) { showToast('封面处理失败：' + err.message, 'error'); }
+        const reader = new FileReader();
+        reader.onload = (ev) => openCropModal(ev.target.result);
+        reader.onerror = () => showToast('读取图片失败', 'error');
+        reader.readAsDataURL(file);
         e.target.value = '';
       });
       document.getElementById('coverRemoveBtn').addEventListener('click', () => {
@@ -346,6 +361,9 @@
         prev.src = ''; prev.classList.add('hidden');
         document.getElementById('coverRemoveBtn').classList.add('hidden');
       });
+      document.getElementById('cropCancelBtn').addEventListener('click', closeCropModal);
+      document.getElementById('cropConfirmBtn').addEventListener('click', confirmCrop);
+      document.getElementById('cropModal').addEventListener('click', (e) => { if (e.target.id === 'cropModal') closeCropModal(); });
     }
 
     function compressImageToDataUrl(file, maxKB) {
@@ -509,6 +527,46 @@
         closeDeleteModal();
         loadArticles();
       } catch (err) { console.error(err); showToast('删除失败：' + (err.message || ''), 'error'); }
+    }
+
+    // ===================== 封面裁剪 =====================
+    function openCropModal(dataUrl) {
+      const img = document.getElementById('cropImage');
+      img.src = dataUrl;
+      document.getElementById('cropModal').classList.add('open');
+      if (cropper) cropper.destroy();
+      cropper = new Cropper(img, {
+        aspectRatio: 16 / 9,
+        viewMode: 1,
+        autoCropArea: 1,
+        background: false,
+        responsive: true
+      });
+    }
+    function closeCropModal() {
+      document.getElementById('cropModal').classList.remove('open');
+      if (cropper) { cropper.destroy(); cropper = null; }
+    }
+    function confirmCrop() {
+      if (!cropper) return;
+      try {
+        const canvas = cropper.getCroppedCanvas({ maxWidth: 1280, maxHeight: 720 });
+        currentCoverUrl = compressCanvasToDataUrl(canvas, 100);
+        const prev = document.getElementById('coverPreview');
+        prev.src = currentCoverUrl; prev.classList.remove('hidden');
+        document.getElementById('coverRemoveBtn').classList.remove('hidden');
+        closeCropModal();
+        showToast('封面已裁剪并预览', 'success');
+      } catch (err) { showToast('裁剪失败：' + err.message, 'error'); }
+    }
+    function compressCanvasToDataUrl(canvas, maxKB) {
+      let quality = 0.92;
+      let dataUrl = canvas.toDataURL('image/jpeg', quality);
+      while (dataUrl.length > maxKB * 1024 && quality > 0.1) {
+        quality -= 0.08;
+        dataUrl = canvas.toDataURL('image/jpeg', quality);
+      }
+      return dataUrl;
     }
 
     // ===================== Supabase =====================
