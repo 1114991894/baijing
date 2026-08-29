@@ -55,7 +55,7 @@
       if (error || !data) { box.innerHTML = '<p class="text-center text-secondary/60 py-12">文章不存在或已被删除</p>'; return; }
       document.title = data.title + ' - 百鲸咨询';
       box.innerHTML = `
-        ${data.cover_url ? `<img src="${escapeHtml(data.cover_url)}" class="w-full rounded-xl mb-6 object-cover max-h-80" alt="">` : ''}
+        <img src="${escapeHtml(data.cover_url || 'article-default-cover.svg')}" class="w-full rounded-xl mb-6 object-cover max-h-96" alt="">
         <div class="flex items-center text-sm text-secondary/50 mb-4 gap-2">
           <span><i class="far fa-calendar-alt mr-1"></i>${formatDate(data.created_at)}</span>
           <span>·</span><span><i class="far fa-user mr-1"></i>${escapeHtml(data.author || '百鲸咨询')}</span>
