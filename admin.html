@@ -13,19 +13,11 @@
       theme: {
         extend: {
           colors: {
-            primary: '#083E78',
-            accent: '#28B8A0',
-            hover: '#22C0E0',
-            dark: '#0F172A',
-            light: '#FFFFFF',
-            section: '#F4FAFF',
-            neutral: '#E2E8F0',
-            secondary: '#333333',
+            primary: '#083E78', accent: '#28B8A0', hover: '#22C0E0',
+            section: '#F4FAFF', neutral: '#E2E8F0', secondary: '#333333',
           },
           fontFamily: { sans: ['Noto Sans SC', 'system-ui', 'sans-serif'] },
-          boxShadow: {
-            'elevated': '0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.08)',
-          }
+          boxShadow: { 'elevated': '0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.08)' }
         }
       }
     }
@@ -34,18 +26,16 @@
     * { box-sizing: border-box; }
     html, body { overflow-x: hidden; }
     body { font-family: 'Noto Sans SC', sans-serif; color: #333; background: #F4FAFF; }
-    .sidebar-link { @apply flex items-center gap-3 px-4 py-3 text-secondary/80 hover:text-primary hover:bg-primary/5 transition-all rounded-lg; }
-    .sidebar-link.active { @apply bg-primary text-white font-semibold; }
     .btn-delete { @apply text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-all; }
     .btn-edit { @apply text-accent hover:text-hover p-2 rounded-lg transition-all; }
     .form-input { @apply w-full px-4 py-2.5 border border-neutral/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all bg-white; }
-    .editor-toolbar button, .editor-toolbar select { @apply text-secondary hover:text-primary transition-colors; }
     .editor:empty:before { content: attr(data-placeholder); color: #94a3b8; }
-    .modal-overlay { @apply fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4; }
-    .modal-overlay.open { @apply flex; }
     .table-row { @apply hover:bg-primary/5 transition-colors; }
-    .toast { @apply fixed top-6 right-6 z-50 flex items-center gap-2 px-6 py-3 rounded-lg text-white shadow-xl transition-transform duration-300 translate-x-[150%]; }
-    .toast.show { @apply translate-x-0; }
+    .toast { @apply fixed top-6 right-6 z-50 flex items-center gap-2 px-6 py-3 rounded-lg text-white shadow-xl transition-transform duration-300; transform: translateX(150%); }
+    .toast.show { transform: translateX(0); }
+    /* 弹窗：纯 CSS 控制显隐，避免 Tailwind display 切换不稳定 */
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 50; align-items: center; justify-content: center; background: rgba(0,0,0,.5); padding: 1rem; }
+    .modal-overlay.open { display: flex; }
   </style>
 </head>
 <body>
@@ -69,7 +59,7 @@
           <label class="block text-sm font-semibold text-secondary mb-1.5">密码</label>
           <input type="password" id="loginPassword" required class="form-input" placeholder="••••••••">
         </div>
-        <button type="submit" id="loginBtn" class="btn-primary w-full flex items-center justify-center gap-2">
+        <button type="submit" class="btn-primary w-full flex items-center justify-center gap-2">
           <i class="fas fa-sign-in-alt"></i><span>登录</span>
         </button>
       </form>
@@ -78,40 +68,29 @@
     </div>
   </section>
 
-  <!-- ============ 管理主界面 ============ -->
-  <div id="adminView" class="hidden min-h-screen lg:flex">
-    <!-- 侧边栏 -->
-    <aside class="w-64 bg-white h-screen border-r border-neutral/20 fixed top-0 left-0 z-40 flex flex-col">
-      <div class="p-6 border-b border-neutral/20">
+  <!-- ============ 管理主界面（无左侧栏） ============ -->
+  <div id="adminView" class="hidden min-h-screen flex flex-col">
+    <!-- 顶部栏 -->
+    <header class="sticky top-0 z-40 bg-white border-b border-neutral/20 shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4 flex-wrap">
         <div class="flex items-center gap-3">
           <i class="fas fa-blog text-primary text-2xl"></i>
-          <div>
-            <h2 class="text-lg font-bold text-secondary">文章管理</h2>
-            <p class="text-xs text-secondary/50">百鲸咨询后台</p>
-          </div>
+          <h1 class="text-lg font-bold text-secondary">文章管理后台</h1>
+        </div>
+        <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <button id="navList" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-list mr-1"></i>文章列表</button>
+          <button id="navAdd" class="btn-primary text-sm flex items-center gap-2"><i class="fas fa-plus mr-1"></i>添加文章</button>
+          <a href="../index.html" target="_blank" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-home mr-1"></i>查看首页</a>
+          <span id="adminEmail" class="text-sm text-secondary/60 hidden sm:inline truncate max-w-[160px]"></span>
+          <button id="logoutBtn" class="text-sm text-secondary/60 hover:text-red-500 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors"><i class="fas fa-sign-out-alt mr-1"></i>退出</button>
         </div>
       </div>
-      <nav class="p-4 space-y-1 flex-1">
-        <a href="#" class="sidebar-link active" data-tab="article-list"><i class="fas fa-list w-5 text-center"></i><span>文章列表</span></a>
-        <a href="#" class="sidebar-link" data-tab="add-article"><i class="fas fa-plus w-5 text-center"></i><span>添加文章</span></a>
-        <a href="../index.html" class="sidebar-link" target="_blank"><i class="fas fa-home w-5 text-center"></i><span>查看首页</span></a>
-      </nav>
-      <div class="p-4 border-t border-neutral/20">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><i class="fas fa-user text-primary"></i></div>
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold text-secondary truncate" id="adminEmail">管理员</p>
-            <button id="logoutBtn" class="text-xs text-secondary/50 hover:text-red-500 transition-colors"><i class="fas fa-sign-out-alt"></i> 退出登录</button>
-          </div>
-        </div>
-      </div>
-    </aside>
+    </header>
 
-    <!-- 主内容区 -->
-    <main class="flex-1 min-w-0 ml-0 lg:ml-64 p-4 sm:p-8">
+    <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
         <div>
-          <h1 class="text-2xl md:text-3xl font-bold text-secondary" id="pageTitle">文章列表</h1>
+          <h2 class="text-2xl md:text-3xl font-bold text-secondary" id="pageTitle">文章列表</h2>
           <p class="text-secondary/50 text-sm mt-1" id="pageSubtitle">管理您的精选文章，文章更新后前端自动同步</p>
         </div>
         <div class="flex items-center gap-3">
@@ -190,10 +169,6 @@
                 <textarea id="articleExcerpt" rows="2" class="form-input" placeholder="简要描述文章内容"></textarea>
               </div>
               <div>
-                <label class="block text-sm font-semibold text-secondary mb-1.5">封面图片URL</label>
-                <input type="url" id="articleCoverUrl" class="form-input" placeholder="https://example.com/cover.jpg">
-              </div>
-              <div>
                 <label class="block text-sm font-semibold text-secondary mb-1.5">文章内容 <span class="text-red-500">*</span></label>
                 <div class="border border-neutral/40 rounded-lg overflow-hidden">
                   <div class="editor-toolbar flex flex-wrap items-center gap-1 px-3 py-2 bg-section border-b border-neutral/20">
@@ -216,12 +191,12 @@
                     <input type="file" id="imgInput" accept="image/*" class="hidden">
                   </div>
                   <div id="articleContent" contenteditable="true" data-placeholder="请输入文章内容，可调整字体大小、插入图片..."
-                       class="editor min-h-[220px] max-h-[480px] overflow-y-auto p-4 text-sm leading-relaxed focus:outline-none prose max-w-none"></div>
+                       class="editor min-h-[220px] max-h-[480px] overflow-y-auto p-4 text-sm leading-relaxed focus:outline-none"></div>
                 </div>
                 <p class="text-xs text-secondary/40 mt-1">插入图片会自动压缩至 100KB 以内；正文以富文本保存。</p>
               </div>
               <div class="flex gap-3 pt-4">
-                <button type="submit" id="submitBtn" class="btn-primary flex-1 flex items-center justify-center gap-2">
+                <button type="submit" class="btn-primary flex-1 flex items-center justify-center gap-2">
                   <i class="fas fa-save"></i><span>保存文章</span>
                 </button>
                 <button type="button" id="cancelBtn" class="btn-secondary flex items-center gap-2">
@@ -262,17 +237,13 @@
     let deletingArticleId = null;
     let listenersBound = false;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      setupAuthListeners();
-      checkSession();
-    });
+    document.addEventListener('DOMContentLoaded', () => { setupAuthListeners(); checkSession(); });
 
     // ===================== 认证 =====================
     async function checkSession() {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session) showAdminUI(session.user); else showAuthUI();
     }
-
     function setupAuthListeners() {
       document.getElementById('loginForm').addEventListener('submit', handleLogin);
       document.getElementById('logoutBtn').addEventListener('click', handleLogout);
@@ -280,7 +251,6 @@
         if (session) showAdminUI(session.user); else showAuthUI();
       });
     }
-
     async function handleLogin(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
@@ -290,17 +260,11 @@
       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) { errEl.textContent = '登录失败：' + error.message; errEl.classList.remove('hidden'); }
     }
-
-    async function handleLogout() {
-      await supabaseClient.auth.signOut();
-      showAuthUI();
-    }
-
+    async function handleLogout() { await supabaseClient.auth.signOut(); showAuthUI(); }
     function showAuthUI() {
       document.getElementById('authView').classList.remove('hidden');
       document.getElementById('adminView').classList.add('hidden');
     }
-
     function showAdminUI(user) {
       document.getElementById('authView').classList.add('hidden');
       document.getElementById('adminView').classList.remove('hidden');
@@ -315,6 +279,8 @@
       document.getElementById('searchInput').addEventListener('input', filterArticles);
       document.getElementById('addArticleBtn').addEventListener('click', () => switchToForm('add'));
       document.getElementById('emptyAddBtn').addEventListener('click', () => switchToForm('add'));
+      document.getElementById('navAdd').addEventListener('click', () => switchToForm('add'));
+      document.getElementById('navList').addEventListener('click', switchToListView);
       document.getElementById('cancelBtn').addEventListener('click', switchToListView);
       document.getElementById('articleForm').addEventListener('submit', handleFormSubmit);
       document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
@@ -322,14 +288,6 @@
       document.getElementById('deleteModal').addEventListener('click', (e) => { if (e.target === document.getElementById('deleteModal')) closeDeleteModal(); });
       document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDeleteModal(); });
 
-      document.querySelectorAll('.sidebar-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (link.getAttribute('data-tab') === 'add-article') switchToForm('add');
-        });
-      });
-
-      // 富文本工具栏
       document.getElementById('fontSize').addEventListener('change', (e) => {
         document.getElementById('articleContent').focus();
         document.execCommand('fontSize', false, e.target.value);
@@ -353,14 +311,11 @@
           const dataUrl = await compressImageToDataUrl(file, 100);
           document.getElementById('articleContent').focus();
           document.execCommand('insertImage', false, dataUrl);
-        } catch (err) {
-          showToast('图片处理失败：' + err.message, 'error');
-        }
+        } catch (err) { showToast('图片处理失败：' + err.message, 'error'); }
         e.target.value = '';
       });
     }
 
-    // 图片压缩至 maxKB 以内（canvas 重绘 + 质量递减）
     function compressImageToDataUrl(file, maxKB) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -373,8 +328,7 @@
             const maxDim = 1280;
             if (width > maxDim || height > maxDim) {
               const ratio = Math.min(maxDim / width, maxDim / height);
-              width = Math.floor(width * ratio);
-              height = Math.floor(height * ratio);
+              width = Math.floor(width * ratio); height = Math.floor(height * ratio);
             }
             const canvas = document.createElement('canvas');
             canvas.width = width; canvas.height = height;
@@ -382,8 +336,7 @@
             let quality = 0.92;
             let dataUrl = canvas.toDataURL('image/jpeg', quality);
             while (dataUrl.length > maxKB * 1024 && quality > 0.1) {
-              quality -= 0.08;
-              dataUrl = canvas.toDataURL('image/jpeg', quality);
+              quality -= 0.08; dataUrl = canvas.toDataURL('image/jpeg', quality);
             }
             resolve(dataUrl);
           };
@@ -405,7 +358,6 @@
         currentEditingId = null;
       }
     }
-
     function switchToListView() {
       document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
       document.getElementById('article-list-view').classList.remove('hidden');
@@ -415,8 +367,7 @@
     // ===================== 加载文章 =====================
     async function loadArticles() {
       try {
-        const { data, error } = await supabaseClient
-          .from('articles').select('*').order('created_at', { ascending: false });
+        const { data, error } = await supabaseClient.from('articles').select('*').order('created_at', { ascending: false });
         if (error) throw error;
         articles = data || [];
         renderArticleTable(articles);
@@ -425,12 +376,10 @@
         const isMissing = (err.code === 'PGRST205') || (err.message && err.message.includes('articles'));
         document.getElementById('articleTableBody').innerHTML = '';
         document.getElementById('emptyState').classList.add('hidden');
-        const es = document.getElementById('errorState');
-        es.classList.remove('hidden');
+        document.getElementById('errorState').classList.remove('hidden');
         document.getElementById('errorMsg').textContent = isMissing ? '文章表不存在' : ('加载失败：' + (err.message || '未知错误'));
       }
     }
-
     function renderArticleTable(data) {
       document.getElementById('errorState').classList.add('hidden');
       const tbody = document.getElementById('articleTableBody');
@@ -469,7 +418,6 @@
           </td>
         </tr>`).join('');
     }
-
     function filterArticles() {
       const q = document.getElementById('searchInput').value.toLowerCase();
       renderArticleTable(articles.filter(a => a.title.toLowerCase().includes(q) || (a.excerpt || '').toLowerCase().includes(q)));
@@ -486,13 +434,9 @@
         document.getElementById('articleAuthor').value = data.author || '百鲸咨询';
         document.getElementById('articleFeatured').value = String(data.featured);
         document.getElementById('articleExcerpt').value = data.excerpt || '';
-        document.getElementById('articleCoverUrl').value = data.cover_url || '';
         document.getElementById('articleContent').innerHTML = data.content || '';
         switchToForm('edit');
-      } catch (err) {
-        console.error(err);
-        showToast('加载文章失败', 'error');
-      }
+      } catch (err) { console.error(err); showToast('加载文章失败', 'error'); }
     };
 
     // ===================== 提交 =====================
@@ -503,30 +447,19 @@
       const author = document.getElementById('articleAuthor').value.trim();
       const featured = document.getElementById('articleFeatured').value === 'true';
       const excerpt = document.getElementById('articleExcerpt').value.trim();
-      const coverUrl = document.getElementById('articleCoverUrl').value.trim();
       const content = document.getElementById('articleContent').innerHTML.trim();
       if (!title || !content) { showToast('请填写标题和内容', 'error'); return; }
       const articleData = { title, author, featured, excerpt, content };
-      if (coverUrl) articleData.cover_url = coverUrl;
       try {
         if (id) { await updateArticle(id, articleData); showToast('文章更新成功'); }
         else { await createArticle(articleData); showToast('文章创建成功'); }
         switchToListView();
-      } catch (err) {
-        console.error(err);
-        showToast('保存失败：' + (err.message || ''), 'error');
-      }
+      } catch (err) { console.error(err); showToast('保存失败：' + (err.message || ''), 'error'); }
     }
 
     // ===================== 删除 =====================
-    function openDeleteModal(id) {
-      deletingArticleId = id;
-      document.getElementById('deleteModal').classList.add('open');
-    }
-    function closeDeleteModal() {
-      document.getElementById('deleteModal').classList.remove('open');
-      deletingArticleId = null;
-    }
+    function openDeleteModal(id) { deletingArticleId = id; document.getElementById('deleteModal').classList.add('open'); }
+    function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('open'); deletingArticleId = null; }
     async function confirmDelete() {
       if (!deletingArticleId) return;
       try {
@@ -534,10 +467,7 @@
         showToast('文章删除成功');
         closeDeleteModal();
         loadArticles();
-      } catch (err) {
-        console.error(err);
-        showToast('删除失败：' + (err.message || ''), 'error');
-      }
+      } catch (err) { console.error(err); showToast('删除失败：' + (err.message || ''), 'error'); }
     }
 
     // ===================== Supabase =====================
