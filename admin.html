@@ -118,6 +118,7 @@
             <table class="w-full min-w-[640px]">
               <thead class="bg-section">
                 <tr>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider w-16">排序</th>
                   <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">标题</th>
                   <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">作者</th>
                   <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">日期</th>
@@ -166,6 +167,10 @@
                     <option value="false">否</option>
                   </select>
                 </div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-secondary mb-1.5">排序（数字越小越靠前，建议 1、2、3…）</label>
+                <input type="number" id="articleSortOrder" class="form-input w-40" placeholder="例如：1" min="0">
               </div>
               <div>
                 <label class="block text-sm font-semibold text-secondary mb-1.5">封面图片 <span class="text-red-500">*</span>（建议 16:9，在线裁剪并压缩 ≤100k）</label>
@@ -424,6 +429,7 @@
         const prev = document.getElementById('coverPreview');
         if (prev) { prev.src = ''; prev.classList.add('hidden'); }
         document.getElementById('coverRemoveBtn').classList.add('hidden');
+        document.getElementById('articleSortOrder').value = '';
         currentEditingId = null;
       }
     }
@@ -439,6 +445,11 @@
         const { data, error } = await supabaseClient.from('articles').select('*').order('created_at', { ascending: false });
         if (error) throw error;
         articles = data || [];
+        articles.sort((a, b) => {
+          const sa = a.sort_order ?? 99999, sb = b.sort_order ?? 99999;
+          if (sa !== sb) return sa - sb;
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
         renderArticleTable(articles);
       } catch (err) {
         console.error('加载文章失败：', err);
@@ -463,6 +474,7 @@
       document.getElementById('articleCount').textContent = `共 ${data.length} 篇文章`;
       tbody.innerHTML = data.map(a => `
         <tr class="table-row">
+          <td class="px-6 py-4 text-sm text-secondary font-semibold whitespace-nowrap">${a.sort_order != null ? a.sort_order : '<span class="text-secondary/40">—</span>'}</td>
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
               ${a.cover_url ? `<img src="${escapeHtml(a.cover_url)}" class="w-10 h-10 rounded-lg object-cover" alt="">` : `<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><i class="fas fa-file-alt text-primary"></i></div>`}
@@ -502,6 +514,7 @@
         document.getElementById('articleTitle').value = data.title;
         document.getElementById('articleAuthor').value = data.author || '百鲸咨询';
         document.getElementById('articleFeatured').value = String(data.featured);
+        document.getElementById('articleSortOrder').value = (data.sort_order != null ? data.sort_order : '');
         document.getElementById('articleExcerpt').value = data.excerpt || '';
         document.getElementById('articleContent').innerHTML = data.content || '';
         currentCoverUrl = data.cover_url || null;
@@ -521,9 +534,11 @@
       const featured = document.getElementById('articleFeatured').value === 'true';
       const excerpt = document.getElementById('articleExcerpt').value.trim();
       const content = document.getElementById('articleContent').innerHTML.trim();
+      const sortOrderRaw = document.getElementById('articleSortOrder').value;
+      const sort_order = sortOrderRaw === '' ? null : (parseInt(sortOrderRaw, 10) || 0);
       if (!title || !content) { showToast('请填写标题和内容', 'error'); return; }
       if (!currentCoverUrl) { showToast('请上传封面图片（必填）', 'error'); return; }
-      const articleData = { title, author, featured, excerpt, content, cover_url: currentCoverUrl };
+      const articleData = { title, author, featured, excerpt, content, cover_url: currentCoverUrl, sort_order };
       try {
         if (id) { await updateArticle(id, articleData); showToast('文章更新成功'); }
         else { await createArticle(articleData); showToast('文章创建成功'); }

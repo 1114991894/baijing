@@ -939,10 +939,15 @@
           .from('articles')
           .select('*')
           .eq('featured', true)
-          .order('created_at', { ascending: false })
           .limit(100);
         if (error) throw error;
-        return data || [];
+        const list = data || [];
+        list.sort((a, b) => {
+          const sa = a.sort_order ?? 99999, sb = b.sort_order ?? 99999;
+          if (sa !== sb) return sa - sb;
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
+        return list;
       } catch (err) {
         console.error('获取文章失败：', err);
         return [];

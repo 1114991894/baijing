@@ -45,3 +45,7 @@ CREATE TRIGGER set_updated_at
   BEFORE UPDATE ON articles
   FOR EACH ROW
   EXECUTE FUNCTION handle_updated_at();
+
+-- 手动排序字段：数字越小越靠前（建议 1、2、3…）。若表已存在，单独执行下面的 ALTER：
+-- ALTER TABLE articles ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0;
