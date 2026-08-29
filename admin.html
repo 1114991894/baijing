@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文章管理后台 - 百鲸咨询</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#083E78',
+            accent: '#28B8A0',
+            hover: '#22C0E0',
+            dark: '#0F172A',
+            light: '#FFFFFF',
+            section: '#F4FAFF',
+            neutral: '#E2E8F0',
+            secondary: '#333333',
+          },
+          fontFamily: {
+            sans: ['Noto Sans SC', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      color: #333333;
+      background-color: #F4FAFF;
+    }
+    .sidebar-link {
+      @apply flex items-center gap-3 px-4 py-3 text-secondary/80 hover:text-primary hover:bg-primary/5 transition-all duration-200 rounded-lg;
+    }
+    .sidebar-link.active {
+      @apply bg-primary text-white font-semibold;
+    }
+    .btn-delete {
+      @apply text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-all;
+    }
+    .btn-edit {
+      @apply text-accent hover:text-hover p-2 rounded-lg transition-all;
+    }
+    .modal-overlay {
+      @apply fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden;
+    }
+    .modal-overlay.open {
+      @apply flex;
+    }
+    .form-input {
+      @apply w-full px-4 py-2.5 border border-neutral/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all;
+    }
+    .form-input:focus {
+      @apply border-primary ring-2 ring-primary/20;
+    }
+    .table-row {
+      @apply hover:bg-primary/5 transition-colors;
+    }
+  </style>
+</head>
+<body>
+  <div class="flex min-h-screen">
+    <!-- 侧边栏 -->
+    <aside class="w-64 bg-white min-h-screen border-r border-neutral/20 fixed top-0 left-0 z-40">
+      <div class="p-6 border-b border-neutral/20">
+        <div class="flex items-center gap-3">
+          <i class="fas fa-blog text-primary text-2xl"></i>
+          <div>
+            <h2 class="text-lg font-bold text-secondary">文章管理</h2>
+            <p class="text-xs text-secondary/50">百鲸咨询后台</p>
+          </div>
+        </div>
+      </div>
+      <nav class="p-4 space-y-1">
+        <a href="#" class="sidebar-link active" data-tab="article-list">
+          <i class="fas fa-list w-5 text-center"></i>
+          <span>文章列表</span>
+        </a>
+        <a href="#" class="sidebar-link" data-tab="add-article">
+          <i class="fas fa-plus w-5 text-center"></i>
+          <span>添加文章</span>
+        </a>
+        <a href="../index.html" class="sidebar-link" target="_blank">
+          <i class="fas fa-home w-5 text-center"></i>
+          <span>查看首页</span>
+        </a>
+      </nav>
+      <div class="absolute bottom-0 w-full p-4 border-t border-neutral/20">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <i class="fas fa-user text-primary"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-secondary">管理员</p>
+            <p class="text-xs text-secondary/50">baijing@admin.com</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 ml-64 p-8">
+      <!-- 顶部栏 -->
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-secondary" id="pageTitle">文章列表</h1>
+          <p class="text-secondary/50 text-sm mt-1" id="pageSubtitle">管理您的精选文章，文章更新后前端自动同步</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="articleCount" class="text-sm text-secondary/50">共 0 篇文章</span>
+          <button id="refreshBtn" class="text-secondary hover:text-primary p-2 rounded-lg hover:bg-primary/5 transition-colors" title="刷新">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 文章列表视图 -->
+      <section id="article-list-view" class="tab-view">
+        <div class="bg-white rounded-xl shadow-elevated border border-neutral/20 overflow-hidden">
+          <div class="p-4 border-b border-neutral/20 flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center">
+            <div class="relative w-full sm:w-64">
+              <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-secondary/40"></i>
+              <input type="text" id="searchInput" placeholder="搜索文章标题..." class="form-input pl-10 text-sm">
+            </div>
+            <button id="addArticleBtn" class="btn-primary text-sm flex items-center gap-2 whitespace-nowrap">
+              <i class="fas fa-plus"></i>
+              添加文章
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-section">
+                <tr>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">标题</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">作者</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">日期</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">状态</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider w-28">操作</th>
+                </tr>
+              </thead>
+              <tbody id="articleTableBody" class="divide-y divide-neutral/10">
+                <tr>
+                  <td colspan="5" class="px-6 py-12 text-center text-secondary/50">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
+                    <p>加载中...</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="emptyState" class="hidden py-16 text-center text-secondary/50">
+            <i class="fas fa-newspaper text-4xl mb-4 text-secondary/30"></i>
+            <p class="text-lg">暂无文章</p>
+            <button id="emptyAddBtn" class="mt-4 text-accent hover:text-hover font-semibold text-sm inline-flex items-center gap-1">
+              <i class="fas fa-plus"></i> 添加第一篇文章
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 添加/编辑文章视图 -->
+      <section id="add-article-view" class="tab-view hidden">
+        <div class="max-w-3xl mx-auto">
+          <div class="bg-white rounded-xl shadow-elevated border border-neutral/20 p-6 md:p-8">
+            <h2 id="formTitle" class="text-xl font-bold text-secondary mb-6">添加文章</h2>
+            <form id="articleForm" class="space-y-5">
+              <input type="hidden" id="articleId">
+              <div>
+                <label class="block text-sm font-semibold text-secondary mb-1.5">文章标题 <span class="text-red-500">*</span></label>
+                <input type="text" id="articleTitle" required class="form-input" placeholder="请输入文章标题">
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-semibold text-secondary mb-1.5">作者</label>
+                  <input type="text" id="articleAuthor" class="form-input" placeholder="百鲸咨询" value="百鲸咨询">
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-secondary mb-1.5">精选</label>
+                  <select id="articleFeatured" class="form-input">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-secondary mb-1.5">摘要</label>
+                <textarea id="articleExcerpt" rows="2" class="form-input" placeholder="简要描述文章内容"></textarea>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-secondary mb-1.5">封面图片URL</label>
+                <input type="url" id="articleCoverUrl" class="form-input" placeholder="https://example.com/cover.jpg">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-secondary mb-1.5">文章内容 <span class="text-red-500">*</span></label>
+                <textarea id="articleContent" required rows="8" class="form-input" placeholder="请输入文章内容..."></textarea>
+              </div>
+              <div class="flex gap-3 pt-4">
+                <button type="submit" id="submitBtn" class="btn-primary flex-1 flex items-center justify-center gap-2">
+                  <i class="fas fa-save"></i>
+                  <span>保存文章</span>
+                </button>
+                <button type="button" id="cancelBtn" class="btn-secondary flex items-center gap-2">
+                  <i class="fas fa-times"></i>
+                  <span>取消</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- 删除确认弹窗 -->
+      <div id="deleteModal" class="modal-overlay">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+              <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-secondary">确认删除</h3>
+          </div>
+          <p class="text-secondary/70 mb-6">确定要删除这篇文章吗？删除后前端将不再显示此文章，此操作不可撤销。</p>
+          <div class="flex gap-3">
+            <button id="confirmDeleteBtn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-lg transition-colors">
+              确认删除
+            </button>
+            <button id="cancelDeleteBtn" class="flex-1 bg-neutral/20 hover:bg-neutral/30 text-secondary font-semibold py-2.5 rounded-lg transition-colors">
+              取消
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast通知 -->
+      <div id="toast" class="fixed top-6 right-6 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl z-50 transform translate-x-full transition-transform duration-300 flex items-center gap-2">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMsg">操作成功</span>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let articles = [];
+    let currentEditingId = null;
+    let deletingArticleId = null;
+
+    // ===================== 页面初始化 =====================
+    document.addEventListener('DOMContentLoaded', () => {
+      loadArticles();
+      setupEventListeners();
+    });
+
+    function setupEventListeners() {
+      document.getElementById('refreshBtn').addEventListener('click', () => loadArticles());
+      document.getElementById('searchInput').addEventListener('input', filterArticles);
+      document.getElementById('addArticleBtn').addEventListener('click', () => switchToForm('add'));
+      document.getElementById('emptyAddBtn').addEventListener('click', () => switchToForm('add'));
+      document.getElementById('cancelBtn').addEventListener('click', () => switchToListView());
+      document.getElementById('articleForm').addEventListener('submit', handleFormSubmit);
+      document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+      document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+    }
+
+    // ===================== 标签切换 =====================
+    function switchToForm(mode) {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+      document.getElementById('add-article-view').classList.remove('hidden');
+      document.getElementById('pageTitle').textContent = mode === 'add' ? '添加文章' : '编辑文章';
+      if (mode === 'add') {
+        document.getElementById('articleForm').reset();
+        document.getElementById('articleId').value = '';
+        currentEditingId = null;
+      }
+    }
+
+    function switchToListView() {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+      document.getElementById('article-list-view').classList.remove('hidden');
+      loadArticles();
+    }
+
+    // ===================== 加载文章 =====================
+    async function loadArticles() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('articles')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        articles = data || [];
+        renderArticleTable(articles);
+        updateArticleCount();
+      } catch (err) {
+        console.error('加载文章失败：', err);
+        showToast('加载文章失败，请检查网络', 'error');
+      }
+    }
+
+    // ===================== 渲染文章表格 =====================
+    function renderArticleTable(data) {
+      const tbody = document.getElementById('articleTableBody');
+      const emptyState = document.getElementById('emptyState');
+
+      if (!data.length) {
+        tbody.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        document.getElementById('articleCount').textContent = '共 0 篇文章';
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      document.getElementById('articleCount').textContent = `共 ${data.length} 篇文章`;
+
+      tbody.innerHTML = data.map(article => `
+        <tr class="table-row">
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              ${article.cover_url ? `<img src="${article.cover_url}" class="w-10 h-10 rounded-lg object-cover" alt="">` : `<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><i class="fas fa-file-alt text-primary"></i></div>`}
+              <div>
+                <p class="font-medium text-secondary text-sm">${escapeHtml(article.title)}</p>
+                <p class="text-xs text-secondary/50 line-clamp-1 max-w-xs">${escapeHtml(article.excerpt || '')}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 text-sm text-secondary">${escapeHtml(article.author || '百鲸咨询')}</td>
+          <td class="px-6 py-4 text-sm text-secondary">${formatDate(article.created_at)}</td>
+          <td class="px-6 py-4">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${article.featured ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+              <i class="fas fa-${article.featured ? 'star' : 'minus'}"></i>
+              ${article.featured ? '精选' : '普通'}
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-1">
+              <button class="btn-edit text-sm" onclick="editArticle('${article.id}')">
+                <i class="fas fa-pen"></i>
+              </button>
+              <button class="btn-delete text-sm" onclick="openDeleteModal('${article.id}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterArticles() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = articles.filter(a => a.title.toLowerCase().includes(query) || (a.excerpt || '').toLowerCase().includes(query));
+      renderArticleTable(filtered);
+    }
+
+    function updateArticleCount() {
+      document.getElementById('articleCount').textContent = `共 ${articles.length} 篇文章`;
+    }
+
+    // ===================== 编辑文章 =====================
+    window.editArticle = async function(id) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('articles')
+          .select('*')
+          .eq('id', id)
+          .single();
+        if (error) throw error;
+
+        currentEditingId = id;
+        document.getElementById('articleId').value = id;
+        document.getElementById('articleTitle').value = data.title;
+        document.getElementById('articleAuthor').value = data.author || '百鲸咨询';
+        document.getElementById('articleFeatured').value = String(data.featured);
+        document.getElementById('articleExcerpt').value = data.excerpt || '';
+        document.getElementById('articleCoverUrl').value = data.cover_url || '';
+        document.getElementById('articleContent').value = data.content || '';
+
+        switchToForm('edit');
+      } catch (err) {
+        console.error('加载文章失败：', err);
+        showToast('加载文章失败', 'error');
+      }
+    };
+
+    // ===================== 表单提交 =====================
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('articleId').value;
+      const title = document.getElementById('articleTitle').value.trim();
+      const author = document.getElementById('articleAuthor').value.trim();
+      const featured = document.getElementById('articleFeatured').value === 'true';
+      const excerpt = document.getElementById('articleExcerpt').value.trim();
+      const coverUrl = document.getElementById('articleCoverUrl').value.trim();
+      const content = document.getElementById('articleContent').value.trim();
+
+      if (!title || !content) {
+        showToast('请填写标题和内容', 'error');
+        return;
+      }
+
+      try {
+        const articleData = { title, author, featured, excerpt, content };
+        if (coverUrl) articleData.cover_url = coverUrl;
+
+        if (id) {
+          await updateArticle(id, articleData);
+          showToast('文章更新成功');
+        } else {
+          await createArticle({ title, author, featured, excerpt, content });
+          showToast('文章创建成功');
+        }
+        switchToListView();
+      } catch (err) {
+        console.error('保存文章失败：', err);
+        showToast('保存文章失败，请检查网络', 'error');
+      }
+    }
+
+    // ===================== 删除文章 =====================
+    function openDeleteModal(id) {
+      deletingArticleId = id;
+      document.getElementById('deleteModal').classList.add('open');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').classList.remove('open');
+      deletingArticleId = null;
+    }
+
+    async function confirmDelete() {
+      if (!deletingArticleId) return;
+      try {
+        await deleteArticle(deletingArticleId);
+        showToast('文章删除成功');
+        closeDeleteModal();
+        loadArticles();
+      } catch (err) {
+        console.error('删除文章失败：', err);
+        showToast('删除文章失败', 'error');
+      }
+    }
+
+    // ===================== Supabase操作 =====================
+    async function createArticle(data) {
+      const { data: result, error } = await supabaseClient
+        .from('articles')
+        .insert([{ ...data, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }])
+        .select()
+        .single();
+      if (error) throw error;
+      return result;
+    }
+
+    async function updateArticle(id, data) {
+      const { data: result, error } = await supabaseClient
+        .from('articles')
+        .update({ ...data, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+      if (error) throw error;
+      return result;
+    }
+
+    async function deleteArticle(id) {
+      const { error } = await supabaseClient
+        .from('articles')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    }
+
+    // ===================== 辅助函数 =====================
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const date = new Date(dateStr);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.style.backgroundColor = type === 'success' ? '#22C0E0' : '#EF4444';
+      toast.classList.remove('translate-x-full');
+      setTimeout(() => toast.classList.add('translate-x-full'), 3000);
+    }
+  </script>
+</body>
+</html>

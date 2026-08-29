@@ -9,6 +9,86 @@ localforage.config({
   driver: [localforage.INDEXEDDB, localforage.LOCALSTORAGE] // 自动降级
 });
 
+// ===================== 文章管理函数 =====================
+
+async function fetchArticlesFromSupabase() {
+  try {
+    const { data, error } = await supabaseClient
+      .from('articles')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.error('获取文章失败：', err);
+    return [];
+  }
+}
+
+async function createArticle(articleData) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('articles')
+      .insert([{
+        ...articleData,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }])
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.error('创建文章失败：', err);
+    throw err;
+  }
+}
+
+async function updateArticle(id, articleData) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('articles')
+      .update({ ...articleData, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.error('更新文章失败：', err);
+    throw err;
+  }
+}
+
+async function deleteArticle(id) {
+  try {
+    const { error } = await supabaseClient
+      .from('articles')
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
+    return true;
+  } catch (err) {
+    console.error('删除文章失败：', err);
+    throw err;
+  }
+}
+
+async function fetchArticles(limit = 100) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('articles')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.error('获取文章列表失败：', err);
+    return [];
+  }
+}
+
 // 加载咨询师数据（优化版）
 async function loadAndRenderConsultantData() {
   try {
