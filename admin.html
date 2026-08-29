@@ -22,53 +22,37 @@
             neutral: '#E2E8F0',
             secondary: '#333333',
           },
-          fontFamily: {
-            sans: ['Noto Sans SC', 'system-ui', 'sans-serif'],
-          },
+          fontFamily: { sans: ['Noto Sans SC', 'system-ui', 'sans-serif'] },
+          boxShadow: {
+            'elevated': '0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.08)',
+          }
         }
       }
     }
   </script>
   <style>
-    body {
-      font-family: 'Noto Sans SC', sans-serif;
-      color: #333333;
-      background-color: #F4FAFF;
-    }
-    .sidebar-link {
-      @apply flex items-center gap-3 px-4 py-3 text-secondary/80 hover:text-primary hover:bg-primary/5 transition-all duration-200 rounded-lg;
-    }
-    .sidebar-link.active {
-      @apply bg-primary text-white font-semibold;
-    }
-    .btn-delete {
-      @apply text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-all;
-    }
-    .btn-edit {
-      @apply text-accent hover:text-hover p-2 rounded-lg transition-all;
-    }
-    .modal-overlay {
-      @apply fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden;
-    }
-    .modal-overlay.open {
-      @apply flex;
-    }
-    .form-input {
-      @apply w-full px-4 py-2.5 border border-neutral/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all;
-    }
-    .form-input:focus {
-      @apply border-primary ring-2 ring-primary/20;
-    }
-    .table-row {
-      @apply hover:bg-primary/5 transition-colors;
-    }
+    * { box-sizing: border-box; }
+    html, body { overflow-x: hidden; }
+    body { font-family: 'Noto Sans SC', sans-serif; color: #333; background: #F4FAFF; }
+    .sidebar-link { @apply flex items-center gap-3 px-4 py-3 text-secondary/80 hover:text-primary hover:bg-primary/5 transition-all rounded-lg; }
+    .sidebar-link.active { @apply bg-primary text-white font-semibold; }
+    .btn-delete { @apply text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-all; }
+    .btn-edit { @apply text-accent hover:text-hover p-2 rounded-lg transition-all; }
+    .form-input { @apply w-full px-4 py-2.5 border border-neutral/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all bg-white; }
+    .editor-toolbar button, .editor-toolbar select { @apply text-secondary hover:text-primary transition-colors; }
+    .editor:empty:before { content: attr(data-placeholder); color: #94a3b8; }
+    .modal-overlay { @apply fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4; }
+    .modal-overlay.open { @apply flex; }
+    .table-row { @apply hover:bg-primary/5 transition-colors; }
+    .toast { @apply fixed top-6 right-6 z-50 flex items-center gap-2 px-6 py-3 rounded-lg text-white shadow-xl transition-transform duration-300 translate-x-[150%]; }
+    .toast.show { @apply translate-x-0; }
   </style>
 </head>
 <body>
 
   <!-- ============ 登录视图 ============ -->
   <section id="authView" class="min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-elevated border border-neutral/20 p-8 w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-elevated border border-neutral/20 p-8 w-full max-w-md">
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
           <i class="fas fa-lock text-primary text-2xl"></i>
@@ -86,21 +70,18 @@
           <input type="password" id="loginPassword" required class="form-input" placeholder="••••••••">
         </div>
         <button type="submit" id="loginBtn" class="btn-primary w-full flex items-center justify-center gap-2">
-          <i class="fas fa-sign-in-alt"></i>
-          <span>登录</span>
+          <i class="fas fa-sign-in-alt"></i><span>登录</span>
         </button>
       </form>
       <p id="authError" class="text-red-500 text-sm mt-4 text-center hidden"></p>
-      <p class="text-xs text-secondary/40 text-center mt-6">
-        后台由 Supabase 提供认证与数据存储，登录后方可发布/修改/删除文章
-      </p>
+      <p class="text-xs text-secondary/40 text-center mt-6">后台由 Supabase 提供认证与数据存储，登录后方可发布 / 修改 / 删除文章</p>
     </div>
   </section>
 
   <!-- ============ 管理主界面 ============ -->
-  <div id="adminView" class="hidden flex min-h-screen">
+  <div id="adminView" class="hidden min-h-screen lg:flex">
     <!-- 侧边栏 -->
-    <aside class="w-64 bg-white min-h-screen border-r border-neutral/20 fixed top-0 left-0 z-40">
+    <aside class="w-64 bg-white h-screen border-r border-neutral/20 fixed top-0 left-0 z-40 flex flex-col">
       <div class="p-6 border-b border-neutral/20">
         <div class="flex items-center gap-3">
           <i class="fas fa-blog text-primary text-2xl"></i>
@@ -110,65 +91,49 @@
           </div>
         </div>
       </div>
-      <nav class="p-4 space-y-1">
-        <a href="#" class="sidebar-link active" data-tab="article-list">
-          <i class="fas fa-list w-5 text-center"></i>
-          <span>文章列表</span>
-        </a>
-        <a href="#" class="sidebar-link" data-tab="add-article">
-          <i class="fas fa-plus w-5 text-center"></i>
-          <span>添加文章</span>
-        </a>
-        <a href="../index.html" class="sidebar-link" target="_blank">
-          <i class="fas fa-home w-5 text-center"></i>
-          <span>查看首页</span>
-        </a>
+      <nav class="p-4 space-y-1 flex-1">
+        <a href="#" class="sidebar-link active" data-tab="article-list"><i class="fas fa-list w-5 text-center"></i><span>文章列表</span></a>
+        <a href="#" class="sidebar-link" data-tab="add-article"><i class="fas fa-plus w-5 text-center"></i><span>添加文章</span></a>
+        <a href="../index.html" class="sidebar-link" target="_blank"><i class="fas fa-home w-5 text-center"></i><span>查看首页</span></a>
       </nav>
-      <div class="absolute bottom-0 w-full p-4 border-t border-neutral/20">
+      <div class="p-4 border-t border-neutral/20">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-            <i class="fas fa-user text-primary"></i>
-          </div>
-          <div class="flex-1">
+          <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><i class="fas fa-user text-primary"></i></div>
+          <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold text-secondary truncate" id="adminEmail">管理员</p>
-            <button id="logoutBtn" class="text-xs text-secondary/50 hover:text-red-500 transition-colors">
-              <i class="fas fa-sign-out-alt"></i> 退出登录
-            </button>
+            <button id="logoutBtn" class="text-xs text-secondary/50 hover:text-red-500 transition-colors"><i class="fas fa-sign-out-alt"></i> 退出登录</button>
           </div>
         </div>
       </div>
     </aside>
 
     <!-- 主内容区 -->
-    <main class="flex-1 ml-64 p-8">
-      <div class="flex justify-between items-center mb-8">
+    <main class="flex-1 min-w-0 ml-0 lg:ml-64 p-4 sm:p-8">
+      <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
         <div>
           <h1 class="text-2xl md:text-3xl font-bold text-secondary" id="pageTitle">文章列表</h1>
           <p class="text-secondary/50 text-sm mt-1" id="pageSubtitle">管理您的精选文章，文章更新后前端自动同步</p>
         </div>
         <div class="flex items-center gap-3">
           <span id="articleCount" class="text-sm text-secondary/50">共 0 篇文章</span>
-          <button id="refreshBtn" class="text-secondary hover:text-primary p-2 rounded-lg hover:bg-primary/5 transition-colors" title="刷新">
-            <i class="fas fa-sync-alt"></i>
-          </button>
+          <button id="refreshBtn" class="text-secondary hover:text-primary p-2 rounded-lg hover:bg-primary/5 transition-colors" title="刷新"><i class="fas fa-sync-alt"></i></button>
         </div>
       </div>
 
-      <!-- 文章列表视图 -->
+      <!-- 文章列表 -->
       <section id="article-list-view" class="tab-view">
-        <div class="bg-white rounded-xl shadow-elevated border border-neutral/20 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-elevated border border-neutral/20 overflow-hidden">
           <div class="p-4 border-b border-neutral/20 flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center">
             <div class="relative w-full sm:w-64">
               <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-secondary/40"></i>
               <input type="text" id="searchInput" placeholder="搜索文章标题..." class="form-input pl-10 text-sm">
             </div>
             <button id="addArticleBtn" class="btn-primary text-sm flex items-center gap-2 whitespace-nowrap">
-              <i class="fas fa-plus"></i>
-              添加文章
+              <i class="fas fa-plus"></i> 添加文章
             </button>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full">
+            <table class="w-full min-w-[640px]">
               <thead class="bg-section">
                 <tr>
                   <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">标题</th>
@@ -179,29 +144,27 @@
                 </tr>
               </thead>
               <tbody id="articleTableBody" class="divide-y divide-neutral/10">
-                <tr>
-                  <td colspan="5" class="px-6 py-12 text-center text-secondary/50">
-                    <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
-                    <p>加载中...</p>
-                  </td>
-                </tr>
+                <tr><td colspan="5" class="px-6 py-12 text-center text-secondary/50"><i class="fas fa-spinner fa-spin text-2xl mb-3"></i><p>加载中...</p></td></tr>
               </tbody>
             </table>
           </div>
           <div id="emptyState" class="hidden py-16 text-center text-secondary/50">
             <i class="fas fa-newspaper text-4xl mb-4 text-secondary/30"></i>
             <p class="text-lg">暂无文章</p>
-            <button id="emptyAddBtn" class="mt-4 text-accent hover:text-hover font-semibold text-sm inline-flex items-center gap-1">
-              <i class="fas fa-plus"></i> 添加第一篇文章
-            </button>
+            <button id="emptyAddBtn" class="mt-4 text-accent hover:text-hover font-semibold text-sm inline-flex items-center gap-1"><i class="fas fa-plus"></i> 添加第一篇文章</button>
+          </div>
+          <div id="errorState" class="hidden py-16 text-center text-red-500">
+            <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
+            <p class="text-lg" id="errorMsg">加载失败</p>
+            <p class="text-sm text-secondary/50 mt-2">请确认已在 Supabase 执行 articles/schema.sql 建表</p>
           </div>
         </div>
       </section>
 
-      <!-- 添加/编辑文章视图 -->
+      <!-- 添加 / 编辑 -->
       <section id="add-article-view" class="tab-view hidden">
         <div class="max-w-3xl mx-auto">
-          <div class="bg-white rounded-xl shadow-elevated border border-neutral/20 p-6 md:p-8">
+          <div class="bg-white rounded-2xl shadow-elevated border border-neutral/20 p-6 md:p-8">
             <h2 id="formTitle" class="text-xl font-bold text-secondary mb-6">添加文章</h2>
             <form id="articleForm" class="space-y-5">
               <input type="hidden" id="articleId">
@@ -232,16 +195,37 @@
               </div>
               <div>
                 <label class="block text-sm font-semibold text-secondary mb-1.5">文章内容 <span class="text-red-500">*</span></label>
-                <textarea id="articleContent" required rows="8" class="form-input" placeholder="请输入文章内容..."></textarea>
+                <div class="border border-neutral/40 rounded-lg overflow-hidden">
+                  <div class="editor-toolbar flex flex-wrap items-center gap-1 px-3 py-2 bg-section border-b border-neutral/20">
+                    <select id="fontSize" class="text-sm bg-white border border-neutral/30 rounded px-2 py-1" title="字体大小">
+                      <option value="1">小</option>
+                      <option value="3" selected>常规</option>
+                      <option value="5">大</option>
+                      <option value="7">特大</option>
+                    </select>
+                    <span class="w-px h-5 bg-neutral/30 mx-1"></span>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="加粗" data-cmd="bold"><i class="fas fa-bold"></i></button>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="斜体" data-cmd="italic"><i class="fas fa-italic"></i></button>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="下划线" data-cmd="underline"><i class="fas fa-underline"></i></button>
+                    <span class="w-px h-5 bg-neutral/30 mx-1"></span>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="标题" data-cmd="h2"><i class="fas fa-heading"></i></button>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="无序列表" data-cmd="ul"><i class="fas fa-list-ul"></i></button>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="有序列表" data-cmd="ol"><i class="fas fa-list-ol"></i></button>
+                    <span class="w-px h-5 bg-neutral/30 mx-1"></span>
+                    <button type="button" id="insertImgBtn" class="px-2 py-1 rounded hover:bg-primary/5 text-accent" title="插入图片（自动压缩≤100k）"><i class="fas fa-image"></i> 图片</button>
+                    <input type="file" id="imgInput" accept="image/*" class="hidden">
+                  </div>
+                  <div id="articleContent" contenteditable="true" data-placeholder="请输入文章内容，可调整字体大小、插入图片..."
+                       class="editor min-h-[220px] max-h-[480px] overflow-y-auto p-4 text-sm leading-relaxed focus:outline-none prose max-w-none"></div>
+                </div>
+                <p class="text-xs text-secondary/40 mt-1">插入图片会自动压缩至 100KB 以内；正文以富文本保存。</p>
               </div>
               <div class="flex gap-3 pt-4">
                 <button type="submit" id="submitBtn" class="btn-primary flex-1 flex items-center justify-center gap-2">
-                  <i class="fas fa-save"></i>
-                  <span>保存文章</span>
+                  <i class="fas fa-save"></i><span>保存文章</span>
                 </button>
                 <button type="button" id="cancelBtn" class="btn-secondary flex items-center gap-2">
-                  <i class="fas fa-times"></i>
-                  <span>取消</span>
+                  <i class="fas fa-times"></i><span>取消</span>
                 </button>
               </div>
             </form>
@@ -251,30 +235,20 @@
 
       <!-- 删除确认弹窗 -->
       <div id="deleteModal" class="modal-overlay">
-        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
           <div class="flex items-center gap-4 mb-4">
-            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-              <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
-            </div>
+            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center"><i class="fas fa-exclamation-triangle text-red-500 text-xl"></i></div>
             <h3 class="text-lg font-bold text-secondary">确认删除</h3>
           </div>
           <p class="text-secondary/70 mb-6">确定要删除这篇文章吗？删除后前端将不再显示此文章，此操作不可撤销。</p>
           <div class="flex gap-3">
-            <button id="confirmDeleteBtn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-lg transition-colors">
-              确认删除
-            </button>
-            <button id="cancelDeleteBtn" class="flex-1 bg-neutral/20 hover:bg-neutral/30 text-secondary font-semibold py-2.5 rounded-lg transition-colors">
-              取消
-            </button>
+            <button id="confirmDeleteBtn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-lg transition-colors">确认删除</button>
+            <button id="cancelDeleteBtn" class="flex-1 bg-neutral/20 hover:bg-neutral/30 text-secondary font-semibold py-2.5 rounded-lg transition-colors">取消</button>
           </div>
         </div>
       </div>
 
-      <!-- Toast通知 -->
-      <div id="toast" class="fixed top-6 right-6 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl z-50 transform translate-x-full transition-transform duration-300 flex items-center gap-2">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMsg">操作成功</span>
-      </div>
+      <div id="toast" class="toast"><i class="fas fa-check-circle"></i><span id="toastMsg">操作成功</span></div>
     </main>
   </div>
 
@@ -286,32 +260,24 @@
     let articles = [];
     let currentEditingId = null;
     let deletingArticleId = null;
+    let listenersBound = false;
 
-    // ===================== 认证 =====================
     document.addEventListener('DOMContentLoaded', () => {
       setupAuthListeners();
       checkSession();
     });
 
+    // ===================== 认证 =====================
     async function checkSession() {
       const { data: { session } } = await supabaseClient.auth.getSession();
-      if (session) {
-        showAdminUI(session.user);
-      } else {
-        showAuthUI();
-      }
+      if (session) showAdminUI(session.user); else showAuthUI();
     }
 
     function setupAuthListeners() {
       document.getElementById('loginForm').addEventListener('submit', handleLogin);
       document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-
-      supabaseClient.auth.onAuthStateChange((_event, session) => {
-        if (session) {
-          showAdminUI(session.user);
-        } else {
-          showAuthUI();
-        }
+      supabaseClient.auth.onAuthStateChange((_e, session) => {
+        if (session) showAdminUI(session.user); else showAuthUI();
       });
     }
 
@@ -321,12 +287,8 @@
       const password = document.getElementById('loginPassword').value;
       const errEl = document.getElementById('authError');
       errEl.classList.add('hidden');
-
       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) {
-        errEl.textContent = '登录失败：' + error.message;
-        errEl.classList.remove('hidden');
-      }
+      if (error) { errEl.textContent = '登录失败：' + error.message; errEl.classList.remove('hidden'); }
     }
 
     async function handleLogout() {
@@ -343,31 +305,95 @@
       document.getElementById('authView').classList.add('hidden');
       document.getElementById('adminView').classList.remove('hidden');
       document.getElementById('adminEmail').textContent = user.email || '管理员';
-      // 侧边栏标签切换
-      document.querySelectorAll('.sidebar-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const tab = link.getAttribute('data-tab');
-          if (tab === 'add-article') switchToForm('add');
-        });
-      });
-      setupAdminListeners();
+      if (!listenersBound) { setupAdminListeners(); listenersBound = true; }
       loadArticles();
     }
 
-    // ===================== 页面初始化（登录后） =====================
+    // ===================== 后台事件 =====================
     function setupAdminListeners() {
-      document.getElementById('refreshBtn').addEventListener('click', () => loadArticles());
+      document.getElementById('refreshBtn').addEventListener('click', loadArticles);
       document.getElementById('searchInput').addEventListener('input', filterArticles);
       document.getElementById('addArticleBtn').addEventListener('click', () => switchToForm('add'));
       document.getElementById('emptyAddBtn').addEventListener('click', () => switchToForm('add'));
-      document.getElementById('cancelBtn').addEventListener('click', () => switchToListView());
+      document.getElementById('cancelBtn').addEventListener('click', switchToListView);
       document.getElementById('articleForm').addEventListener('submit', handleFormSubmit);
       document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
       document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+      document.getElementById('deleteModal').addEventListener('click', (e) => { if (e.target === document.getElementById('deleteModal')) closeDeleteModal(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDeleteModal(); });
+
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (link.getAttribute('data-tab') === 'add-article') switchToForm('add');
+        });
+      });
+
+      // 富文本工具栏
+      document.getElementById('fontSize').addEventListener('change', (e) => {
+        document.getElementById('articleContent').focus();
+        document.execCommand('fontSize', false, e.target.value);
+      });
+      document.querySelectorAll('.editor-toolbar button[data-cmd]').forEach(btn => {
+        btn.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          const cmd = btn.getAttribute('data-cmd');
+          document.getElementById('articleContent').focus();
+          if (cmd === 'h2') document.execCommand('formatBlock', false, 'h2');
+          else if (cmd === 'ul') document.execCommand('insertUnorderedList');
+          else if (cmd === 'ol') document.execCommand('insertOrderedList');
+          else document.execCommand(cmd);
+        });
+      });
+      document.getElementById('insertImgBtn').addEventListener('click', () => document.getElementById('imgInput').click());
+      document.getElementById('imgInput').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+          const dataUrl = await compressImageToDataUrl(file, 100);
+          document.getElementById('articleContent').focus();
+          document.execCommand('insertImage', false, dataUrl);
+        } catch (err) {
+          showToast('图片处理失败：' + err.message, 'error');
+        }
+        e.target.value = '';
+      });
     }
 
-    // ===================== 标签切换 =====================
+    // 图片压缩至 maxKB 以内（canvas 重绘 + 质量递减）
+    function compressImageToDataUrl(file, maxKB) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('读取失败'));
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onerror = () => reject(new Error('图片解析失败'));
+          img.onload = () => {
+            let { width, height } = img;
+            const maxDim = 1280;
+            if (width > maxDim || height > maxDim) {
+              const ratio = Math.min(maxDim / width, maxDim / height);
+              width = Math.floor(width * ratio);
+              height = Math.floor(height * ratio);
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width; canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            let quality = 0.92;
+            let dataUrl = canvas.toDataURL('image/jpeg', quality);
+            while (dataUrl.length > maxKB * 1024 && quality > 0.1) {
+              quality -= 0.08;
+              dataUrl = canvas.toDataURL('image/jpeg', quality);
+            }
+            resolve(dataUrl);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ===================== 视图切换 =====================
     function switchToForm(mode) {
       document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
       document.getElementById('add-article-view').classList.remove('hidden');
@@ -375,6 +401,7 @@
       if (mode === 'add') {
         document.getElementById('articleForm').reset();
         document.getElementById('articleId').value = '';
+        document.getElementById('articleContent').innerHTML = '';
         currentEditingId = null;
       }
     }
@@ -389,82 +416,70 @@
     async function loadArticles() {
       try {
         const { data, error } = await supabaseClient
-          .from('articles')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .from('articles').select('*').order('created_at', { ascending: false });
         if (error) throw error;
         articles = data || [];
         renderArticleTable(articles);
       } catch (err) {
         console.error('加载文章失败：', err);
-        showToast('加载文章失败，请检查网络', 'error');
+        const isMissing = (err.code === 'PGRST205') || (err.message && err.message.includes('articles'));
+        document.getElementById('articleTableBody').innerHTML = '';
+        document.getElementById('emptyState').classList.add('hidden');
+        const es = document.getElementById('errorState');
+        es.classList.remove('hidden');
+        document.getElementById('errorMsg').textContent = isMissing ? '文章表不存在' : ('加载失败：' + (err.message || '未知错误'));
       }
     }
 
-    // ===================== 渲染文章表格 =====================
     function renderArticleTable(data) {
+      document.getElementById('errorState').classList.add('hidden');
       const tbody = document.getElementById('articleTableBody');
       const emptyState = document.getElementById('emptyState');
-
       if (!data.length) {
         tbody.innerHTML = '';
         emptyState.classList.remove('hidden');
         document.getElementById('articleCount').textContent = '共 0 篇文章';
         return;
       }
-
       emptyState.classList.add('hidden');
       document.getElementById('articleCount').textContent = `共 ${data.length} 篇文章`;
-
-      tbody.innerHTML = data.map(article => `
+      tbody.innerHTML = data.map(a => `
         <tr class="table-row">
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
-              ${article.cover_url ? `<img src="${article.cover_url}" class="w-10 h-10 rounded-lg object-cover" alt="">` : `<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><i class="fas fa-file-alt text-primary"></i></div>`}
-              <div>
-                <p class="font-medium text-secondary text-sm">${escapeHtml(article.title)}</p>
-                <p class="text-xs text-secondary/50 line-clamp-1 max-w-xs">${escapeHtml(article.excerpt || '')}</p>
+              ${a.cover_url ? `<img src="${escapeHtml(a.cover_url)}" class="w-10 h-10 rounded-lg object-cover" alt="">` : `<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><i class="fas fa-file-alt text-primary"></i></div>`}
+              <div class="min-w-0">
+                <p class="font-medium text-secondary text-sm truncate">${escapeHtml(a.title)}</p>
+                <p class="text-xs text-secondary/50 truncate max-w-xs">${escapeHtml(a.excerpt || '')}</p>
               </div>
             </div>
           </td>
-          <td class="px-6 py-4 text-sm text-secondary">${escapeHtml(article.author || '百鲸咨询')}</td>
-          <td class="px-6 py-4 text-sm text-secondary">${formatDate(article.created_at)}</td>
+          <td class="px-6 py-4 text-sm text-secondary">${escapeHtml(a.author || '百鲸咨询')}</td>
+          <td class="px-6 py-4 text-sm text-secondary whitespace-nowrap">${formatDate(a.created_at)}</td>
           <td class="px-6 py-4">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${article.featured ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
-              <i class="fas fa-${article.featured ? 'star' : 'minus'}"></i>
-              ${article.featured ? '精选' : '普通'}
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${a.featured ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+              <i class="fas fa-${a.featured ? 'star' : 'minus'}"></i> ${a.featured ? '精选' : '普通'}
             </span>
           </td>
           <td class="px-6 py-4">
             <div class="flex items-center gap-1">
-              <button class="btn-edit text-sm" onclick="editArticle('${article.id}')">
-                <i class="fas fa-pen"></i>
-              </button>
-              <button class="btn-delete text-sm" onclick="openDeleteModal('${article.id}')">
-                <i class="fas fa-trash"></i>
-              </button>
+              <button class="btn-edit" onclick="editArticle('${a.id}')"><i class="fas fa-pen"></i></button>
+              <button class="btn-delete" onclick="openDeleteModal('${a.id}')"><i class="fas fa-trash"></i></button>
             </div>
           </td>
-        </tr>
-      `).join('');
+        </tr>`).join('');
     }
 
     function filterArticles() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = articles.filter(a => a.title.toLowerCase().includes(query) || (a.excerpt || '').toLowerCase().includes(query));
-      renderArticleTable(filtered);
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      renderArticleTable(articles.filter(a => a.title.toLowerCase().includes(q) || (a.excerpt || '').toLowerCase().includes(q)));
     }
 
-    // ===================== 编辑文章 =====================
+    // ===================== 编辑 =====================
     window.editArticle = async function(id) {
       try {
-        const { data, error } = await supabaseClient
-          .from('articles')
-          .select('*')
-          .eq('id', id)
-          .single();
+        const { data, error } = await supabaseClient.from('articles').select('*').eq('id', id).single();
         if (error) throw error;
-
         currentEditingId = id;
         document.getElementById('articleId').value = id;
         document.getElementById('articleTitle').value = data.title;
@@ -472,16 +487,15 @@
         document.getElementById('articleFeatured').value = String(data.featured);
         document.getElementById('articleExcerpt').value = data.excerpt || '';
         document.getElementById('articleCoverUrl').value = data.cover_url || '';
-        document.getElementById('articleContent').value = data.content || '';
-
+        document.getElementById('articleContent').innerHTML = data.content || '';
         switchToForm('edit');
       } catch (err) {
-        console.error('加载文章失败：', err);
+        console.error(err);
         showToast('加载文章失败', 'error');
       }
     };
 
-    // ===================== 表单提交 =====================
+    // ===================== 提交 =====================
     async function handleFormSubmit(e) {
       e.preventDefault();
       const id = document.getElementById('articleId').value;
@@ -490,42 +504,29 @@
       const featured = document.getElementById('articleFeatured').value === 'true';
       const excerpt = document.getElementById('articleExcerpt').value.trim();
       const coverUrl = document.getElementById('articleCoverUrl').value.trim();
-      const content = document.getElementById('articleContent').value.trim();
-
-      if (!title || !content) {
-        showToast('请填写标题和内容', 'error');
-        return;
-      }
-
+      const content = document.getElementById('articleContent').innerHTML.trim();
+      if (!title || !content) { showToast('请填写标题和内容', 'error'); return; }
+      const articleData = { title, author, featured, excerpt, content };
+      if (coverUrl) articleData.cover_url = coverUrl;
       try {
-        const articleData = { title, author, featured, excerpt, content };
-        if (coverUrl) articleData.cover_url = coverUrl;
-
-        if (id) {
-          await updateArticle(id, articleData);
-          showToast('文章更新成功');
-        } else {
-          await createArticle({ title, author, featured, excerpt, content });
-          showToast('文章创建成功');
-        }
+        if (id) { await updateArticle(id, articleData); showToast('文章更新成功'); }
+        else { await createArticle(articleData); showToast('文章创建成功'); }
         switchToListView();
       } catch (err) {
-        console.error('保存文章失败：', err);
-        showToast('保存文章失败，请检查网络', 'error');
+        console.error(err);
+        showToast('保存失败：' + (err.message || ''), 'error');
       }
     }
 
-    // ===================== 删除文章 =====================
+    // ===================== 删除 =====================
     function openDeleteModal(id) {
       deletingArticleId = id;
       document.getElementById('deleteModal').classList.add('open');
     }
-
     function closeDeleteModal() {
       document.getElementById('deleteModal').classList.remove('open');
       deletingArticleId = null;
     }
-
     async function confirmDelete() {
       if (!deletingArticleId) return;
       try {
@@ -534,64 +535,36 @@
         closeDeleteModal();
         loadArticles();
       } catch (err) {
-        console.error('删除文章失败：', err);
-        showToast('删除文章失败', 'error');
+        console.error(err);
+        showToast('删除失败：' + (err.message || ''), 'error');
       }
     }
 
-    // ===================== Supabase操作 =====================
+    // ===================== Supabase =====================
     async function createArticle(data) {
-      const { data: result, error } = await supabaseClient
-        .from('articles')
-        .insert([{ ...data, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }])
-        .select()
-        .single();
+      const { error } = await supabaseClient.from('articles').insert([{ ...data, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }]).select().single();
       if (error) throw error;
-      return result;
     }
-
     async function updateArticle(id, data) {
-      const { data: result, error } = await supabaseClient
-        .from('articles')
-        .update({ ...data, updated_at: new Date().toISOString() })
-        .eq('id', id)
-        .select()
-        .single();
+      const { error } = await supabaseClient.from('articles').update({ ...data, updated_at: new Date().toISOString() }).eq('id', id).select().single();
       if (error) throw error;
-      return result;
     }
-
     async function deleteArticle(id) {
-      const { error } = await supabaseClient
-        .from('articles')
-        .delete()
-        .eq('id', id);
+      const { error } = await supabaseClient.from('articles').delete().eq('id', id);
       if (error) throw error;
     }
 
-    // ===================== 辅助函数 =====================
-    function formatDate(dateStr) {
-      if (!dateStr) return '-';
-      const date = new Date(dateStr);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
-    }
-
+    // ===================== 工具 =====================
+    function formatDate(s) { if (!s) return '-'; const d = new Date(s); const p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+    function escapeHtml(str) { if (!str) return ''; const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+    let toastTimer;
     function showToast(msg, type = 'success') {
-      const toast = document.getElementById('toast');
+      const t = document.getElementById('toast');
       document.getElementById('toastMsg').textContent = msg;
-      toast.style.backgroundColor = type === 'success' ? '#22C0E0' : '#EF4444';
-      toast.classList.remove('translate-x-full');
-      setTimeout(() => toast.classList.add('translate-x-full'), 3000);
+      t.style.backgroundColor = type === 'success' ? '#22C0E0' : '#EF4444';
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
     }
   </script>
 </body>
