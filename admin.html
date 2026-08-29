@@ -165,6 +165,19 @@
                 </div>
               </div>
               <div>
+                <label class="block text-sm font-semibold text-secondary mb-1.5">封面图片（列表缩略图，自动压缩 ≤100k）</label>
+                <div class="flex items-center gap-4">
+                  <img id="coverPreview" class="w-20 h-20 rounded-lg object-cover border border-neutral/30 hidden" alt="封面预览">
+                  <div class="flex flex-col gap-2">
+                    <input type="file" id="coverInput" accept="image/*" class="hidden">
+                    <div class="flex items-center gap-2">
+                      <button type="button" id="coverBtn" class="btn-secondary text-sm"><i class="fas fa-image mr-1"></i>选择封面图片</button>
+                      <button type="button" id="coverRemoveBtn" class="text-sm text-red-500 hover:underline hidden">移除</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
                 <label class="block text-sm font-semibold text-secondary mb-1.5">摘要</label>
                 <textarea id="articleExcerpt" rows="2" class="form-input w-full" placeholder="简要描述文章内容"></textarea>
               </div>
@@ -235,6 +248,7 @@
     let articles = [];
     let currentEditingId = null;
     let deletingArticleId = null;
+    let currentCoverUrl = null;
     let listenersBound = false;
 
     document.addEventListener('DOMContentLoaded', () => { setupAuthListeners(); checkSession(); });
@@ -314,6 +328,24 @@
         } catch (err) { showToast('图片处理失败：' + err.message, 'error'); }
         e.target.value = '';
       });
+      document.getElementById('coverBtn').addEventListener('click', () => document.getElementById('coverInput').click());
+      document.getElementById('coverInput').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+          currentCoverUrl = await compressImageToDataUrl(file, 100);
+          const prev = document.getElementById('coverPreview');
+          prev.src = currentCoverUrl; prev.classList.remove('hidden');
+          document.getElementById('coverRemoveBtn').classList.remove('hidden');
+        } catch (err) { showToast('封面处理失败：' + err.message, 'error'); }
+        e.target.value = '';
+      });
+      document.getElementById('coverRemoveBtn').addEventListener('click', () => {
+        currentCoverUrl = null;
+        const prev = document.getElementById('coverPreview');
+        prev.src = ''; prev.classList.add('hidden');
+        document.getElementById('coverRemoveBtn').classList.add('hidden');
+      });
     }
 
     function compressImageToDataUrl(file, maxKB) {
@@ -355,6 +387,10 @@
         document.getElementById('articleForm').reset();
         document.getElementById('articleId').value = '';
         document.getElementById('articleContent').innerHTML = '';
+        currentCoverUrl = null;
+        const prev = document.getElementById('coverPreview');
+        if (prev) { prev.src = ''; prev.classList.add('hidden'); }
+        document.getElementById('coverRemoveBtn').classList.add('hidden');
         currentEditingId = null;
       }
     }
@@ -435,6 +471,10 @@
         document.getElementById('articleFeatured').value = String(data.featured);
         document.getElementById('articleExcerpt').value = data.excerpt || '';
         document.getElementById('articleContent').innerHTML = data.content || '';
+        currentCoverUrl = data.cover_url || null;
+        const prev = document.getElementById('coverPreview');
+        if (currentCoverUrl) { prev.src = currentCoverUrl; prev.classList.remove('hidden'); document.getElementById('coverRemoveBtn').classList.remove('hidden'); }
+        else { prev.src = ''; prev.classList.add('hidden'); document.getElementById('coverRemoveBtn').classList.add('hidden'); }
         switchToForm('edit');
       } catch (err) { console.error(err); showToast('加载文章失败', 'error'); }
     };
@@ -450,6 +490,7 @@
       const content = document.getElementById('articleContent').innerHTML.trim();
       if (!title || !content) { showToast('请填写标题和内容', 'error'); return; }
       const articleData = { title, author, featured, excerpt, content };
+      if (currentCoverUrl) articleData.cover_url = currentCoverUrl;
       try {
         if (id) { await updateArticle(id, articleData); showToast('文章更新成功'); }
         else { await createArticle(articleData); showToast('文章创建成功'); }
