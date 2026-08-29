@@ -10,6 +10,8 @@ localforage.config({
 });
 
 // ===================== 文章管理函数 =====================
+const SUPABASE_URL = 'https://mxtxwjprmfstbheiempi.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
 
 async function fetchArticlesFromSupabase() {
   try {

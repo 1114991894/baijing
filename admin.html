@@ -65,7 +65,40 @@
   </style>
 </head>
 <body>
-  <div class="flex min-h-screen">
+
+  <!-- ============ 登录视图 ============ -->
+  <section id="authView" class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-elevated border border-neutral/20 p-8 w-full max-w-md">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
+          <i class="fas fa-lock text-primary text-2xl"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-secondary">文章管理后台</h1>
+        <p class="text-sm text-secondary/50 mt-2">请登录以管理精选文章</p>
+      </div>
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-secondary mb-1.5">邮箱</label>
+          <input type="email" id="loginEmail" required class="form-input" placeholder="admin@baijing.com">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-secondary mb-1.5">密码</label>
+          <input type="password" id="loginPassword" required class="form-input" placeholder="••••••••">
+        </div>
+        <button type="submit" id="loginBtn" class="btn-primary w-full flex items-center justify-center gap-2">
+          <i class="fas fa-sign-in-alt"></i>
+          <span>登录</span>
+        </button>
+      </form>
+      <p id="authError" class="text-red-500 text-sm mt-4 text-center hidden"></p>
+      <p class="text-xs text-secondary/40 text-center mt-6">
+        后台由 Supabase 提供认证与数据存储，登录后方可发布/修改/删除文章
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 管理主界面 ============ -->
+  <div id="adminView" class="hidden flex min-h-screen">
     <!-- 侧边栏 -->
     <aside class="w-64 bg-white min-h-screen border-r border-neutral/20 fixed top-0 left-0 z-40">
       <div class="p-6 border-b border-neutral/20">
@@ -96,9 +129,11 @@
           <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
             <i class="fas fa-user text-primary"></i>
           </div>
-          <div>
-            <p class="text-sm font-semibold text-secondary">管理员</p>
-            <p class="text-xs text-secondary/50">baijing@admin.com</p>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-secondary truncate" id="adminEmail">管理员</p>
+            <button id="logoutBtn" class="text-xs text-secondary/50 hover:text-red-500 transition-colors">
+              <i class="fas fa-sign-out-alt"></i> 退出登录
+            </button>
           </div>
         </div>
       </div>
@@ -106,7 +141,6 @@
 
     <!-- 主内容区 -->
     <main class="flex-1 ml-64 p-8">
-      <!-- 顶部栏 -->
       <div class="flex justify-between items-center mb-8">
         <div>
           <h1 class="text-2xl md:text-3xl font-bold text-secondary" id="pageTitle">文章列表</h1>
@@ -245,21 +279,84 @@
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+    const SUPABASE_URL = 'https://mxtxwjprmfstbheiempi.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let articles = [];
     let currentEditingId = null;
     let deletingArticleId = null;
 
-    // ===================== 页面初始化 =====================
+    // ===================== 认证 =====================
     document.addEventListener('DOMContentLoaded', () => {
-      loadArticles();
-      setupEventListeners();
+      setupAuthListeners();
+      checkSession();
     });
 
-    function setupEventListeners() {
+    async function checkSession() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        showAdminUI(session.user);
+      } else {
+        showAuthUI();
+      }
+    }
+
+    function setupAuthListeners() {
+      document.getElementById('loginForm').addEventListener('submit', handleLogin);
+      document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+      supabaseClient.auth.onAuthStateChange((_event, session) => {
+        if (session) {
+          showAdminUI(session.user);
+        } else {
+          showAuthUI();
+        }
+      });
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errEl = document.getElementById('authError');
+      errEl.classList.add('hidden');
+
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) {
+        errEl.textContent = '登录失败：' + error.message;
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    async function handleLogout() {
+      await supabaseClient.auth.signOut();
+      showAuthUI();
+    }
+
+    function showAuthUI() {
+      document.getElementById('authView').classList.remove('hidden');
+      document.getElementById('adminView').classList.add('hidden');
+    }
+
+    function showAdminUI(user) {
+      document.getElementById('authView').classList.add('hidden');
+      document.getElementById('adminView').classList.remove('hidden');
+      document.getElementById('adminEmail').textContent = user.email || '管理员';
+      // 侧边栏标签切换
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const tab = link.getAttribute('data-tab');
+          if (tab === 'add-article') switchToForm('add');
+        });
+      });
+      setupAdminListeners();
+      loadArticles();
+    }
+
+    // ===================== 页面初始化（登录后） =====================
+    function setupAdminListeners() {
       document.getElementById('refreshBtn').addEventListener('click', () => loadArticles());
       document.getElementById('searchInput').addEventListener('input', filterArticles);
       document.getElementById('addArticleBtn').addEventListener('click', () => switchToForm('add'));
@@ -298,7 +395,6 @@
         if (error) throw error;
         articles = data || [];
         renderArticleTable(articles);
-        updateArticleCount();
       } catch (err) {
         console.error('加载文章失败：', err);
         showToast('加载文章失败，请检查网络', 'error');
@@ -357,10 +453,6 @@
       const query = document.getElementById('searchInput').value.toLowerCase();
       const filtered = articles.filter(a => a.title.toLowerCase().includes(query) || (a.excerpt || '').toLowerCase().includes(query));
       renderArticleTable(filtered);
-    }
-
-    function updateArticleCount() {
-      document.getElementById('articleCount').textContent = `共 ${articles.length} 篇文章`;
     }
 
     // ===================== 编辑文章 =====================
