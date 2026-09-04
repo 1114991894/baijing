@@ -14,3 +14,7 @@ __pycache__/
 
 # WorkBuddy local data
 .workbuddy/
+
+# Local tool caches (do not track)
+.codegraph/
+.omo/

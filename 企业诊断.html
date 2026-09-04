@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>免费企业诊断 - 百鲸咨询 | 3个数字秒懂企业现状</title>
+  <meta name="description" content="输入人数、业绩、成本三个数据，免费生成AI企业诊断报告，帮你快速定位经营问题。数据不会保存，已脱敏处理。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #083E78;
+      --primary-deep: #062451;
+      --accent: #28B8A0;
+      --hover: #22C0E0;
+      --dark: #0F172A;
+      --warn: #FF8A5B;
+      --text: #333333;
+      --muted: #64748B;
+      --line: #E2E8F0;
+      --card: #FFFFFF;
+      --bg: #F4FAFF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans SC', system-ui, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* 顶栏 */
+    header {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .nav-inner {
+      max-width: 1120px; margin: 0 auto; padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 22px; color: var(--primary-deep); }
+    .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+    .back { font-size: 15px; color: var(--primary); font-weight: 500; }
+    .back:hover { color: var(--hover); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #062451 0%, #083E78 50%, #0a4d92 100%);
+      color: #fff; text-align: center; padding: 64px 24px 72px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 40%, rgba(40,184,160,0.18), transparent 55%);
+    }
+    .hero .badge {
+      display: inline-block; padding: 8px 20px; border-radius: 999px;
+      border: 1px solid rgba(40,184,160,0.8); color: var(--accent);
+      font-size: 14px; letter-spacing: 2px; margin-bottom: 20px;
+      background: rgba(40,184,160,0.12); position: relative;
+    }
+    .hero h1 { font-size: 42px; font-weight: 900; letter-spacing: 1px; position: relative; }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero p { margin-top: 16px; font-size: 17px; color: rgba(255,255,255,0.78); position: relative; }
+    .hero .chips { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; position: relative; }
+    .hero .chips span {
+      font-size: 13px; color: #FFC9A8; border: 1px solid rgba(255,138,91,0.5);
+      padding: 6px 14px; border-radius: 999px;
+    }
+
+    /* 主体 */
+    main { max-width: 1120px; margin: -36px auto 60px; padding: 0 24px; }
+    .grid { display: grid; grid-template-columns: 380px 1fr; gap: 28px; align-items: start; }
+
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+      box-shadow: 0 10px 25px -8px rgba(2,36,81,0.10); padding: 28px;
+    }
+
+    /* 输入区 */
+    .form-title { font-size: 20px; font-weight: 700; color: var(--primary-deep); margin-bottom: 6px; }
+    .form-sub { font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+    .field .wrap { position: relative; }
+    .field input, .field select {
+      width: 100%; padding: 13px 14px 13px 40px; border: 1px solid var(--line);
+      border-radius: 10px; font-size: 16px; font-family: inherit; color: var(--text);
+      background: #F8FAFC; transition: border-color .2s, box-shadow .2s;
+    }
+    .field input:focus, .field select:focus {
+      outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(40,184,160,0.15); background: #fff;
+    }
+    .field .wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 15px; }
+    .field .unit { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 13px; }
+    .privacy {
+      display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted);
+      background: #F0FBF8; border: 1px dashed #B7E8DE; border-radius: 8px; padding: 10px 12px; margin-bottom: 18px;
+    }
+    .privacy svg { flex: none; }
+    .btn {
+      width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer;
+      background: linear-gradient(90deg, #28B8A0, #22C0E0); color: #062451;
+      font-size: 17px; font-weight: 700; font-family: inherit; letter-spacing: 1px;
+      transition: transform .15s, box-shadow .2s;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 24px -8px rgba(40,184,160,0.5); }
+    .btn:active { transform: translateY(0); }
+    .sample-btn { margin-top: 12px; width: 100%; background: none; border: none; cursor: pointer; color: var(--primary); font-size: 13px; font-family: inherit; }
+    .sample-btn:hover { color: var(--hover); text-decoration: underline; }
+
+    /* 结果区 */
+    #result { display: none; }
+    #result.show { display: block; }
+    .result-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .result-head h2 { font-size: 20px; font-weight: 700; color: var(--primary-deep); }
+    .result-head .ai-tag { font-size: 12px; color: var(--accent); background: rgba(40,184,160,0.12); padding: 4px 10px; border-radius: 999px; font-weight: 500; }
+    .result-meta { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+    .score-box {
+      background: linear-gradient(135deg, #062451, #083E78); color: #fff; border-radius: 14px;
+      padding: 22px; margin-bottom: 20px;
+    }
+    .score-box .label { font-size: 13px; color: rgba(255,255,255,0.7); letter-spacing: 1px; }
+    .score-box .score-row { display: flex; align-items: baseline; gap: 8px; margin-top: 6px; }
+    .score-box .num { font-size: 52px; font-weight: 900; color: var(--accent); line-height: 1; }
+    .score-box .unit { font-size: 18px; color: var(--hover); }
+    .score-box .verdict { margin-top: 8px; font-size: 15px; color: #FFC9A8; }
+
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+    .metric { background: #F8FAFC; border: 1px solid var(--line); border-radius: 12px; padding: 16px; text-align: center; }
+    .metric .m-name { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .metric .m-val { font-size: 24px; font-weight: 900; color: var(--primary-deep); }
+    .metric .m-tag { font-size: 12px; margin-top: 4px; }
+    .good { color: var(--accent); } .warn { color: #F59E0B; } .bad { color: var(--warn); }
+
+    .section-title { font-size: 16px; font-weight: 700; color: var(--primary-deep); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .section-title::before { content: ""; width: 4px; height: 16px; background: var(--accent); border-radius: 2px; }
+    .conclusion { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 20px; }
+    .advice { list-style: none; margin-bottom: 22px; }
+    .advice li {
+      position: relative; padding: 13px 14px 13px 44px; background: #F8FAFC;
+      border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px; font-size: 14.5px; line-height: 1.7;
+    }
+    .advice li .no {
+      position: absolute; left: 12px; top: 13px; width: 22px; height: 22px; border-radius: 50%;
+      background: var(--accent); color: #fff; font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .cta-box { background: linear-gradient(135deg, #F0FBF8, #EAF7FF); border: 1px solid #C9EEE4; border-radius: 14px; padding: 22px; text-align: center; }
+    .cta-box h3 { font-size: 18px; color: var(--primary-deep); margin-bottom: 6px; }
+    .cta-box p { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+    .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .cta-actions a {
+      display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 10px;
+      font-size: 15px; font-weight: 700;
+    }
+    .cta-phone { background: var(--primary); color: #fff; }
+    .cta-wechat { background: #fff; color: var(--primary); border: 1px solid var(--line); }
+    .cta-phone:hover { background: var(--primary-deep); }
+    .cta-wechat:hover { border-color: var(--accent); color: var(--hover); }
+
+    /* 右侧说明卡 */
+    .side-note { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 26px; box-shadow: 0 10px 25px -8px rgba(2,36,81,0.08); }
+    .side-note h3 { font-size: 16px; font-weight: 700; color: var(--primary-deep); margin-bottom: 16px; }
+    .side-note .steps { list-style: none; }
+    .side-note .steps li { display: flex; gap: 12px; margin-bottom: 16px; font-size: 14px; color: var(--text); }
+    .side-note .steps .n { flex: none; width: 24px; height: 24px; border-radius: 50%; background: rgba(40,184,160,0.15); color: var(--accent); font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+    .side-note .tip { margin-top: 6px; padding: 14px; background: #FFF8F0; border-radius: 10px; font-size: 13px; color: #B45309; line-height: 1.7; }
+
+    footer { background: var(--dark); color: rgba(255,255,255,0.6); text-align: center; padding: 28px 20px; font-size: 13px; line-height: 2; }
+    footer a { color: var(--accent); }
+
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .hero h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-inner">
+      <div class="brand"><span class="dot"></span>百鲸咨询</div>
+      <a class="back" href="index.html">← 返回首页</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="badge">免费 · 企业健康自测</span>
+    <h1>你的企业，<em>卡在哪一步？</em></h1>
+    <p>只需 3 个数字，30 秒生成一份 AI 企业诊断报告</p>
+    <div class="chips">
+      <span>成本居高不下</span><span>团队效率低下</span><span>员工相互推责</span>
+      <span>人才流失严重</span><span>战略方向模糊</span><span>利润增长乏力</span>
+    </div>
+  </section>
+
+  <main>
+    <div class="grid">
+      <!-- 左侧：输入 + 结果 -->
+      <div>
+        <div class="card" id="formCard">
+          <div class="form-title">填写企业数据</div>
+          <div class="form-sub">数字越准确，诊断越精准</div>
+
+          <div class="field">
+            <label>员工人数（人）</label>
+            <div class="wrap">
+              <i>👥</i>
+              <input type="number" id="people" placeholder="例如：120" min="1">
+              <span class="unit">人</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>年营业收入（万元）</label>
+            <div class="wrap">
+              <i>💰</i>
+              <input type="number" id="revenue" placeholder="例如：3000" min="1">
+              <span class="unit">万元</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>年总成本（万元）</label>
+            <div class="wrap">
+              <i>📊</i>
+              <input type="number" id="cost" placeholder="例如：2400" min="1">
+              <span class="unit">万元</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>所属行业（可选）</label>
+            <div class="wrap">
+              <i>🏭</i>
+              <select id="industry">
+                <option value="制造业">制造业</option>
+                <option value="服务业">服务业</option>
+                <option value="零售电商">零售电商</option>
+                <option value="科技互联网">科技互联网</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="privacy">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#28B8A0" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            数据不会保存，已脱敏处理
+          </div>
+
+          <button class="btn" id="genBtn">生成 AI 诊断报告 →</button>
+          <button class="sample-btn" id="sampleBtn">试试示例数据</button>
+        </div>
+
+        <!-- 结果 -->
+        <div class="card" id="result" style="margin-top: 28px;">
+          <div class="result-head">
+            <h2>AI 诊断报告</h2>
+            <span class="ai-tag">AI 自动生成</span>
+          </div>
+          <div class="result-meta" id="resultMeta"></div>
+
+          <div class="score-box">
+            <div class="label">综合健康度</div>
+            <div class="score-row">
+              <span class="num" id="scoreNum">--</span>
+              <span class="unit">分</span>
+            </div>
+            <div class="verdict" id="scoreVerdict"></div>
+          </div>
+
+          <div class="metrics" id="metrics"></div>
+
+          <div class="section-title">诊断结论</div>
+          <p class="conclusion" id="conclusion"></p>
+
+          <div class="section-title">改善建议</div>
+          <ul class="advice" id="advice"></ul>
+
+          <div class="cta-box">
+            <h3>想要一份定制化的改善方案？</h3>
+            <p>联系咨询师，获取针对你企业的专属诊断与陪跑方案</p>
+            <div class="cta-actions">
+              <a class="cta-phone" href="tel:15158195310">📞 15158195310</a>
+              <a class="cta-wechat" href="#contact">💬 添加微信咨询</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧说明 -->
+      <div>
+        <div class="side-note">
+          <h3>诊断流程</h3>
+          <ul class="steps">
+            <li><span class="n">1</span><span>填写人数、业绩、成本三个基础数据</span></li>
+            <li><span class="n">2</span><span>AI 自动分析人均产值、成本率等关键指标</span></li>
+            <li><span class="n">3</span><span>生成诊断结论与改善建议，定位经营短板</span></li>
+            <li><span class="n">4</span><span>联系咨询师，获取定制化陪跑方案</span></li>
+          </ul>
+          <div class="tip">
+            💡 <b>小提示：</b>人均产值、成本率、人效是衡量企业健康度的三大核心指标，AI 将围绕它们为你自动分析。
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 百鲸咨询 版权所有 · 数据仅用于本次诊断，不会保存或上传<br>
+    <a href="https://beian.miit.gov.cn" target="_blank">浙ICP备2023042992号</a>
+  </footer>
+
+  <script>
+    const peopleEl = document.getElementById('people');
+    const revenueEl = document.getElementById('revenue');
+    const costEl = document.getElementById('cost');
+    const industryEl = document.getElementById('industry');
+    const resultEl = document.getElementById('result');
+
+    function fmt(n) { return Math.round(n).toLocaleString('zh-CN'); }
+
+    function tag(level) {
+      if (level === 'good') return '<span class="m-tag good">良好</span>';
+      if (level === 'warn') return '<span class="m-tag warn">一般</span>';
+      return '<span class="m-tag bad">偏低</span>';
+    }
+    function costTag(level) {
+      if (level === 'good') return '<span class="m-tag good">健康</span>';
+      if (level === 'warn') return '<span class="m-tag warn">偏高</span>';
+      return '<span class="m-tag bad">过高</span>';
+    }
+
+    function generate() {
+      const n = parseFloat(peopleEl.value);
+      const rev = parseFloat(revenueEl.value);
+      const cost = parseFloat(costEl.value);
+      if (!n || !rev || !cost) {
+        alert('请完整填写人数、业绩、成本三个数据');
+        return;
+      }
+
+      const perCap = rev / n;             // 人均产值（万元/人）
+      const costRate = (cost / rev) * 100; // 成本率 %
+      const perCapCost = cost / n;        // 人均成本（万元/人）
+
+      // 等级判定
+      let capLevel, costLevel, effLevel;
+      if (perCap >= 60) capLevel = 'good'; else if (perCap >= 40) capLevel = 'warn'; else capLevel = 'bad';
+      if (costRate < 55) costLevel = 'good'; else if (costRate <= 70) costLevel = 'warn'; else costLevel = 'bad';
+      const profitRate = 100 - costRate;
+      if (profitRate >= 25) effLevel = 'good'; else if (profitRate >= 12) effLevel = 'warn'; else effLevel = 'bad';
+
+      // 综合健康度（简单加权）
+      let score = 0;
+      score += capLevel === 'good' ? 40 : capLevel === 'warn' ? 26 : 12;
+      score += costLevel === 'good' ? 35 : costLevel === 'warn' ? 22 : 8;
+      score += effLevel === 'good' ? 25 : effLevel === 'warn' ? 16 : 6;
+      score = Math.max(10, Math.min(100, Math.round(score)));
+
+      const industry = industryEl.value;
+      const verdict = score >= 75 ? '整体健康，建议聚焦规模化增长'
+        : score >= 50 ? '存在明显短板，需针对性改善'
+        : '经营承压较重，建议尽快系统梳理';
+
+      // 指标卡片
+      const capTag = capLevel === 'good' ? tag('good') : capLevel === 'warn' ? tag('warn') : tag('bad');
+      const cTag = costLevel === 'good' ? costTag('good') : costLevel === 'warn' ? costTag('warn') : costTag('bad');
+      const eTag = effLevel === 'good' ? tag('good') : effLevel === 'warn' ? tag('warn') : tag('bad');
+
+      document.getElementById('metrics').innerHTML = `
+        <div class="metric">
+          <div class="m-name">人均产值</div>
+          <div class="m-val">${fmt(perCap)}</div>
+          <div class="m-sub" style="font-size:12px;color:#94A3B8;">万元/人/年</div>
+          ${capTag}
+        </div>
+        <div class="metric">
+          <div class="m-name">成本率</div>
+          <div class="m-val">${costRate.toFixed(1)}%</div>
+          <div class="m-sub" style="font-size:12px;color:#94A3B8;">成本 / 营收</div>
+          ${cTag}
+        </div>
+        <div class="metric">
+          <div class="m-name">利润率</div>
+          <div class="m-val">${profitRate.toFixed(1)}%</div>
+          <div class="m-sub" style="font-size:12px;color:#94A3B8;">营收 - 成本</div>
+          ${eTag}
+        </div>
+      `;
+
+      // 结论
+      const conclusionParts = [];
+      if (capLevel === 'bad') conclusionParts.push(`人均产值约 ${fmt(perCap)} 万元，明显低于 ${industry} 行业健康水平，说明组织人效偏低，可能存在人浮于事、流程冗余或员工缺乏目标牵引。`);
+      else if (capLevel === 'warn') conclusionParts.push(`人均产值约 ${fmt(perCap)} 万元，处于行业中等水平，尚有提升空间。`);
+      else conclusionParts.push(`人均产值约 ${fmt(perCap)} 万元，表现良好，人效健康。`);
+
+      if (costLevel === 'bad') conclusionParts.push(`成本率高达 ${costRate.toFixed(1)}%，吞噬了大量利润，是当前最突出的经营风险。`);
+      else if (costLevel === 'warn') conclusionParts.push(`成本率 ${costRate.toFixed(1)}% 偏高，需关注成本结构与费用管控。`);
+      else conclusionParts.push(`成本率 ${costRate.toFixed(1)}% 控制得较好。`);
+
+      conclusionParts.push(`综合来看，企业当前净利润率约 ${profitRate.toFixed(1)}%，${verdict}。`);
+      document.getElementById('conclusion').textContent = conclusionParts.join('');
+
+      // 建议
+      const advices = [];
+      if (capLevel !== 'good') advices.push(`提升人效：梳理岗位职责与流程，建立以结果为导向的绩效考核，让每个岗位都有清晰的产出目标。`);
+      if (costLevel !== 'good') advices.push(`优化成本：盘点成本结构，识别高耗低效环节，通过精益管理与数字化手段压缩非必要支出。`);
+      if (effLevel !== 'good') advices.push(`改善盈利：聚焦高毛利业务，砍掉亏损产品线，提升定价与议价能力。`);
+      advices.push(`明确责任：建立清晰的权责体系与协作机制，避免"推责扯皮"，让问题有人负责、目标有人担当。`);
+      advices.push(`借力 AI：引入 AI 应用培训与 FDE 工程实施，用数字化工具降低人工成本、提升决策效率。`);
+
+      document.getElementById('advice').innerHTML = advices.map((a, i) =>
+        `<li><span class="no">${i + 1}</span>${a}</li>`).join('');
+
+      document.getElementById('scoreNum').textContent = score;
+      document.getElementById('scoreVerdict').textContent = verdict;
+      document.getElementById('resultMeta').textContent =
+        `${industry} · 员工 ${fmt(n)} 人 · 营收 ${fmt(rev)} 万 · 成本 ${fmt(cost)} 万`;
+
+      resultEl.classList.add('show');
+      resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.getElementById('genBtn').addEventListener('click', generate);
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      peopleEl.value = 150;
+      revenueEl.value = 3600;
+      costEl.value = 2700;
+      generate();
+    });
+  </script>
+</body>
+</html>
