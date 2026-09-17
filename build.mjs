@@ -192,8 +192,10 @@ function generateIndexHtml(articles) {
 }
 
 function copyStaticFiles() {
+  // 注意：index.html 使用构建生成的预渲染版，不从这里复制覆盖。
+  // article-detail.html 保留源目录原版（含 JS 动态加载逻辑，兼容 /article-detail.html?id= 旧链接）。
   const staticFiles = [
-    'index.html', 'article-detail.html', 'article-default-cover.svg',
+    'article-detail.html', 'article-default-cover.svg',
     'home-banner.png', 'logo0（透明）.png', 'CNAME', 'robots.txt',
     '_redirects', '404.html',
     'home-banner.svg', 'home-banner-诊断.svg', 'wechat-qrcode.jpg'
@@ -261,10 +263,7 @@ async function main() {
   }
   console.log(`✅ ${articles.length} 个文章页面已生成到 dist/article/`);
 
-  // 生成通用的 article-detail.html（重定向到首页）
-  writeFileSync(join(DIST, 'article-detail.html'), indexHtml);
-
-  // 复制静态资源（不覆盖 index.html 和 article-detail.html）
+  // 复制静态资源（index.html 已由构建生成预渲染版；article-detail.html 保留原版 JS 逻辑）
   copyStaticFiles();
 
   // 生成 sitemap（覆盖复制过来的旧版）
