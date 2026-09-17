@@ -31,9 +31,13 @@
     .btn-delete { @apply text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-all; }
     .btn-edit { @apply text-accent hover:text-hover p-2 rounded-lg transition-all; }
     .form-input { @apply w-full px-4 py-2.5 border border-neutral/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all bg-white; }
-    .editor:empty:before { content: attr(data-placeholder); color: #94a3b8; }
-    .editor a { color: #28B8A0; text-decoration: underline; font-weight: 500; }
-    .table-row { @apply hover:bg-primary/5 transition-colors; }
+     .editor:empty:before { content: attr(data-placeholder); color: #94a3b8; }
+     .editor a { color: #28B8A0; text-decoration: underline; font-weight: 500; }
+     .editor img { cursor: pointer; outline: none; }
+     .editor img.selected { outline: 2px solid #28B8A0; outline-offset: 2px; border-radius: 4px; }
+     .editor [contenteditable=true] { }
+     .editor-toolbar .align-btn.active { background: #28B8A0; color: white; }
+     .table-row { @apply hover:bg-primary/5 transition-colors; }
     .toast { @apply fixed top-6 right-6 z-50 flex items-center gap-2 px-6 py-3 rounded-lg text-white shadow-xl transition-transform duration-300; transform: translateX(150%); }
     .toast.show { transform: translateX(0); }
     /* 弹窗：纯 CSS 控制显隐，避免 Tailwind display 切换不稳定 */
@@ -210,6 +214,11 @@
                     <span class="w-px h-5 bg-neutral/30 mx-1"></span>
                     <button type="button" id="insertLinkBtn" class="px-2 py-1 rounded hover:bg-primary/5 text-accent" title="插入超链接"><i class="fas fa-link"></i> 链接</button>
                     <button type="button" id="insertImgBtn" class="px-2 py-1 rounded hover:bg-primary/5 text-accent" title="插入图片（自动压缩≤100k）"><i class="fas fa-image"></i> 图片</button>
+                    <span class="w-px h-5 bg-neutral/30 mx-1"></span>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="左对齐" data-cmd="justifyLeft"><i class="fas fa-align-left"></i></button>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="居中对齐" data-cmd="justifyCenter"><i class="fas fa-align-center"></i></button>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="右对齐" data-cmd="justifyRight"><i class="fas fa-align-right"></i></button>
+                    <button type="button" class="px-2 py-1 rounded hover:bg-primary/5" title="两端对齐" data-cmd="justifyFull"><i class="fas fa-align-justify"></i></button>
                     <input type="file" id="imgInput" accept="image/*" class="hidden">
                   </div>
                   <div id="articleContent" contenteditable="true" data-placeholder="请输入文章内容，可调整字体大小、插入图片..."
@@ -339,7 +348,35 @@
           else if (cmd === 'ul') document.execCommand('insertUnorderedList');
           else if (cmd === 'ol') document.execCommand('insertOrderedList');
           else document.execCommand(cmd);
+          if (cmd.startsWith('justify')) updateAlignButtons();
         });
+      });
+      function updateAlignButtons() {
+        document.querySelectorAll('.editor-toolbar button[data-cmd^="justify"]').forEach(btn => {
+          const cmd = btn.getAttribute('data-cmd');
+          try { const active = document.queryCommandState(cmd); btn.classList.toggle('active', active); } catch(e) {}
+        });
+      }
+      document.getElementById('articleContent').addEventListener('click', (e) => {
+        const img = e.target.closest('img');
+        if (img && img.closest('#articleContent')) {
+          e.preventDefault(); e.stopPropagation();
+          document.querySelectorAll('#articleContent img.selected').forEach(i => i.classList.remove('selected'));
+          img.classList.add('selected');
+          const sel = window.getSelection(); sel.removeAllRanges();
+          const range = document.createRange(); range.selectNodeContents(img); sel.addRange(range);
+        } else {
+          document.querySelectorAll('#articleContent img.selected').forEach(i => i.classList.remove('selected'));
+        }
+      });
+      document.getElementById('articleContent').addEventListener('keydown', (e) => {
+        const selectedImg = document.querySelector('#articleContent img.selected');
+        if ((e.key === 'Delete' || e.key === 'Backspace') && selectedImg) {
+          e.preventDefault(); e.stopPropagation();
+          selectedImg.remove();
+          document.querySelectorAll('#articleContent img.selected').forEach(i => i.classList.remove('selected'));
+          showToast('图片已删除', 'success');
+        }
       });
       document.getElementById('insertImgBtn').addEventListener('click', () => document.getElementById('imgInput').click());
       document.getElementById('insertLinkBtn').addEventListener('click', () => {
@@ -362,6 +399,9 @@
           const dataUrl = await compressImageToDataUrl(file, 100);
           document.getElementById('articleContent').focus();
           document.execCommand('insertImage', false, dataUrl);
+          const newImg = document.querySelector('#articleContent img[src="' + dataUrl + '"]') ||
+                         document.querySelector('#articleContent img[src^="data:"]');
+          if (newImg) newImg.addEventListener('click', function(evt) { evt.stopPropagation(); });
         } catch (err) { showToast('图片处理失败：' + err.message, 'error'); }
         e.target.value = '';
       });
@@ -432,6 +472,15 @@
         document.getElementById('articleSortOrder').value = '';
         currentEditingId = null;
       }
+      document.querySelectorAll('#articleContent img.selected').forEach(i => i.classList.remove('selected'));
+    }
+    function bindImageClickHandlers() {
+      document.querySelectorAll('#articleContent img').forEach(img => {
+        img.style.cursor = 'pointer';
+        img.removeEventListener('click', img._clickHandler);
+        img._clickHandler = (evt) => { evt.preventDefault(); evt.stopPropagation(); };
+        img.addEventListener('click', img._clickHandler);
+      });
     }
     function switchToListView() {
       document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
@@ -517,6 +566,7 @@
         document.getElementById('articleSortOrder').value = (data.sort_order != null ? data.sort_order : '');
         document.getElementById('articleExcerpt').value = data.excerpt || '';
         document.getElementById('articleContent').innerHTML = data.content || '';
+        bindImageClickHandlers();
         currentCoverUrl = data.cover_url || null;
         const prev = document.getElementById('coverPreview');
         if (currentCoverUrl) { prev.src = currentCoverUrl; prev.classList.remove('hidden'); document.getElementById('coverRemoveBtn').classList.remove('hidden'); }
