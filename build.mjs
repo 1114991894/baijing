@@ -222,6 +222,23 @@ function copyStaticFiles() {
   }
 }
 
+function generateSitemap(articles) {
+  const today = new Date().toISOString().slice(0, 10);
+  const staticUrls = [
+    { loc: `${SITE_URL}/`, lastmod: '2026-09-03', freq: 'weekly', pri: '1.0' },
+    ...articles.map(a => ({ loc: `${SITE_URL}/article/${a.id}.html`, lastmod: today, freq: 'daily', pri: '0.9' })),
+    { loc: `${SITE_URL}/%E7%9B%AE%E6%A0%87%E6%B5%8B%E7%AE%97%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'monthly', pri: '0.8' },
+    { loc: `${SITE_URL}/%E6%88%98%E7%95%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'monthly', pri: '0.8' },
+    { loc: `${SITE_URL}/%E7%BB%84%E7%BB%87%E6%9E%B6%E6%9E%84%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'monthly', pri: '0.8' },
+    { loc: `${SITE_URL}/%E8%82%A1%E6%9D%83%E6%9E%B6%E6%9E%84%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'monthly', pri: '0.8' },
+    { loc: `${SITE_URL}/%E4%BC%81%E4%B8%9A%E8%AF%8A%E6%96%AD.html`, lastmod: '2026-09-04', freq: 'monthly', pri: '0.8' }
+  ];
+  const urls = staticUrls.map(u =>
+    `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <changefreq>${u.freq}</changefreq>\n    <priority>${u.pri}</priority>\n  </url>`
+  ).join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+}
+
 async function main() {
   console.log('🔄 正在从 Supabase 获取文章数据...');
   const articles = await fetchArticles();
@@ -249,6 +266,11 @@ async function main() {
 
   // 复制静态资源（不覆盖 index.html 和 article-detail.html）
   copyStaticFiles();
+
+  // 生成 sitemap（覆盖复制过来的旧版）
+  const sitemap = generateSitemap(articles);
+  writeFileSync(join(DIST, 'sitemap.xml'), sitemap);
+  console.log(`✅ sitemap.xml 已生成（${articles.length + 6} 个 URL）`);
 
   console.log('✅ 所有静态页面已生成到 dist/');
   console.log('🎉 构建完成！');
