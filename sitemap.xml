@@ -12,6 +12,13 @@
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
+  <!-- 文章页面由构建脚本自动生成 -->
+  <!-- <url>
+    <loc>https://baijingzixun.top/article/{id}.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url> -->
   <url>
     <loc>https://baijingzixun.top/%E7%9B%AE%E6%A0%87%E6%B5%8B%E7%AE%97%E5%B7%A5%E5%85%B7.html</loc>
     <lastmod>2026-06-12</lastmod>

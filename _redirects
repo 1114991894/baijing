@@ -1,1 +1,5 @@
+# GitHub Pages SPA fallback
 /* /index.html 200
+
+# Article pages
+/article/* /article/$1 200

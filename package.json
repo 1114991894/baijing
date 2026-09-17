@@ -1,0 +1,13 @@
+{
+  "name": "baijing-blog",
+  "version": "1.0.0",
+  "description": "百鲸咨询静态网站 - SSR预渲染",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs && npx serve dist"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0"
+  }
+}

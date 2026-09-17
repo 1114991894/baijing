@@ -1,3 +1,6 @@
+# Build output
+dist/
+
 # WorkBuddy project settings (do not track)
 .codebuddy/
 
