@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="百鲸咨询 - 精选专业文章">
+  <meta property="og:title" content="文章详情 - 百鲸咨询">
+  <meta property="og:description" content="百鲸咨询 - 精选专业文章">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://baijingzixun.top/article-detail.html">
+  <meta property="og:image" content="https://baijingzixun.top/home-banner.png">
+  <meta property="og:site_name" content="百鲸咨询">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="文章详情 - 百鲸咨询">
+  <meta name="twitter:description" content="百鲸咨询 - 精选专业文章">
+  <link rel="canonical" href="https://baijingzixun.top/article-detail.html">
   <title>文章详情 - 百鲸咨询</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -56,6 +67,25 @@
       const { data, error } = await supabaseClient.from('articles').select('*').eq('id', id).single();
       if (error || !data) { box.innerHTML = '<p class="text-center text-secondary/60 py-12">文章不存在或已被删除</p>'; return; }
       document.title = data.title + ' - 百鲸咨询';
+      const siteUrl = 'https://baijingzixun.top';
+      const coverImg = data.cover_url ? data.cover_url : siteUrl + '/article-default-cover.svg';
+      // 动态更新 meta 标签（提升 SEO）
+      const updateMeta = (attr, value, content) => {
+        let el = document.querySelector(`meta[${attr}="${value}"]`);
+        if (!el) { el = document.createElement('meta'); el.setAttribute(attr, value); document.head.appendChild(el); }
+        el.setAttribute('content', content);
+      };
+      updateMeta('property', 'og:title', data.title + ' - 百鲸咨询');
+      updateMeta('property', 'og:description', data.excerpt || '百鲸咨询 - 精选专业文章');
+      updateMeta('property', 'og:image', coverImg);
+      updateMeta('property', 'og:url', siteUrl + '/article-detail.html?id=' + id);
+      updateMeta('name', 'description', data.excerpt || '百鲸咨询 - 精选专业文章');
+      updateMeta('property', 'twitter:title', data.title + ' - 百鲸咨询');
+      updateMeta('property', 'twitter:description', data.excerpt || '百鲸咨询 - 精选专业文章');
+      updateMeta('property', 'twitter:image', coverImg);
+      // 更新 canonical
+      let canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) canonical.setAttribute('href', siteUrl + '/article-detail.html?id=' + id);
       box.innerHTML = `
         <img src="${escapeHtml(data.cover_url || 'article-default-cover.svg')}" class="w-full rounded-xl mb-6 object-cover max-h-96" alt="">
         <div class="flex items-center text-sm text-secondary/50 mb-4 gap-2">
