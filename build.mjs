@@ -8,8 +8,8 @@ const ROOT = __dirname;
 const DIST = join(ROOT, 'dist');
 const SITE_URL = 'https://baijingzixun.top';
 
-const SUPABASE_URL = 'https://mxtxwjprmfstbheiempi.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function formatDate(s) {
@@ -36,11 +36,14 @@ async function fetchArticles() {
 }
 
 function generateArticleHtml(article) {
-  const coverImg = article.cover_url || `${SITE_URL}/article-default-cover.svg`;
+  const coverImg = article.cover_url && !article.cover_url.startsWith('data:')
+    ? article.cover_url
+    : `${SITE_URL}/article-default-cover.svg`;
   const contentHtml = article.content || '';
   const excerpt = article.excerpt || '';
   const createdAt = formatDate(article.created_at);
   const author = article.author || '百鲸咨询';
+  const articleUrl = `${SITE_URL}/article/${article.id}.html`;
 
   return `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -51,14 +54,14 @@ function generateArticleHtml(article) {
   <meta property="og:title" content="${escapeHtml(article.title)} - 百鲸咨询">
   <meta property="og:description" content="${escapeHtml(excerpt || '百鲸咨询 - 精选专业文章')}">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="${SITE_URL}/article-detail.html?id=${article.id}">
+  <meta property="og:url" content="${articleUrl}">
   <meta property="og:image" content="${coverImg}">
   <meta property="og:site_name" content="百鲸咨询">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(article.title)} - 百鲸咨询">
   <meta name="twitter:description" content="${escapeHtml(excerpt || '百鲸咨询 - 精选专业文章')}">
   <meta name="twitter:image" content="${coverImg}">
-  <link rel="canonical" href="${SITE_URL}/article-detail.html?id=${article.id}">
+  <link rel="canonical" href="${articleUrl}">
   <title>${escapeHtml(article.title)} - 百鲸咨询</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
