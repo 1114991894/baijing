@@ -110,85 +110,47 @@ function generateArticleHtml(article) {
 }
 
 function generateIndexHtml(articles) {
+  // 关键修复：不再整页重造首页（那会把 banner 轮播 / 产品模块 / 联系我们等全部内容丢掉）。
+  // 正确做法：以源目录 index.html（完整版首页）为基础，仅把「精选文章」容器里的
+  // 「加载中...」占位替换为预渲染文章卡片，供爬虫抓取与首屏直出。
+  // 页面加载后，index.html 自带的 Supabase 动态加载逻辑会接管该容器（分页渲染），互不冲突。
+  const src = readFileSync(join(ROOT, 'index.html'), 'utf8');
+
+  const placeholder = [
+    '          <div class="text-center text-secondary/60 py-12" data-page-node-id="YCFMRSdz4Ewf4ZAqrU3CHA">',
+    '            <i class="fas fa-spinner fa-spin text-2xl mb-4" data-page-node-id="nBzLjT0lMmgkMWCJMstuhn"></i>',
+    '            <p data-page-node-id="RsGqTT4KDx1cpTbm3e5V1V">加载中...</p>',
+    '          </div>'
+  ].join('\n');
+
+  if (!src.includes(placeholder)) {
+    throw new Error('未在源 index.html 中找到文章占位符（articlesContainer 内的加载中块），请检查结构后再构建');
+  }
+
   const articleCards = articles.map(a => {
-    const coverImg = a.cover_url || `${SITE_URL}/article-default-cover.svg`;
-    const excerpt = (a.excerpt || '').substring(0, 120) + '...';
-    return `<div class="bg-white rounded-xl shadow-elevated border border-neutral/20 overflow-hidden hover:shadow-lg transition-all cursor-pointer group" onclick="location.href='article/${a.id}.html'">
-      <div class="relative h-48 overflow-hidden">
-        <img src="${escapeHtml(a.cover_url || 'article-default-cover.svg')}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${escapeHtml(a.title)}">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div class="absolute bottom-4 left-4 right-4">
-          <span class="bg-accent/90 text-white text-xs px-3 py-1 rounded-full font-medium">${escapeHtml(a.category || '咨询')}</span>
-        </div>
-      </div>
-      <div class="p-6">
-        <h3 class="text-xl font-bold text-primary mb-3 group-hover:text-accent transition">${escapeHtml(a.title)}</h3>
-        <p class="text-secondary/70 text-sm leading-relaxed mb-4 line-clamp-2">${escapeHtml(excerpt)}</p>
-        <div class="flex items-center justify-between text-sm text-secondary/50">
-          <span><i class="far fa-calendar-alt mr-1"></i>${formatDate(a.created_at)}</span>
-          <span class="text-accent font-medium">阅读全文 →</span>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+    const coverImg = a.cover_url && !a.cover_url.startsWith('data:')
+      ? a.cover_url
+      : 'article-default-cover.svg';
+    return `<article class="bg-white rounded-xl shadow-elevated card-gradient border border-neutral/20 overflow-hidden product-card flex flex-col">
+          <a href="article/${a.id}.html" class="block shrink-0">
+            <img src="${escapeHtml(coverImg)}" alt="${escapeHtml(a.title)}" class="w-full h-48 object-cover" loading="lazy">
+          </a>
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center text-sm text-secondary/50 mb-3 shrink-0">
+              <span><i class="far fa-calendar-alt mr-1"></i>${formatDate(a.created_at)}</span>
+              <span class="mx-2">·</span>
+              <span><i class="far fa-user mr-1"></i>${escapeHtml(a.author || '百鲸咨询')}</span>
+            </div>
+            <a href="article/${a.id}.html" class="text-xl font-bold mb-3 text-secondary leading-snug hover:text-primary transition-colors block line-clamp-2">${escapeHtml(a.title)}</a>
+            <p class="text-secondary/70 leading-relaxed mb-4 text-sm line-clamp-3 flex-1">${escapeHtml(a.excerpt || '')}</p>
+            <a href="article/${a.id}.html" class="text-accent hover:text-hover font-semibold text-sm inline-flex items-center gap-1 transition-colors shrink-0 mt-auto">
+              阅读更多 <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </article>`;
+  }).join('\n          ');
 
-  const siteDesc = '百鲸咨询12年专注企业管理落地陪跑辅导，提供战略定位、组织优化、薪酬绩效、股权激励、数字化转型等服务，累计服务1000+企业。';
-
-  return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="${siteDesc}">
-  <meta property="og:title" content="百鲸咨询 - 12年专注企业管理落地陪跑辅导">
-  <meta property="og:description" content="${siteDesc}">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="${SITE_URL}/">
-  <meta property="og:image" content="${SITE_URL}/logo0（透明）.png">
-  <meta property="og:site_name" content="百鲸咨询">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="百鲸咨询 - 12年专注企业管理落地陪跑辅导">
-  <meta name="twitter:description" content="${siteDesc}">
-  <link rel="canonical" href="${SITE_URL}/">
-  <title>百鲸咨询 - 12年专注企业管理落地陪跑辅导 | 战略定位·组织优化·股权激励</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script>tailwind.config={theme:{extend:{colors:{primary:'#083E78',accent:'#28B8A0',hover:'#22C0E0',section:'#F4FAFF',neutral:'#E2E8F0',secondary:'#333333'},fontFamily:{sans:['Noto Sans SC','system-ui','sans-serif']}}}}</script>
-  <style>body{font-family:'Noto Sans SC',sans-serif;color:#333;background:#F4FAFF}.prose img{max-width:100%;height:auto;border-radius:8px;margin:1rem 0}.prose h2{font-size:1.4rem;font-weight:700;margin:1.2rem 0 .6rem;color:#083E78}.prose p{line-height:1.9;margin:.6rem 0}.prose ul,.prose ol{margin:.6rem 0 1rem 1.4rem}.prose li{margin:.3rem 0}.prose a{color:#28B8A0;text-decoration:underline;font-weight:500}.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}</style>
-</head>
-<body class="min-h-screen flex flex-col">
-  <header class="bg-primary text-white shadow-lg">
-    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="index.html" class="flex items-center gap-3 text-white no-underline">
-        <img src="logo0（透明）.png" alt="百鲸咨询" class="h-10 w-10 rounded-full">
-        <div>
-          <div class="text-xl font-bold">百鲸咨询</div>
-          <div class="text-xs text-blue-200">12年专注企业管理落地陪跑辅导</div>
-        </div>
-      </a>
-      <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a href="index.html" class="hover:text-accent transition">首页</a>
-        <a href="index.html#articles" class="hover:text-accent transition">文章</a>
-        <a href="index.html#contact" class="hover:text-accent transition">联系</a>
-      </nav>
-    </div>
-  </header>
-  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
-    <div class="mb-12">
-      <h2 class="text-3xl font-bold text-primary mb-2">精选文章</h2>
-      <p class="text-secondary/60">深度洞察企业管理实践，助力企业战略落地</p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">${articleCards}</div>
-  </main>
-  <footer class="bg-primary text-white text-center py-6 mt-12">
-    <div class="container mx-auto px-4 text-sm">
-      <p>&copy; 2026 百鲸咨询. All rights reserved.</p>
-      <p class="mt-1 text-blue-200">专注于企业战略落地·组织优化·股权激励·数字化转型</p>
-    </div>
-  </footer>
-</body>
-</html>`;
+  return src.replace(placeholder, articleCards);
 }
 
 function copyStaticFiles() {
