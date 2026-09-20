@@ -676,6 +676,14 @@
       box-shadow: 0 10px 30px -18px rgba(8,62,120,.35);
       border-bottom-color: rgba(8,62,120,.12);
     }
+    /* 部分手机浏览器（微信内置浏览器等）不支持 backdrop-filter，
+       半透明背景会直接透出页面内容导致导航看不清：移动端直接用纯白不透明 */
+    @media (max-width: 767px) {
+      .site-header, .site-header.scrolled { background: #fff; }
+    }
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .site-header, .site-header.scrolled { background: #fff; }
+    }
     .nav-link {
       position: relative; padding: 8px 2px; font-size: 15px; font-weight: 500;
       letter-spacing: .01em; color: rgba(11,37,69,.72); transition: color .3s;
