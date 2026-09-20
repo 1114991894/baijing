@@ -360,6 +360,26 @@
       max-height: 300px;
     }
 
+    /* 合作客户 logo 卡片 */
+    .client-logo-card {
+      background: #fff;
+      border: 1px solid #E8EEF4;
+      border-radius: 14px;
+      height: 104px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 18px 22px;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .client-logo-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(40,184,160,.5);
+      box-shadow: 0 10px 28px rgba(8,62,120,.10);
+    }
+    .client-logo-card img {
+      max-width: 100%; max-height: 100%;
+      object-fit: contain;
+    }
+
     /* ===================== 移动端优化 ===================== */
     /* 底部快捷联系栏（仅移动端显示） */
     .mobile-cta-bar {
@@ -898,6 +918,26 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 合作客户 -->
+    <section id="clients" class="py-16 md:py-24 bg-white" aria-label="合作客户" data-page-node-id="clientWallSection">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8" data-page-node-id="clientWallWrap">
+        <h2 class="text-2xl md:text-3xl font-bold mb-3 text-center text-secondary">合作客户</h2>
+        <p class="text-center text-secondary/50 text-sm mb-10">累计服务 1000+ 企业 · 以下为部分合作客户，排名不分先后</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 max-w-6xl mx-auto">
+          <div class="client-logo-card"><img src="logos/baishi.jpeg" alt="百世快运" loading="lazy"></div>
+          <div class="client-logo-card"><img src="logos/baosheng.png" alt="宝盛控股集团" loading="lazy"></div>
+          <div class="client-logo-card"><img src="logos/meimin.png" alt="美民家具科技" loading="lazy"></div>
+          <div class="client-logo-card"><img src="logos/putuoshan.jpg" alt="普陀山旅游集团" loading="lazy"></div>
+          <div class="client-logo-card"><img src="logos/zhidao.jpg" alt="知到教育" loading="lazy"></div>
+          <div class="client-logo-card"><img src="logos/zhiwuyan.jpg" alt="知无不言" loading="lazy"></div>
+          <div class="client-logo-card"><img src="logos/zhongjian.jpg" alt="中舰企服集团" loading="lazy"></div>
+          <div class="client-logo-card"><img src="logos/zhongnan.jpeg" alt="中南控股集团" loading="lazy"></div>
+          <div class="client-logo-card"><img src="logos/zhongtian.jpg" alt="中天集团" loading="lazy"></div>
+          <div class="client-logo-card"><img src="logos/zhongtong.jpg" alt="中通快递" loading="lazy"></div>
         </div>
       </div>
     </section>

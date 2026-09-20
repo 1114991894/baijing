@@ -164,7 +164,11 @@ function copyStaticFiles() {
     // 工具页面：sitemap 中已声明这些 URL，必须复制到 dist，否则搜索引擎抓取 404
     '目标测算工具.html', '战略解码工具.html', '组织架构生成工具.html', '股权架构生成工具.html',
     // 管理后台（robots.txt 已 Disallow，不参与收录，但必须可访问）
-    'admin.html', '咨询师登录页面.html', '企业诊断.html'
+    'admin.html', '咨询师登录页面.html', '企业诊断.html',
+    // 合作客户 logo 墙
+    'logos/baishi.jpeg', 'logos/baosheng.png', 'logos/meimin.png', 'logos/putuoshan.jpg',
+    'logos/zhidao.jpg', 'logos/zhiwuyan.jpg', 'logos/zhongjian.jpg', 'logos/zhongnan.jpeg',
+    'logos/zhongtian.jpg', 'logos/zhongtong.jpg'
   ];
   const dirs = ['articles', 'api'];
   const consultantImgs = ['consultant-lilaoshi.png', 'consultant-liuquanan.png', 'consultant-wanglaoshi.png', '刘诠案老师.jpg', '微信公众号.jpg', '企业诊断.html'];
