@@ -301,6 +301,11 @@
       transform: translateX(100%);
       transition: transform 0.3s ease-in-out;
     }
+
+    /* 桌面端彻底隐藏移动抽屉（双保险，防止定位异常时露出） */
+    @media (min-width: 768px) {
+      .mobile-nav, .mobile-overlay { display: none !important; }
+    }
     
     .mobile-nav.open {
       transform: translateX(0);
@@ -821,11 +826,13 @@
       </button>
     </div>
     
-    <!-- 移动端遮罩 -->
-    <div id="mobileOverlay" class="mobile-overlay fixed inset-0 bg-black/50 z-40 md:hidden" data-page-node-id="41zBI5mrKq9Z2HF96Tt291"></div>
+  </header>
 
-    <!-- 移动端导航 -->
-    <div id="mobileNav" class="mobile-nav fixed top-0 right-0 h-full w-72 bg-white shadow-xl p-6 z-50 border-l border-neutral flex flex-col" data-page-node-id="eYWCBFg68KSPoIL7Mqp1Ze">
+  <!-- 移动端遮罩（必须在 header 外：header 的 backdrop-filter 会改变 fixed 定位基准） -->
+  <div id="mobileOverlay" class="mobile-overlay fixed inset-0 bg-black/50 z-40 md:hidden" data-page-node-id="41zBI5mrKq9Z2HF96Tt291"></div>
+
+  <!-- 移动端导航 -->
+  <div id="mobileNav" class="mobile-nav fixed top-0 right-0 h-full w-72 bg-white shadow-xl p-6 z-50 border-l border-neutral flex flex-col" data-page-node-id="eYWCBFg68KSPoIL7Mqp1Ze">
       <div class="flex justify-between items-center mb-8" data-page-node-id="2MHgIL0v9NqDhE7c3AfMm7">
         <div class="flex items-center gap-3">
           <img src="logo0（透明）.png" alt="百鲸咨询logo" class="h-9 w-auto">
@@ -850,8 +857,7 @@
         <a href="tel:15158195310" class="font-semibold text-secondary hover:text-primary">15158195310</a>
         <div class="text-xs mt-1 text-secondary/50">工作日 9:00 - 18:00</div>
       </div>
-    </div>
-  </header>
+  </div>
 
   <!-- 首页 Banner（双图自动轮播） -->
   <section id="banner" class="relative w-full overflow-hidden bg-primary" aria-label="品牌宣传轮播" data-page-node-id="ZtOAW6YvRUMkju7F7uo6Rm">
@@ -1679,6 +1685,13 @@
     
     mobileNav.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', closeMobileMenu);
+    });
+
+    // 窗口拉宽到桌面尺寸时自动关闭抽屉，防止残留悬浮层
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768 && mobileNav.classList.contains('open')) {
+        closeMobileMenu();
+      }
     });
 
     // ===================== 免费企业诊断表单 =====================
