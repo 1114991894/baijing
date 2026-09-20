@@ -359,6 +359,58 @@
     .tool-dropdown.open {
       max-height: 300px;
     }
+
+    /* ===================== 移动端优化 ===================== */
+    /* 底部快捷联系栏（仅移动端显示） */
+    .mobile-cta-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+      display: flex;
+      background: #fff;
+      box-shadow: 0 -4px 20px rgba(8,62,120,0.12);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+      gap: 10px;
+    }
+    .mobile-cta-bar a {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 0; border-radius: 12px;
+      font-size: 15px; font-weight: 700; letter-spacing: 0.5px;
+      transition: transform .12s ease;
+    }
+    .mobile-cta-bar a:active { transform: scale(0.97); }
+    .mobile-cta-bar .cta-call {
+      background: linear-gradient(135deg, #083E78, #0a4d92); color: #fff;
+    }
+    .mobile-cta-bar .cta-diag {
+      background: linear-gradient(135deg, #28B8A0, #22C0E0); color: #062451;
+    }
+    /* 抽屉导航项 */
+    .mobile-nav .nav-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 4px;
+      border-bottom: 1px solid #F1F5F9;
+      font-size: 17px; font-weight: 500; color: #333;
+    }
+    .mobile-nav .nav-item i {
+      width: 36px; height: 36px; flex: none;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(40,184,160,0.1); color: #28B8A0;
+      border-radius: 10px; font-size: 15px;
+    }
+
+    @media (max-width: 767px) {
+      /* 底部栏不遮挡内容 */
+      body { padding-bottom: 76px; }
+      /* 章节留白收紧 */
+      #home { padding-top: 3rem; padding-bottom: 3.5rem; }
+      #home .mb-24 { margin-bottom: 3.5rem; }
+      /* 卡片内边距收紧 */
+      #home .bg-white.p-10 { padding: 1.5rem; }
+      #home .product-card { padding: 1.5rem; }
+      /* banner 指示点更贴近底部 */
+      #banner .banner-dot { box-shadow: 0 1px 4px rgba(0,0,0,0.35); }
+      /* 文章卡片触摸反馈 */
+      #articlesContainer article:active { transform: scale(0.98); }
+    }
   </style>
 </head>
 <body data-page-node-id="wpEXmDpkHr4hVOD2vu1hYF">
@@ -388,26 +440,37 @@
     <div id="mobileOverlay" class="mobile-overlay fixed inset-0 bg-black/50 z-40 md:hidden" data-page-node-id="41zBI5mrKq9Z2HF96Tt291"></div>
 
     <!-- 移动端导航 -->
-    <div id="mobileNav" class="mobile-nav fixed top-0 right-0 h-full w-72 bg-white shadow-xl p-8 z-50 border-l border-neutral" data-page-node-id="eYWCBFg68KSPoIL7Mqp1Ze">
-      <div class="flex justify-between items-center mb-10" data-page-node-id="2MHgIL0v9NqDhE7c3AfMm7">
-        <h3 class="text-2xl font-bold text-secondary" data-page-node-id="u2PDa2vPFuMHoUwuUoHx7z">百鲸咨询</h3>
+    <div id="mobileNav" class="mobile-nav fixed top-0 right-0 h-full w-72 bg-white shadow-xl p-6 z-50 border-l border-neutral flex flex-col" data-page-node-id="eYWCBFg68KSPoIL7Mqp1Ze">
+      <div class="flex justify-between items-center mb-8" data-page-node-id="2MHgIL0v9NqDhE7c3AfMm7">
+        <div class="flex items-center gap-3">
+          <img src="logo0（透明）.png" alt="百鲸咨询logo" class="h-9 w-auto">
+          <h3 class="text-xl font-bold text-secondary" data-page-node-id="u2PDa2vPFuMHoUwuUoHx7z">百鲸咨询</h3>
+        </div>
         <button id="closeBtn" class="text-secondary text-xl p-2 rounded-full hover:bg-neutral/30 transition-colors" aria-label="关闭菜单" data-page-node-id="0bIr22aRQEgRjTkdo4zT6I">
           <i class="fas fa-times" data-page-node-id="lhcIrlF4LONmiHfHOP2Jvd"></i>
         </button>
       </div>
-      <nav class="flex flex-col space-y-8" data-page-node-id="o4L2UtCAs90HCFo5IPQXrc">
-        <a href="#home" class="text-xl font-medium hover:text-primary transition-colors" data-page-node-id="0ViD0FDvOOLFI68ghZZU1n">首页</a>
-        <a href="#consultants" class="text-xl font-medium hover:text-primary transition-colors" data-page-node-id="TbHvqT0fEJbsnkFMqkZzHU">咨询师</a>
-        <a href="#projects" class="text-xl font-medium hover:text-primary transition-colors" data-page-node-id="0bDkzar14hLuDeYhugq5qk">项目案例</a>
-        <a href="#contact" class="text-xl font-medium hover:text-primary transition-colors" data-page-node-id="UQzObaqHftB0yfUPA1fRE6">联系我们</a>
-        <a href="https://g.baijingzixun.top" target="_blank" class="bg-accent hover:bg-hover text-white font-semibold py-2 px-4 rounded-md transition-all duration-300 text-sm ml-4 inline-block" data-page-node-id="3UuMEwxxRCQ0Ir71a8p04j">百鲸G系统</a>
+      <nav class="flex flex-col" data-page-node-id="o4L2UtCAs90HCFo5IPQXrc">
+        <a href="#home" class="nav-item" data-page-node-id="0ViD0FDvOOLFI68ghZZU1n"><i class="fas fa-house"></i>首页</a>
+        <a href="#consultants" class="nav-item" data-page-node-id="TbHvqT0fEJbsnkFMqkZzHU"><i class="fas fa-user-tie"></i>咨询师</a>
+        <a href="#projects" class="nav-item" data-page-node-id="0bDkzar14hLuDeYhugq5qk"><i class="fas fa-briefcase"></i>项目案例</a>
+        <a href="#articles" class="nav-item"><i class="fas fa-newspaper"></i>精选文章</a>
+        <a href="#contact" class="nav-item" data-page-node-id="UQzObaqHftB0yfUPA1fRE6"><i class="fas fa-phone"></i>联系我们</a>
       </nav>
+      <a href="https://g.baijingzixun.top" target="_blank" class="mt-6 bg-accent hover:bg-hover text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm text-center inline-flex items-center justify-center gap-2" data-page-node-id="3UuMEwxxRCQ0Ir71a8p04j">
+        <i class="fas fa-rocket"></i>进入百鲸 G 系统
+      </a>
+      <div class="mt-auto pt-6 text-center text-sm text-secondary/60">
+        <i class="fas fa-phone text-accent mr-1"></i>
+        <a href="tel:15158195310" class="font-semibold text-secondary hover:text-primary">15158195310</a>
+        <div class="text-xs mt-1 text-secondary/50">工作日 9:00 - 18:00</div>
+      </div>
     </div>
   </header>
 
   <!-- 首页 Banner（双图自动轮播） -->
   <section id="banner" class="relative w-full overflow-hidden bg-primary" aria-label="品牌宣传轮播" data-page-node-id="ZtOAW6YvRUMkju7F7uo6Rm">
-    <div class="relative w-full aspect-video" data-page-node-id="DRKkdqNWcADIlQ6bjnUEj0">
+    <div class="relative w-full aspect-[4/3] sm:aspect-video" data-page-node-id="DRKkdqNWcADIlQ6bjnUEj0">
       <!-- 第 1 张：品牌 banner -->
       <div class="banner-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-100 pointer-events-auto" data-page-node-id="CNOGOAwymw0YkXmHDFT0vc">
         <picture data-page-node-id="zlxhbwqCdezVcsJXQC1GoE">
@@ -968,6 +1031,12 @@
     </div>
   </footer>
 
+  <!-- 移动端底部快捷联系栏 -->
+  <div class="mobile-cta-bar md:hidden" aria-label="快捷联系">
+    <a href="tel:15158195310" class="cta-call"><i class="fas fa-phone-volume"></i>电话咨询</a>
+    <a href="企业诊断.html" target="_blank" rel="noopener" class="cta-diag"><i class="fas fa-bolt"></i>免费企业诊断</a>
+  </div>
+
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
     <script>
@@ -1094,6 +1163,23 @@
       const banner = document.getElementById('banner');
       banner.addEventListener('mouseenter', stop);
       banner.addEventListener('mouseleave', start);
+
+      // 移动端：手指左右滑动切换 banner
+      let touchX = 0, touchY = 0;
+      banner.addEventListener('touchstart', (e) => {
+        touchX = e.touches[0].clientX;
+        touchY = e.touches[0].clientY;
+        stop();
+      }, { passive: true });
+      banner.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - touchX;
+        const dy = e.changedTouches[0].clientY - touchY;
+        // 水平滑动超过 40px 且明显大于垂直位移时才算切图，避免干扰上下滚动
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          show(index + (dx < 0 ? 1 : -1));
+        }
+        start();
+      }, { passive: true });
 
       // 页面不可见时暂停，避免后台空转
       document.addEventListener('visibilitychange', () => {
