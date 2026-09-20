@@ -86,6 +86,7 @@
         </div>
         <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
           <button id="navList" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-list mr-1"></i>文章列表</button>
+          <button id="navLeads" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-chart-bar mr-1"></i>信息统计</button>
           <button id="navAdd" class="btn-primary text-sm flex items-center gap-2"><i class="fas fa-plus mr-1"></i>添加文章</button>
           <a href="../index.html" target="_blank" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-home mr-1"></i>查看首页</a>
           <span id="adminEmail" class="text-sm text-secondary/60 hidden sm:inline truncate max-w-[160px]"></span>
@@ -144,6 +145,45 @@
             <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
             <p class="text-lg" id="errorMsg">加载失败</p>
             <p class="text-sm text-secondary/50 mt-2">请确认已在 Supabase 执行 articles/schema.sql 建表</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 信息统计（企业诊断线索） -->
+      <section id="leads-view" class="tab-view hidden">
+        <div class="bg-white rounded-2xl shadow-elevated border border-neutral/20 overflow-hidden">
+          <div class="p-4 border-b border-neutral/20 flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center">
+            <p class="text-sm text-secondary/60"><i class="fas fa-info-circle text-accent mr-1.5"></i>来自首页移动端「免费企业诊断」表单的提交记录</p>
+            <button id="leadsRefreshBtn" class="text-sm text-secondary hover:text-primary px-3 py-1.5 rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap"><i class="fas fa-sync-alt mr-1"></i>刷新</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[900px]">
+              <thead class="bg-section">
+                <tr>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider whitespace-nowrap">提交时间</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">公司名称</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">城市</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">联系人</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">手机号</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">员工数</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">需求</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider whitespace-nowrap">状态</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider w-28">操作</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTableBody" class="divide-y divide-neutral/10">
+                <tr><td colspan="9" class="px-6 py-12 text-center text-secondary/50"><i class="fas fa-spinner fa-spin text-2xl mb-3"></i><p>加载中...</p></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="leadsEmpty" class="hidden py-16 text-center text-secondary/50">
+            <i class="fas fa-inbox text-4xl mb-4 text-secondary/30"></i>
+            <p class="text-lg">暂无诊断申请</p>
+          </div>
+          <div id="leadsErrorState" class="hidden py-16 text-center text-red-500">
+            <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
+            <p class="text-lg" id="leadsErrorMsg">加载失败</p>
+            <p class="text-sm text-secondary/50 mt-2">首次使用请先在 Supabase SQL Editor 执行 articles/diagnosis_leads.sql 建表</p>
           </div>
         </div>
       </section>
@@ -485,7 +525,82 @@
     function switchToListView() {
       document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
       document.getElementById('article-list-view').classList.remove('hidden');
+      document.getElementById('pageTitle').textContent = '文章列表';
+      document.getElementById('pageSubtitle').textContent = '管理您的精选文章，文章更新后前端自动同步';
+      document.getElementById('articleCount').classList.remove('hidden');
       loadArticles();
+    }
+
+    // ===================== 信息统计（企业诊断线索） =====================
+    let leads = [];
+    function switchToLeadsView() {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+      document.getElementById('leads-view').classList.remove('hidden');
+      document.getElementById('pageTitle').textContent = '信息统计';
+      document.getElementById('pageSubtitle').textContent = '首页移动端「免费企业诊断」表单收集的潜在客户信息';
+      document.getElementById('articleCount').classList.add('hidden');
+      loadLeads();
+    }
+    async function loadLeads() {
+      const body = document.getElementById('leadsTableBody');
+      body.innerHTML = '<tr><td colspan="9" class="px-6 py-12 text-center text-secondary/50"><i class="fas fa-spinner fa-spin text-2xl mb-3"></i><p>加载中...</p></td></tr>';
+      document.getElementById('leadsEmpty').classList.add('hidden');
+      document.getElementById('leadsErrorState').classList.add('hidden');
+      try {
+        const { data, error } = await supabaseClient.from('diagnosis_leads').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        leads = data || [];
+        renderLeads(leads);
+      } catch (err) {
+        console.error('加载诊断信息失败：', err);
+        const isMissing = err && (err.code === 'PGRST205' || err.code === '42P01' || /does not exist|Could not find the table/i.test(err.message || ''));
+        document.getElementById('leadsErrorMsg').textContent = isMissing ? '数据表 diagnosis_leads 不存在' : ('加载失败：' + (err.message || '未知错误'));
+        document.getElementById('leadsErrorState').classList.remove('hidden');
+        body.innerHTML = '';
+      }
+    }
+    function renderLeads(data) {
+      const body = document.getElementById('leadsTableBody');
+      if (!data.length) {
+        body.innerHTML = '';
+        document.getElementById('leadsEmpty').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('leadsEmpty').classList.add('hidden');
+      body.innerHTML = data.map(l => `
+        <tr class="table-row align-top">
+          <td class="px-5 py-4 text-sm text-secondary/70 whitespace-nowrap">${formatDateTime(l.created_at)}</td>
+          <td class="px-5 py-4 text-sm font-semibold text-secondary">${escapeHtml(l.company)}</td>
+          <td class="px-5 py-4 text-sm text-secondary/80">${escapeHtml(l.city) || '-'}</td>
+          <td class="px-5 py-4 text-sm text-secondary/80 whitespace-nowrap">${escapeHtml(l.contact_name)}</td>
+          <td class="px-5 py-4 text-sm whitespace-nowrap"><a href="tel:${escapeHtml(l.phone)}" class="text-primary hover:text-accent">${escapeHtml(l.phone)}</a></td>
+          <td class="px-5 py-4 text-sm text-secondary/80 whitespace-nowrap">${escapeHtml(l.employee_count) || '-'}</td>
+          <td class="px-5 py-4 text-sm text-secondary/80 max-w-[240px]">${escapeHtml(l.requirement) || '-'}</td>
+          <td class="px-5 py-4 whitespace-nowrap">
+            ${l.status === 'contacted'
+              ? '<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200"><i class="fas fa-check"></i>已联系</span>'
+              : '<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200"><i class="fas fa-bell"></i>待跟进</span>'}
+          </td>
+          <td class="px-5 py-4 whitespace-nowrap">
+            <button data-lead-id="${l.id}" data-lead-status="${l.status === 'contacted' ? 'new' : 'contacted'}" class="leadToggleBtn text-xs ${l.status === 'contacted' ? 'text-secondary/50 hover:text-amber-500' : 'text-accent hover:text-hover'} font-semibold">${l.status === 'contacted' ? '标记待跟进' : '标记已联系'}</button>
+          </td>
+        </tr>`).join('');
+      body.querySelectorAll('.leadToggleBtn').forEach(btn => {
+        btn.addEventListener('click', () => toggleLeadStatus(btn.dataset.leadId, btn.dataset.leadStatus));
+      });
+    }
+    async function toggleLeadStatus(id, status) {
+      const { error } = await supabaseClient.from('diagnosis_leads').update({ status }).eq('id', id);
+      if (error) { showToast('更新失败：' + error.message, 'error'); return; }
+      showToast(status === 'contacted' ? '已标记为已联系' : '已标记为待跟进');
+      const item = leads.find(l => l.id === id);
+      if (item) { item.status = status; renderLeads(leads); }
+    }
+    function formatDateTime(s) {
+      if (!s) return '-';
+      const d = new Date(s);
+      const p = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
     }
 
     // ===================== 加载文章 =====================
