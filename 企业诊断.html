@@ -1,620 +1,612 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="x2A52zP4AUQX7AVkf26DTS">
-<head data-page-node-id="xEVFu7to1i60ceC88BkDaK">
-  <meta charset="UTF-8" data-page-node-id="Jty3s9b2CmZQpn11SfnmuV">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="Y0MapRRnUIXhW1VVzYrGfB">
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>免费企业诊断 - 百鲸咨询 | 3个数字秒懂企业现状</title>
-  <meta name="description" content="输入人数、业绩、成本三个数据，免费生成AI企业诊断报告，帮你快速定位经营问题。数据不会保存，已脱敏处理。" data-page-node-id="pwDIXk3ggiUOt0Q0v5OIiJ">
-  <meta name="robots" content="index, follow" data-page-node-id="Bdl8fIaYzqx3ETTCMvVOuI">
-  <link rel="canonical" href="https://baijingzixun.top/%E4%BC%81%E4%B8%9A%E8%AF%8A%E6%96%AD.html" data-page-node-id="KV98Rr4QkO1SqfFFHfk0Zv">
-  <link rel="icon" href="logo0（透明）.png" data-page-node-id="xUx1K6BNJxuxkmMnFyRsIC">
-  <link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="Gdnkz4GOT8tCQGu8TY3dsE">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-page-node-id="hw3FXlYiCUpMPuA25fWsMm">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" data-page-node-id="7mCi6H0p4Qc8O8gnd45Nby">
+  <meta name="description" content="输入人数、业绩、成本三个数据，免费生成AI企业诊断报告，帮你快速定位经营问题。数据不会保存，已脱敏处理。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://baijingzixun.top/%E4%BC%81%E4%B8%9A%E8%AF%8A%E6%96%AD.html">
+  <link rel="icon" href="logo0（透明）.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Open Graph -->
-  <meta property="og:type" content="website" data-page-node-id="W73Vas4oMNonXMh8ZhyMjZ">
-  <meta property="og:url" content="https://baijingzixun.top/%E4%BC%81%E4%B8%9A%E8%AF%8A%E6%96%AD.html" data-page-node-id="I43ZpR1n0hLmiK5e0BtDJo">
-  <meta property="og:title" content="免费企业诊断 - 百鲸咨询" data-page-node-id="ZlPqxs9xWs3uORoSW6J8Gq">
-  <meta property="og:description" content="3 个数字，30 秒生成一份 AI 企业诊断报告，定位成本、人效、利润等核心问题。" data-page-node-id="E2IO6reVkD4r4yYVbwZBB3">
-  <meta property="og:image" content="https://baijingzixun.top/logo0（透明）.png" data-page-node-id="f9RLZExi0CG4j4BfxBCQ4V">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://baijingzixun.top/%E4%BC%81%E4%B8%9A%E8%AF%8A%E6%96%AD.html">
+  <meta property="og:title" content="免费企业诊断 - 百鲸咨询">
+  <meta property="og:description" content="3 个数字，30 秒生成一份 AI 企业诊断报告，定位成本、人效、利润等核心问题。">
+  <meta property="og:image" content="https://baijingzixun.top/home-banner.png">
 
   <style>
     :root {
-      --primary: #083E78;
-      --primary-deep: #062451;
+      --ink-950: #03101F;
+      --ink-900: #04182F;
+      --ink-800: #062A50;
+      --ink-700: #083E78;
       --primary-mid: #0a4d92;
-      --accent: #28B8A0;
-      --accent-soft: rgba(40,184,160,0.12);
-      --hover: #22C0E0;
+      --brand: #28B8A0;
+      --brand-2: #22C0E0;
+      --hair-b: rgba(8,62,120,.10);
+      --hair-w: rgba(255,255,255,.10);
+      --font-num: 'Sora', 'Noto Sans SC', system-ui, sans-serif;
+      --txt: #0B2545;
+      --muted: rgba(11,37,69,.55);
+      --line: #E4EDF6;
       --warn: #FF8A5B;
-      --warn-soft: #FFF1E8;
       --good: #22C55E;
       --mid: #F59E0B;
       --bad: #EF4444;
-      --text: #1F2937;
-      --muted: #64748B;
-      --line: #E2E8F0;
-      --card: #FFFFFF;
-      --bg: #F4FAFF;
-      --bg-soft: #F8FAFC;
       --grad-accent: linear-gradient(135deg, #28B8A0, #22C0E0);
-      --grad-primary: linear-gradient(135deg, #062451, #083E78 50%, #0a4d92 100%);
+      --grad-primary: linear-gradient(140deg, #062A50 0%, #083E78 55%, #04182F 100%);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Noto Sans SC', system-ui, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+      color: var(--txt); background: #F4FAFF; line-height: 1.6;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     }
     a { text-decoration: none; color: inherit; }
-
     .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
 
-    /* ========== 顶栏 ========== */
-    header {
-      background: #fff;
-      border-bottom: 1px solid var(--line);
+    /* —— 滚动显现 —— */
+    .reveal { transition: opacity .85s cubic-bezier(.22,.61,.36,1), transform .85s cubic-bezier(.22,.61,.36,1); }
+    .reveal.in { opacity: 1 !important; transform: none !important; }
+    @media (prefers-reduced-motion: reduce) { .reveal { transition: none !important; } }
+
+    /* ========== 顶栏（玻璃拟态，与首页一致） ========== */
+    .site-header {
       position: sticky; top: 0; z-index: 50;
-      backdrop-filter: blur(8px);
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,.78);
+      backdrop-filter: saturate(180%) blur(18px);
+      -webkit-backdrop-filter: saturate(180%) blur(18px);
+      border-bottom: 1px solid rgba(8,62,120,.08);
+      transition: background .35s, box-shadow .35s, border-color .35s;
+    }
+    .site-header.scrolled {
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 10px 30px -18px rgba(8,62,120,.35);
+      border-bottom-color: rgba(8,62,120,.12);
     }
     .nav-inner {
-      max-width: 1180px; margin: 0 auto; padding: 16px 24px;
-      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1180px; margin: 0 auto; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 22px; color: var(--primary-deep); }
-    .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
-    .back { font-size: 15px; color: var(--primary); font-weight: 500; transition: color .2s; }
-    .back:hover { color: var(--hover); }
+    .nav-logo img { width: 25vw; max-width: 140px; min-width: 80px; height: auto; object-fit: contain; display: block; }
+    .nav-right { display: flex; align-items: center; gap: 22px; }
+    .nav-link {
+      position: relative; padding: 8px 2px; font-size: 15px; font-weight: 500;
+      letter-spacing: .01em; color: rgba(11,37,69,.72); transition: color .3s;
+    }
+    .nav-link::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+      background: var(--grad-accent); border-radius: 2px;
+      transform: scaleX(0); transition: transform .35s cubic-bezier(.22,.61,.36,1);
+    }
+    .nav-link:hover { color: var(--ink-700); }
+    .nav-link:hover::after { transform: scaleX(1); }
+    .nav-cta {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, #083E78, #0B4E92); color: #fff;
+      font-size: 13.5px; font-weight: 600; padding: 10px 20px; border-radius: 10px;
+      box-shadow: 0 8px 22px -10px rgba(8,62,120,.6);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -10px rgba(8,62,120,.7); }
+    .nav-cta::after {
+      content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+      transform: skewX(-18deg); transition: left .6s ease;
+    }
+    .nav-cta:hover::after { left: 120%; }
+
+    /* ========== 深色区 ========== */
+    .section-dark {
+      position: relative; overflow: hidden; color: #fff;
+      background:
+        radial-gradient(900px 460px at 12% -12%, rgba(34,192,224,.22), transparent 62%),
+        radial-gradient(760px 400px at 90% 6%, rgba(40,184,160,.17), transparent 64%),
+        linear-gradient(165deg, #04182F 0%, #062A50 52%, #03101F 100%);
+    }
+    .section-dark::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 62px 62px;
+      -webkit-mask-image: radial-gradient(circle at 50% 26%, #000 0%, transparent 76%);
+      mask-image: radial-gradient(circle at 50% 26%, #000 0%, transparent 76%);
+    }
+    .section-dark > * { position: relative; z-index: 1; }
+    .section-dark::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; z-index: 2;
+      background: linear-gradient(90deg, transparent, rgba(40,184,160,.6), transparent);
+    }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--font-num);
+      font-size: 11.5px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase;
+      color: var(--brand);
+    }
+    .eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; opacity: .75; }
+
+    .sec-head { text-align: center; margin-bottom: 54px; }
+    .sec-head .eyebrow { margin-bottom: 16px; }
+    .sec-head h2 {
+      font-size: clamp(25px, 3.1vw, 36px); font-weight: 800; line-height: 1.24;
+      letter-spacing: -.025em; color: var(--txt);
+    }
+    .sec-head p { margin-top: 14px; font-size: 15px; color: var(--muted); }
+    .sec-rule {
+      width: 52px; height: 2px; margin: 22px auto 0; border-radius: 2px;
+      background: linear-gradient(90deg, var(--brand), var(--brand-2));
+    }
 
     /* ========== Hero ========== */
-    .hero {
-      background: var(--grad-primary);
-      color: #fff;
-      padding: 72px 0 96px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: ""; position: absolute; inset: 0;
-      background:
-        radial-gradient(circle at 25% 30%, rgba(40,184,160,0.22), transparent 45%),
-        radial-gradient(circle at 80% 70%, rgba(34,192,224,0.18), transparent 50%);
-      pointer-events: none;
-    }
-    .hero::after {
-      content: ""; position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-      -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-      pointer-events: none;
-    }
+    .hero { padding: 68px 0 84px; }
     .hero-inner {
-      position: relative; z-index: 2;
-      display: grid; grid-template-columns: 1.1fr 1fr;
-      gap: 48px; align-items: center;
-    }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 18px; border-radius: 999px;
-      border: 1px solid rgba(40,184,160,0.6);
-      background: rgba(40,184,160,0.12);
-      color: var(--accent);
-      font-size: 13px; letter-spacing: 2px; font-weight: 500;
-      margin-bottom: 22px;
-    }
-    .hero-badge::before {
-      content: ""; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 8px var(--accent);
+      display: grid; grid-template-columns: 1.08fr 1fr;
+      gap: 56px; align-items: center;
     }
     .hero h1 {
-      font-size: 52px; font-weight: 900; letter-spacing: 1px;
-      line-height: 1.15;
-      margin-bottom: 20px;
+      font-size: clamp(30px, 4.2vw, 52px); font-weight: 800; letter-spacing: -.03em;
+      line-height: 1.16; margin: 20px 0 20px;
     }
     .hero h1 .grad {
       background: var(--grad-accent);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
     .hero p.lead {
-      font-size: 18px; color: rgba(255,255,255,0.82);
-      margin-bottom: 28px; max-width: 520px;
+      font-size: 16.5px; color: rgba(255,255,255,.76);
+      margin-bottom: 28px; max-width: 520px; line-height: 1.85;
     }
     .pain-tags { display: flex; flex-wrap: wrap; gap: 10px; }
     .pain-tags span {
       font-size: 13px; color: #FFC9A8;
-      border: 1px solid rgba(255,138,91,0.4);
-      background: rgba(255,138,91,0.08);
+      border: 1px solid rgba(255,138,91,.36);
+      background: rgba(255,138,91,.09);
       padding: 7px 14px; border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 7px;
+    }
+    .pain-tags span::before {
+      content: ""; width: 5px; height: 5px; border-radius: 50%;
+      background: #FF8A5B; flex: none;
     }
 
-    /* 右侧仪表盘 mockup */
-    .hero-visual {
-      position: relative;
-      display: flex; justify-content: center;
-    }
+    /* 右侧玻璃仪表盘 */
+    .hero-visual { display: flex; justify-content: center; }
     .visual-card {
       position: relative; width: 100%; max-width: 380px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 24px;
-      padding: 36px 30px;
-      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--hair-w);
+      border-radius: 22px; padding: 34px 30px;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 40px 80px -44px rgba(0,0,0,.6);
     }
-    .visual-card .ring-wrap {
-      position: relative; width: 200px; height: 200px; margin: 0 auto 20px;
-    }
+    .visual-card .ring-wrap { position: relative; width: 196px; height: 196px; margin: 0 auto 20px; }
     .visual-card .ring-wrap svg { transform: rotate(-90deg); }
     .visual-card .ring-center {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
     .visual-card .ring-center .num {
-      font-size: 56px; font-weight: 900; color: var(--accent); line-height: 1;
+      font-family: var(--font-num);
+      font-size: 54px; font-weight: 800; color: transparent; line-height: 1;
+      background: linear-gradient(180deg, #FFFFFF 0%, #8FE3D2 100%);
+      -webkit-background-clip: text; background-clip: text;
     }
     .visual-card .ring-center .lbl {
-      font-size: 13px; color: rgba(255,255,255,0.7);
-      margin-top: 6px; letter-spacing: 1px;
+      font-size: 12px; color: rgba(255,255,255,.6);
+      margin-top: 8px; letter-spacing: .18em;
     }
-    .visual-card .ring-meta {
-      text-align: center;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255,255,255,0.12);
-    }
+    .visual-card .ring-meta { padding-top: 18px; border-top: 1px solid rgba(255,255,255,.1); }
     .visual-card .ring-meta .row {
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 13px; color: rgba(255,255,255,0.78);
-      padding: 6px 0;
+      font-size: 13px; color: rgba(255,255,255,.66); padding: 7px 0;
     }
     .visual-card .ring-meta .row span:last-child {
-      font-weight: 700; color: #fff;
+      font-family: var(--font-num); font-weight: 700; color: #fff;
     }
 
     /* ========== 流程区 ========== */
-    .steps-section { padding: 60px 0 20px; }
-    .section-title {
-      text-align: center;
-      font-size: 28px; font-weight: 900;
-      color: var(--primary-deep);
-      margin-bottom: 8px;
-    }
-    .section-sub {
-      text-align: center; color: var(--muted); font-size: 15px;
-      margin-bottom: 40px;
-    }
-    .steps-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
-    }
+    .steps-section { padding: 74px 0 20px; background: #fff; }
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .step-card {
-      position: relative;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px; padding: 28px 24px;
-      transition: transform .25s, box-shadow .25s;
+      position: relative; background: #fff; border: 1px solid var(--hair-b); border-radius: 18px;
+      padding: 34px 28px 30px;
+      transition: transform .42s cubic-bezier(.22,.61,.36,1), box-shadow .42s, border-color .42s;
+    }
+    .step-card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--grad-accent); border-radius: 18px 18px 0 0;
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .5s cubic-bezier(.22,.61,.36,1);
     }
     .step-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 18px 40px -12px rgba(8,62,120,0.18);
+      transform: translateY(-6px); border-color: rgba(40,184,160,.35);
+      box-shadow: 0 26px 50px -22px rgba(8,62,120,.24);
     }
+    .step-card:hover::before { transform: scaleX(1); }
     .step-card .no {
-      position: absolute; top: -14px; left: 24px;
-      padding: 4px 12px;
-      background: var(--grad-accent);
-      color: #062451; font-weight: 700; font-size: 13px;
-      border-radius: 999px; letter-spacing: 1px;
+      font-family: var(--font-num); font-size: 12px; font-weight: 700;
+      letter-spacing: .18em; color: var(--brand);
     }
     .step-card .icon {
-      width: 48px; height: 48px;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--accent-soft); color: var(--accent);
-      border-radius: 12px; font-size: 22px; margin-bottom: 16px;
+      width: 52px; height: 52px; border-radius: 15px; margin: 18px 0 20px;
+      display: flex; align-items: center; justify-content: center; font-size: 21px;
+      background: linear-gradient(135deg, rgba(40,184,160,.14), rgba(34,192,224,.11));
+      border: 1px solid rgba(40,184,160,.22);
+      transition: background .35s, border-color .35s, transform .35s;
     }
-    .step-card h3 { font-size: 17px; color: var(--primary-deep); margin-bottom: 6px; }
-    .step-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .step-card:hover .icon {
+      background: linear-gradient(135deg, #28B8A0, #22C0E0);
+      border-color: transparent; transform: translateY(-2px);
+    }
+    .step-card h3 { font-size: 17px; font-weight: 700; color: var(--txt); margin-bottom: 10px; letter-spacing: -.01em; }
+    .step-card p { font-size: 14px; color: var(--muted); line-height: 1.85; }
 
     /* ========== 输入区 ========== */
-    .diag-section { padding: 60px 0 80px; }
+    .diag-section { padding: 78px 0 86px; }
     .diag-card {
-      max-width: 760px; margin: 0 auto;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      box-shadow: 0 20px 50px -16px rgba(8,62,120,0.16);
+      max-width: 780px; margin: 0 auto;
+      background: #fff; border: 1px solid var(--hair-b);
+      border-radius: 22px;
+      box-shadow: 0 40px 80px -46px rgba(8,62,120,.34);
       overflow: hidden;
     }
     .diag-head {
-      padding: 32px 40px 24px;
-      background: linear-gradient(135deg, #F0FBF8 0%, #EAF7FF 100%);
+      padding: 34px 42px 26px;
+      background: linear-gradient(140deg, #F1FBF8 0%, #EDF7FF 100%);
       border-bottom: 1px solid var(--line);
       text-align: center;
     }
     .diag-head h2 {
-      font-size: 26px; color: var(--primary-deep); font-weight: 900; margin-bottom: 6px;
+      font-size: 24px; font-weight: 800; letter-spacing: -.02em;
+      color: var(--ink-700); margin-bottom: 8px;
     }
     .diag-head p { color: var(--muted); font-size: 14px; }
-    .diag-body { padding: 32px 40px 12px; }
-    .field-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
-    }
+    .diag-body { padding: 32px 42px 8px; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
     .field { margin-bottom: 18px; }
-    .field.full { grid-column: 1 / -1; }
     .field label {
-      display: block; font-size: 14px; font-weight: 500;
-      color: var(--text); margin-bottom: 8px;
+      display: block; font-size: 13.5px; font-weight: 600;
+      color: var(--txt); margin-bottom: 9px;
     }
-    .field label .req { color: var(--warn); margin-left: 2px; }
+    .field label .req { color: #FF8A5B; margin-left: 2px; }
     .field .wrap { position: relative; }
     .field input, .field select {
-      width: 100%; padding: 13px 14px 13px 42px;
-      border: 1px solid var(--line); border-radius: 10px;
-      font-size: 15px; font-family: inherit;
-      color: var(--text); background: var(--bg-soft);
+      width: 100%; padding: 13px 44px 13px 42px;
+      border: 1px solid var(--line); border-radius: 11px;
+      font-size: 15px; font-family: inherit; color: var(--txt);
+      background: #F8FAFC;
       transition: border-color .2s, box-shadow .2s, background .2s;
     }
     .field input:hover, .field select:hover { border-color: #C9D5E1; }
     .field input:focus, .field select:focus {
-      outline: none; border-color: var(--accent); background: #fff;
-      box-shadow: 0 0 0 4px rgba(40,184,160,0.15);
+      outline: none; border-color: var(--brand); background: #fff;
+      box-shadow: 0 0 0 4px rgba(40,184,160,.15);
     }
     .field .wrap i {
       position: absolute; left: 14px; top: 50%;
-      transform: translateY(-50%);
-      font-style: normal; font-size: 16px;
-      color: var(--accent);
+      transform: translateY(-50%); font-style: normal; font-size: 15px;
+      opacity: .85;
     }
     .field .unit {
       position: absolute; right: 14px; top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted); font-size: 13px;
+      transform: translateY(-50%); color: var(--muted); font-size: 12.5px;
     }
     .privacy {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 9px;
       font-size: 13px; color: var(--muted);
-      background: #F0FBF8;
-      border: 1px dashed #B7E8DE;
-      border-radius: 10px;
-      padding: 11px 14px;
-      margin: 8px 0 22px;
+      background: #F1FBF8; border: 1px dashed #B7E8DE;
+      border-radius: 11px; padding: 12px 15px; margin: 6px 0 22px;
     }
     .privacy svg { flex: none; }
-
-    .btn-row {
-      display: flex; gap: 12px; align-items: center;
-      padding: 8px 40px 32px;
-    }
+    .btn-row { display: flex; gap: 12px; align-items: center; padding: 8px 42px 34px; }
     .btn-primary {
       flex: 1; padding: 15px 18px; border: none; border-radius: 12px; cursor: pointer;
-      background: var(--grad-accent);
-      color: #062451;
-      font-size: 16px; font-weight: 700; font-family: inherit; letter-spacing: 1px;
+      background: var(--grad-accent); color: #062451;
+      font-size: 15.5px; font-weight: 700; font-family: inherit; letter-spacing: .5px;
       transition: transform .15s, box-shadow .2s;
-      box-shadow: 0 8px 20px -8px rgba(40,184,160,0.5);
+      box-shadow: 0 10px 24px -10px rgba(40,184,160,.6);
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -8px rgba(40,184,160,0.6); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -10px rgba(40,184,160,.7); }
     .btn-primary:active { transform: translateY(0); }
     .btn-secondary {
-      padding: 15px 20px; border: 1px solid var(--line);
-      background: #fff; border-radius: 12px; cursor: pointer;
-      color: var(--primary); font-size: 14px; font-weight: 500;
-      font-family: inherit; transition: all .2s;
+      padding: 15px 22px; border: 1px solid var(--line); background: #fff;
+      border-radius: 12px; cursor: pointer; color: var(--ink-700);
+      font-size: 14px; font-weight: 600; font-family: inherit; transition: all .2s;
     }
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-secondary:hover { border-color: var(--brand); color: var(--brand); }
 
     /* ========== 结果区 ========== */
-    .result-section { padding: 0 0 80px; display: none; }
+    .result-section { padding: 0 0 90px; display: none; }
     .result-section.show { display: block; }
-    .result-head-bar {
-      text-align: center; margin-bottom: 32px;
-    }
+    .result-head-bar { text-align: center; margin-bottom: 34px; }
     .result-head-bar h2 {
-      font-size: 30px; font-weight: 900; color: var(--primary-deep); margin-bottom: 6px;
+      font-size: clamp(24px, 3vw, 32px); font-weight: 800; letter-spacing: -.025em;
+      color: var(--txt); margin-bottom: 8px;
     }
     .result-head-bar .meta { color: var(--muted); font-size: 14px; }
-    .result-head-bar .meta b { color: var(--primary-deep); font-weight: 700; }
+    .result-head-bar .meta b { color: var(--ink-700); font-weight: 700; font-family: var(--font-num); }
 
     /* 评分仪表盘 */
     .overview-card {
       background: var(--grad-primary);
-      color: #fff;
-      border-radius: 20px;
-      padding: 36px 40px;
-      margin-bottom: 24px;
+      color: #fff; border-radius: 22px; padding: 38px 42px; margin-bottom: 22px;
       display: grid; grid-template-columns: auto 1fr; gap: 48px; align-items: center;
-      box-shadow: 0 24px 50px -16px rgba(6,36,81,0.4);
-      position: relative;
-      overflow: hidden;
+      box-shadow: 0 34px 70px -30px rgba(6,42,80,.55);
+      position: relative; overflow: hidden;
     }
+    .overview-card::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 52px 52px;
+      -webkit-mask-image: radial-gradient(circle at 40% 40%, #000, transparent 76%);
+      mask-image: radial-gradient(circle at 40% 40%, #000, transparent 76%);
+    }
+    .overview-card > * { position: relative; z-index: 1; }
     .overview-card::after {
-      content: ""; position: absolute; right: -80px; top: -80px;
-      width: 280px; height: 280px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(40,184,160,0.18), transparent 70%);
+      content: ""; position: absolute; right: -90px; top: -90px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(40,184,160,.2), transparent 70%);
       pointer-events: none;
     }
-    .overview-ring {
-      position: relative; width: 180px; height: 180px;
-      flex: none;
-    }
+    .overview-ring { position: relative; width: 178px; height: 178px; flex: none; }
     .overview-ring svg { transform: rotate(-90deg); width: 100%; height: 100%; }
     .overview-ring .center {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
     .overview-ring .center .num {
-      font-size: 60px; font-weight: 900; color: var(--accent); line-height: 1;
+      font-family: var(--font-num);
+      font-size: 56px; font-weight: 800; line-height: 1;
+      background: linear-gradient(180deg, #FFFFFF 0%, #8FE3D2 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
     .overview-ring .center .lbl {
-      font-size: 12px; color: rgba(255,255,255,0.75);
-      margin-top: 4px; letter-spacing: 2px;
+      font-size: 11.5px; color: rgba(255,255,255,.6);
+      margin-top: 8px; letter-spacing: .18em;
     }
     .overview-info h3 {
-      font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.7);
-      letter-spacing: 2px; margin-bottom: 12px;
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,.55);
+      letter-spacing: .22em; margin-bottom: 12px; font-family: var(--font-num);
     }
     .overview-info .verdict {
-      font-size: 28px; font-weight: 900; line-height: 1.3;
-      margin-bottom: 14px;
+      font-size: clamp(21px, 2.4vw, 27px); font-weight: 800; line-height: 1.35;
+      letter-spacing: -.02em; margin-bottom: 14px;
     }
     .overview-info .desc {
-      font-size: 14px; color: rgba(255,255,255,0.72); line-height: 1.8;
-      max-width: 480px;
+      font-size: 14px; color: rgba(255,255,255,.7); line-height: 1.85; max-width: 500px;
     }
     .overview-info .tag {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 12px; font-weight: 600; letter-spacing: 1px;
+      display: inline-block; margin-top: 16px; padding: 5px 13px;
+      border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .06em;
     }
-    .tag-good { background: rgba(34,197,94,0.18); color: #6EE7B7; }
-    .tag-warn { background: rgba(245,158,11,0.18); color: #FCD34D; }
-    .tag-bad { background: rgba(239,68,68,0.20); color: #FCA5A5; }
+    .tag-good { background: rgba(34,197,94,.18); color: #6EE7B7; }
+    .tag-warn { background: rgba(245,158,11,.18); color: #FCD34D; }
+    .tag-bad { background: rgba(239,68,68,.2); color: #FCA5A5; }
 
-    /* 4 个指标卡 */
+    /* 指标卡 */
     .metrics-grid {
       display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 18px; margin-bottom: 24px;
+      gap: 18px; margin-bottom: 22px;
     }
     .metric-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 22px 22px 20px;
-      transition: transform .2s, box-shadow .2s;
+      background: #fff; border: 1px solid var(--hair-b); border-radius: 18px;
+      padding: 24px 22px 22px;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
     }
     .metric-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 32px -16px rgba(8,62,120,0.18);
+      transform: translateY(-4px); border-color: rgba(40,184,160,.32);
+      box-shadow: 0 22px 44px -22px rgba(8,62,120,.24);
     }
     .metric-card .top {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
     }
     .metric-card .icon {
-      width: 38px; height: 38px;
+      width: 40px; height: 40px;
       display: flex; align-items: center; justify-content: center;
-      background: var(--accent-soft); color: var(--accent);
-      border-radius: 10px; font-size: 18px;
+      background: linear-gradient(135deg, rgba(40,184,160,.14), rgba(34,192,224,.11));
+      border: 1px solid rgba(40,184,160,.2);
+      border-radius: 12px; font-size: 18px;
     }
     .metric-card .level {
-      font-size: 11px; font-weight: 600; letter-spacing: 1px;
-      padding: 3px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      padding: 4px 11px; border-radius: 999px;
     }
-    .level-good { background: rgba(34,197,94,0.12); color: var(--good); }
-    .level-warn { background: rgba(245,158,11,0.14); color: var(--mid); }
-    .level-bad { background: rgba(239,68,68,0.12); color: var(--bad); }
-
-    .metric-card .name {
-      font-size: 13px; color: var(--muted); margin-bottom: 6px;
-    }
+    .level-good { background: rgba(34,197,94,.12); color: var(--good); }
+    .level-warn { background: rgba(245,158,11,.14); color: var(--mid); }
+    .level-bad { background: rgba(239,68,68,.12); color: var(--bad); }
+    .metric-card .name { font-size: 12.5px; color: var(--muted); margin-bottom: 8px; }
     .metric-card .val {
-      font-size: 26px; font-weight: 900; color: var(--primary-deep);
-      line-height: 1; margin-bottom: 4px;
+      font-family: var(--font-num);
+      font-size: 27px; font-weight: 800; color: var(--ink-700);
+      line-height: 1; margin-bottom: 6px; letter-spacing: -.02em;
     }
-    .metric-card .val .small {
-      font-size: 14px; font-weight: 500; color: var(--muted); margin-left: 3px;
-    }
-    .metric-card .extra { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
-    .metric-card .bar {
-      height: 6px; background: var(--bg-soft);
-      border-radius: 999px; overflow: hidden;
-    }
-    .metric-card .bar-fill {
-      height: 100%; border-radius: 999px;
-      transition: width .8s ease;
-    }
-    .fill-good { background: linear-gradient(90deg, var(--accent), var(--hover)); }
+    .metric-card .val .small { font-size: 13px; font-weight: 600; color: var(--muted); margin-left: 4px; font-family: inherit; }
+    .metric-card .extra { font-size: 11.5px; color: var(--muted); margin-bottom: 14px; }
+    .metric-card .bar { height: 6px; background: #EEF4FA; border-radius: 999px; overflow: hidden; }
+    .metric-card .bar-fill { height: 100%; border-radius: 999px; transition: width .8s ease; }
+    .fill-good { background: linear-gradient(90deg, var(--brand), var(--brand-2)); }
     .fill-warn { background: linear-gradient(90deg, var(--mid), #FBBF24); }
     .fill-bad { background: linear-gradient(90deg, var(--bad), var(--warn)); }
 
-    /* 诊断结论 + 改善建议 */
+    /* 诊断结论 / 改善建议 */
     .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 28px 32px;
-      margin-bottom: 24px;
+      background: #fff; border: 1px solid var(--hair-b); border-radius: 18px;
+      padding: 30px 34px; margin-bottom: 22px;
     }
     .panel-head {
       display: flex; align-items: center; gap: 10px;
-      font-size: 17px; font-weight: 700; color: var(--primary-deep);
-      margin-bottom: 16px;
+      font-size: 16.5px; font-weight: 700; color: var(--ink-700);
+      letter-spacing: -.01em; margin-bottom: 18px;
     }
     .panel-head::before {
-      content: ""; width: 4px; height: 18px;
+      content: ""; width: 3px; height: 17px;
       background: var(--grad-accent); border-radius: 2px;
     }
-    .conclusion p {
-      font-size: 15px; line-height: 1.9; color: var(--text);
-    }
-    .conclusion p + p { margin-top: 10px; }
-
-    .advice-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-    }
+    .conclusion p { font-size: 15px; line-height: 1.95; color: rgba(11,37,69,.78); }
+    .conclusion p + p { margin-top: 12px; }
+    .advice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .advice-card {
-      position: relative;
-      background: var(--bg-soft);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 20px 22px 18px 60px;
-      transition: border-color .2s, background .2s;
+      position: relative; background: #F8FAFC; border: 1px solid var(--line);
+      border-radius: 15px; padding: 20px 22px 19px 62px;
+      transition: border-color .3s, background .3s, transform .3s;
     }
-    .advice-card:hover { border-color: var(--accent); background: #fff; }
+    .advice-card:hover { border-color: rgba(40,184,160,.45); background: #fff; transform: translateY(-2px); }
     .advice-card .no {
-      position: absolute; top: 18px; left: 18px;
+      position: absolute; top: 19px; left: 19px;
       width: 30px; height: 30px;
       display: flex; align-items: center; justify-content: center;
       background: var(--grad-accent); color: #062451;
-      border-radius: 8px;
-      font-size: 13px; font-weight: 700;
+      border-radius: 9px; font-size: 12px; font-weight: 800;
+      font-family: var(--font-num);
     }
-    .advice-card h4 {
-      font-size: 15px; font-weight: 700; color: var(--primary-deep);
-      margin-bottom: 6px;
-    }
-    .advice-card p {
-      font-size: 13.5px; color: var(--muted); line-height: 1.7;
-    }
+    .advice-card h4 { font-size: 15px; font-weight: 700; color: var(--txt); margin-bottom: 7px; letter-spacing: -.01em; }
+    .advice-card p { font-size: 13.5px; color: var(--muted); line-height: 1.75; }
 
     /* CTA */
     .cta-section {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
-      border-radius: 20px;
-      padding: 44px 40px;
-      text-align: center;
-      color: #fff;
-      position: relative; overflow: hidden;
+      position: relative; overflow: hidden; border-radius: 22px;
+      padding: 46px 42px; text-align: center; color: #fff;
+      background:
+        radial-gradient(680px 320px at 12% -20%, rgba(34,192,224,.26), transparent 62%),
+        linear-gradient(140deg, #062A50 0%, #083E78 60%, #04182F 100%);
+      box-shadow: 0 34px 70px -38px rgba(6,42,80,.55);
     }
     .cta-section::before {
-      content: ""; position: absolute; left: -100px; bottom: -100px;
-      width: 360px; height: 360px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(40,184,160,0.25), transparent 65%);
+      content: ""; position: absolute; left: -110px; bottom: -120px;
+      width: 380px; height: 380px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(40,184,160,.22), transparent 66%);
     }
     .cta-section h3 {
-      font-size: 26px; font-weight: 900; margin-bottom: 12px;
-      position: relative;
+      position: relative; font-size: clamp(22px, 2.6vw, 27px); font-weight: 800;
+      letter-spacing: -.025em; margin-bottom: 12px;
     }
     .cta-section p {
-      font-size: 15px; color: rgba(255,255,255,0.78);
-      max-width: 500px; margin: 0 auto 24px;
-      position: relative;
+      position: relative; font-size: 14.5px; color: rgba(255,255,255,.72);
+      max-width: 520px; margin: 0 auto 26px; line-height: 1.85;
     }
-    .cta-actions {
-      display: flex; gap: 14px; justify-content: center;
-      flex-wrap: wrap;
-      position: relative;
-    }
+    .cta-actions { position: relative; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
     .cta-actions a {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 14px 28px; border-radius: 12px;
       font-size: 15px; font-weight: 700;
-      transition: transform .15s, box-shadow .2s;
+      transition: transform .2s, box-shadow .2s;
     }
-    .cta-phone {
-      background: var(--grad-accent); color: var(--primary-deep);
-      box-shadow: 0 10px 24px -8px rgba(40,184,160,0.6);
-    }
-    .cta-wechat {
-      background: rgba(255,255,255,0.12); color: #fff;
-      border: 1px solid rgba(255,255,255,0.28);
-    }
-    .cta-phone:hover, .cta-wechat:hover {
-      transform: translateY(-2px);
-    }
+    .cta-phone { background: var(--grad-accent); color: #062451; box-shadow: 0 12px 26px -10px rgba(40,184,160,.6); }
+    .cta-wechat { background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.26); }
+    .cta-phone:hover, .cta-wechat:hover { transform: translateY(-2px); }
 
-    /* ========== Footer ========== */
-    footer {
-      background: #0F172A; color: rgba(255,255,255,0.6);
-      text-align: center; padding: 32px 20px;
-      font-size: 13px; line-height: 2;
+    /* ========== 页脚 ========== */
+    .site-footer {
+      position: relative; overflow: hidden;
+      background: linear-gradient(180deg, #04182F 0%, #03101F 100%);
+      color: rgba(255,255,255,.55); text-align: center;
+      padding: 40px 20px 36px; font-size: 13.5px; line-height: 2;
     }
-    footer a { color: var(--accent); }
-    footer a:hover { color: var(--hover); }
+    .site-footer::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 56px 56px;
+      -webkit-mask-image: radial-gradient(circle at 50% 0%, #000, transparent 70%);
+      mask-image: radial-gradient(circle at 50% 0%, #000, transparent 70%);
+    }
+    .site-footer > * { position: relative; z-index: 1; }
+    .site-footer .f-brand { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: .02em; }
+    .site-footer a { color: var(--brand); }
+    .site-footer a:hover { color: var(--brand-2); }
 
-    /* ========== Responsive ========== */
+    /* ========== 响应式 ========== */
     @media (max-width: 980px) {
-      .hero-inner { grid-template-columns: 1fr; gap: 32px; }
-      .hero h1 { font-size: 38px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 34px; }
       .steps-grid { grid-template-columns: 1fr; }
-      .overview-card { grid-template-columns: 1fr; text-align: center; gap: 24px; }
+      .overview-card { grid-template-columns: 1fr; text-align: center; gap: 26px; padding: 32px 24px; }
       .overview-ring { margin: 0 auto; }
       .overview-info .desc { margin: 0 auto; }
       .metrics-grid { grid-template-columns: 1fr 1fr; }
       .advice-grid { grid-template-columns: 1fr; }
       .field-grid { grid-template-columns: 1fr; }
-      .diag-body, .btn-row { padding-left: 24px; padding-right: 24px; }
+      .diag-body, .btn-row { padding-left: 26px; padding-right: 26px; }
+      .nav-right .nav-link { display: none; }
     }
     @media (max-width: 600px) {
-      .hero { padding: 56px 0 72px; }
-      .hero h1 { font-size: 30px; }
-      .hero p.lead { font-size: 16px; }
+      .hero { padding: 50px 0 62px; }
+      .steps-section { padding: 56px 0 16px; }
+      .diag-section { padding: 60px 0 66px; }
       .metrics-grid { grid-template-columns: 1fr; }
-      .diag-head, .panel, .cta-section { padding-left: 20px; padding-right: 20px; }
+      .diag-head { padding: 28px 22px 22px; }
+      .panel { padding: 24px 22px; }
+      .cta-section { padding: 34px 22px; }
+      .result-section { padding-bottom: 70px; }
     }
   </style>
 </head>
-<body data-page-node-id="KAzBSpRlJ7g0jb774AcB8s">
+<body>
 
   <!-- ========== 顶栏 ========== -->
-  <header data-page-node-id="bK7CvpKjAaWY4DBxrCCdT0">
-    <div class="nav-inner" data-page-node-id="oYEGbwC9v6GD9C9ehDNS4Y">
-      <div class="brand" data-page-node-id="I1QHhz39NJYPxGp9SHcJrz"><span class="dot" data-page-node-id="qy8Aj6KBA7ItfNoxnsHWzM"></span>百鲸咨询</div>
-      <a class="back" href="index.html" data-page-node-id="ARkqgFgKOh3fzZNkswcKmp">← 返回首页</a>
+  <header id="siteHeader" class="site-header">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="返回首页">
+        <img src="logo0（透明）.png" alt="百鲸咨询logo">
+      </a>
+      <nav class="nav-right">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="index.html#articles" class="nav-link">精选文章</a>
+        <a href="index.html#contact" class="nav-link">联系我们</a>
+        <a href="https://g.baijingzixun.top" target="_blank" class="nav-cta">百鲸 G 系统</a>
+      </nav>
     </div>
   </header>
 
   <!-- ========== Hero ========== -->
-  <section class="hero" data-page-node-id="oPhCpCG3NNkqo71hkfnZuj">
-    <div class="container hero-inner" data-page-node-id="yuboZZEStwt6bVWnW2HiVh">
-      <div data-page-node-id="p18NgWwBur4KCwAIwNp4sl">
-        <span class="hero-badge" data-page-node-id="LQIFQZ7paTS7GF3j8lCCEI">免费 · 30 秒企业健康自测</span>
-        <h1 data-page-node-id="rI8qKFnnS0adERr210rGwF">你的企业，<span class="grad" data-page-node-id="pnsBt3ltK1nyM4N2kOmvAs">卡在哪一步？</span></h1>
-        <p class="lead" data-page-node-id="Fi3BXC59atlIjgPgFXoHGJ">只需 3 个数字，AI 自动生成一份属于你的企业诊断报告，定位成本、人效、利润三大命门。</p>
-        <div class="pain-tags" data-page-node-id="SmnHiXdrfI5xEcQvWbPFYl">
-          <span data-page-node-id="rmJtrhCB2nxV8BRlkRZVbC">成本居高不下</span>
-          <span data-page-node-id="3bkmq03SFoA9CfuVI0td8z">团队效率低下</span>
-          <span data-page-node-id="zgqXLEDWx4paXbLn01smnL">员工相互推责</span>
-          <span data-page-node-id="lXJ4ynQnatQ3wAOhsRQudL">人才流失严重</span>
-          <span data-page-node-id="K2SyXKbl6FYpLBiy29FU5I">战略方向模糊</span>
-          <span data-page-node-id="kqYgNKMrrwzibeB7Fkj1iT">利润增长乏力</span>
+  <section class="hero section-dark">
+    <div class="container hero-inner">
+      <div>
+        <span class="eyebrow">Free Diagnostic · 30 Seconds</span>
+        <h1>你的企业，<br><span class="grad">卡在哪一步？</span></h1>
+        <p class="lead">只需 3 个数字，AI 自动生成一份属于你的企业诊断报告，定位成本、人效、利润三大命门。</p>
+        <div class="pain-tags">
+          <span>成本居高不下</span>
+          <span>团队效率低下</span>
+          <span>员工相互推责</span>
+          <span>人才流失严重</span>
+          <span>战略方向模糊</span>
+          <span>利润增长乏力</span>
         </div>
       </div>
-      <div class="hero-visual" data-page-node-id="sJCBgVPwwftQvjyv5e5URy">
-        <div class="visual-card" data-page-node-id="RX3L0RvzDRZYsaNRdZeklz">
-          <div class="ring-wrap" data-page-node-id="bAW28s4fKnjdQ2ujaIBOIn">
-            <svg viewBox="0 0 200 200" width="200" height="200" data-page-node-id="JJV7Xfs5oHb84OJo6sKXyN">
-              <circle cx="100" cy="100" r="86" stroke="rgba(255,255,255,0.12)" stroke-width="12" fill="none" data-page-node-id="3XASFDLGvfMMcERmt3fZSF"/>
+      <div class="hero-visual">
+        <div class="visual-card">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 200 200" width="196" height="196">
+              <circle cx="100" cy="100" r="86" stroke="rgba(255,255,255,0.12)" stroke-width="12" fill="none"/>
               <circle cx="100" cy="100" r="86" stroke="url(#heroGrad)" stroke-width="12" fill="none"
-                      stroke-linecap="round"
-                      stroke-dasharray="540"
-                      stroke-dashoffset="205"
-                      style="filter: drop-shadow(0 0 6px rgba(40,184,160,0.6));" data-page-node-id="vrWiiQa1IAxib2GLNJ6bCG"/>
-              <defs data-page-node-id="7uIcC1TEf0cNhgMN3bsbAN">
-                <linearGradient id="heroGrad" x1="0" y1="0" x2="1" y2="1" data-page-node-id="hm5TATGjXOG0iidMi3IY6K">
-                  <stop offset="0%" stop-color="#28B8A0" data-page-node-id="tRR7aRAJu1PZajei1tiPba"/>
-                  <stop offset="100%" stop-color="#22C0E0" data-page-node-id="XnxOfZhjaGQ6GB7NBktDUA"/>
+                      stroke-linecap="round" stroke-dasharray="540" stroke-dashoffset="205"
+                      style="filter: drop-shadow(0 0 6px rgba(40,184,160,0.6));"/>
+              <defs>
+                <linearGradient id="heroGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#28B8A0"/>
+                  <stop offset="100%" stop-color="#22C0E0"/>
                 </linearGradient>
               </defs>
             </svg>
-            <div class="ring-center" data-page-node-id="S89AnKibr3STUq3i1IsGbL">
-              <div class="num" data-page-node-id="RtXh4Fk0NKv1CYS0jBX9ji">62</div>
-              <div class="lbl" data-page-node-id="lWhKh5obN0hCdrJkk9qHsB">健康度</div>
+            <div class="ring-center">
+              <div class="num">62</div>
+              <div class="lbl">健康度</div>
             </div>
           </div>
-          <div class="ring-meta" data-page-node-id="7L8Q0ju6I0pzJUm5HYWBDd">
-            <div class="row" data-page-node-id="Fo150IfVTst85tbxRzzAZv"><span data-page-node-id="P6Xa1LBYd3GWSEHCVVWoLX">人均产值</span><span data-page-node-id="zEENz8DpNMnwRjtOUYeTld">30 万</span></div>
-            <div class="row" data-page-node-id="aJE72xDdE7Y6HczPAifBLc"><span data-page-node-id="cBY4sHWv6BpqLbIfaEcRkW">成本率</span><span data-page-node-id="erFpbWbDCEIoQvcLeXVNVf">72%</span></div>
-            <div class="row" data-page-node-id="cCkaBEDfc5nipLyhexNLEp"><span data-page-node-id="LWfoFYs8fHdffFKX0lOWDh">利润率</span><span data-page-node-id="ygYO3paLPPWQww54ndlrJu">18%</span></div>
+          <div class="ring-meta">
+            <div class="row"><span>人均产值</span><span>30 万</span></div>
+            <div class="row"><span>成本率</span><span>72%</span></div>
+            <div class="row"><span>利润率</span><span>18%</span></div>
           </div>
         </div>
       </div>
@@ -622,171 +614,199 @@
   </section>
 
   <!-- ========== 流程区 ========== -->
-  <section class="steps-section" data-page-node-id="vkZ0YaccavzSmaJFwwijHk">
-    <div class="container" data-page-node-id="lSH0a0QdX1oouLJ4IAvohF">
-      <h2 class="section-title" data-page-node-id="E7HSugBA5fXlh6k7GeiszW">三步看清你的企业</h2>
-      <p class="section-sub" data-page-node-id="vd4CEBpeX9cgUt02IWWHTR">轻量输入，重磅输出 — 数据本地计算，不上传、不留存</p>
-      <div class="steps-grid" data-page-node-id="C3KEnmdUbJZmjGVCnm48OZ">
-        <div class="step-card" data-page-node-id="YpQIZEClpJivoJpRiEUBrd">
-          <span class="no" data-page-node-id="MnlCThto5WE1Ri77CUZMny">STEP 01</span>
-          <div class="icon" data-page-node-id="1KQPanLoG0cgWobjEDwMOo">📝</div>
-          <h3 data-page-node-id="1J8spOk499PnGS9h5MgPWp">填 3 个基础数据</h3>
-          <p data-page-node-id="6cpcGErGfa4Ig63anb6W7h">人数、营收、成本 — 数字越准确，诊断越精准。</p>
+  <section class="steps-section">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="eyebrow center">How It Works</span>
+        <h2>三步看清你的企业</h2>
+        <p>轻量输入，重磅输出 — 数据本地计算，不上传、不留存</p>
+        <div class="sec-rule"></div>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <span class="no">STEP 01</span>
+          <div class="icon">📝</div>
+          <h3>填 3 个基础数据</h3>
+          <p>人数、营收、成本 — 数字越准确，诊断越精准。</p>
         </div>
-        <div class="step-card" data-page-node-id="gPdRtXeDFOsTJSyEQ49CEv">
-          <span class="no" data-page-node-id="4XlvPWxF0QPLhMFqRGWS3Q">STEP 02</span>
-          <div class="icon" data-page-node-id="axe6JvDnnn976w9srIEYpG">📊</div>
-          <h3 data-page-node-id="w3Ctj2Fz6Er3TEaXQaMyXy">AI 自动算分</h3>
-          <p data-page-node-id="9fAFfImrCHEa6IRaMyHp3W">人均产值、成本率、利润率等行业基准对比，30 秒出综合健康度。</p>
+        <div class="step-card reveal">
+          <span class="no">STEP 02</span>
+          <div class="icon">📊</div>
+          <h3>AI 自动算分</h3>
+          <p>人均产值、成本率、利润率等行业基准对比，30 秒出综合健康度。</p>
         </div>
-        <div class="step-card" data-page-node-id="WJZnXjcy9AmqUsooEgxaAb">
-          <span class="no" data-page-node-id="Xm4TfPeDnOTuJthPJxUE5B">STEP 03</span>
-          <div class="icon" data-page-node-id="S0yS4Q2NanQsQYWC9ANjUE">🎯</div>
-          <h3 data-page-node-id="tfDlhRYjXK5k57APm1qaeh">获取报告 + 改善建议</h3>
-          <p data-page-node-id="FgokOjqIZuz5BGwK6pNW64">诊断结论 + 5 条改善建议 + 顾问联系方式，按需深化陪跑。</p>
+        <div class="step-card reveal">
+          <span class="no">STEP 03</span>
+          <div class="icon">🎯</div>
+          <h3>获取报告 + 改善建议</h3>
+          <p>诊断结论 + 6 条改善建议 + 顾问联系方式，按需深化陪跑。</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ========== 输入区 ========== -->
-  <section class="diag-section" data-page-node-id="aH3BPQj1VSYaQDKCHOw9RX">
-    <div class="container" data-page-node-id="kG7QoZnt1AaimIbSeT6YhW">
-      <div class="diag-card" data-page-node-id="hqn0LIDDoF1tehIYYEbUAi">
-        <div class="diag-head" data-page-node-id="DZLyCLz8kjoNxTKi6EGILu">
-          <h2 data-page-node-id="m9JcbzVFyCeYue1ijPqWtP">📊 开始你的企业诊断</h2>
-          <p data-page-node-id="WZYpSbg4KBXMpT0aFHrgrF">填写数据，立即生成 AI 诊断报告</p>
+  <section class="diag-section">
+    <div class="container">
+      <div class="diag-card reveal">
+        <div class="diag-head">
+          <h2>📊 开始你的企业诊断</h2>
+          <p>填写数据，立即生成 AI 诊断报告</p>
         </div>
-        <div class="diag-body" data-page-node-id="uv0M4ckcffWT4mGRvRNueB">
-          <div class="field-grid" data-page-node-id="NJEB8LctA9cbJEDJVmCcRZ">
-            <div class="field" data-page-node-id="HF3YOseZH5x9hjIiWwF7ju">
-              <label data-page-node-id="1LdiJFDyLypjuUBaiB9xnh">员工人数 <span class="req" data-page-node-id="TUrqxMdTAhEY1F3nxrNhe7">*</span></label>
-              <div class="wrap" data-page-node-id="YW5DTWV9T8TzWp4wYN4YIM">
-                <i data-page-node-id="RDJ5ilziHTVrS3bCixSPkz">👥</i>
-                <input type="number" id="people" placeholder="例如：120" min="1" data-page-node-id="cSiRflblgJkWCQtAslIEJw">
-                <span class="unit" data-page-node-id="nSe3ANXWGqTrQmcN4UDGgi">人</span>
+        <div class="diag-body">
+          <div class="field-grid">
+            <div class="field">
+              <label>员工人数 <span class="req">*</span></label>
+              <div class="wrap">
+                <i>👥</i>
+                <input type="number" id="people" placeholder="例如：120" min="1">
+                <span class="unit">人</span>
               </div>
             </div>
-            <div class="field" data-page-node-id="TEgvL5XPA7T9C7bM3ML9a5">
-              <label data-page-node-id="JwCjPN64G7XDKd1NmEP0z1">年营业收入 <span class="req" data-page-node-id="heT8gJYUnXrXTyVpKbbILw">*</span></label>
-              <div class="wrap" data-page-node-id="SSktVnyD3tzCcuROrE0D6P">
-                <i data-page-node-id="aq0cB0uLk1WG9MH7vfLm2B">💰</i>
-                <input type="number" id="revenue" placeholder="例如：3000" min="1" data-page-node-id="kv1XgWSkhVcyvVzIatQIrn">
-                <span class="unit" data-page-node-id="GFxxdPsEzsCDiMsV9DPMjP">万元</span>
+            <div class="field">
+              <label>年营业收入 <span class="req">*</span></label>
+              <div class="wrap">
+                <i>💰</i>
+                <input type="number" id="revenue" placeholder="例如：3000" min="1">
+                <span class="unit">万元</span>
               </div>
             </div>
-            <div class="field" data-page-node-id="1fMlPwJZalJtgxGyPAt5kR">
-              <label data-page-node-id="lTOEhHYOzAV4Poef8lCxIy">年总成本 <span class="req" data-page-node-id="XaMNGfeBbpWUt5Gcmg51ZD">*</span></label>
-              <div class="wrap" data-page-node-id="G2vEkZE9y846YTOgWBEEko">
-                <i data-page-node-id="m5G66xy0A6f7XNUQkYJCfA">📊</i>
-                <input type="number" id="cost" placeholder="例如：2400" min="1" data-page-node-id="rmkWUN6n9I50kCBgE3Bj9F">
-                <span class="unit" data-page-node-id="DzQNg9AX67t0KLuYsv6BdQ">万元</span>
+            <div class="field">
+              <label>年总成本 <span class="req">*</span></label>
+              <div class="wrap">
+                <i>📊</i>
+                <input type="number" id="cost" placeholder="例如：2400" min="1">
+                <span class="unit">万元</span>
               </div>
             </div>
-            <div class="field" data-page-node-id="ZEDAv7B2vVyMebVzeXZ2vY">
-              <label data-page-node-id="ugB1cuIyKuxoBfdXhwCyKM">所属行业 <span style="color:var(--muted); font-weight:normal;" data-page-node-id="yaGko5Nl3FtHbjw1o7ki3d">(可选)</span></label>
-              <div class="wrap" data-page-node-id="tiTUt6mbUB5T5PsoBujJaz">
-                <i data-page-node-id="t0pldFthaJ3TAXuces2SYD">🏭</i>
-                <select id="industry" data-page-node-id="y8VLxTZ5ZwhYqm9KWiDKwL">
-                  <option value="制造" data-page-node-id="HeUqXk9rzBf50sHMRIF5f5">制造业</option>
-                  <option value="服务" data-page-node-id="F7guBUGodwNYZH6s4C99IZ">服务业</option>
-                  <option value="零售" data-page-node-id="yZOQehQyql5RSJyaGF0B0z">零售电商</option>
-                  <option value="科技" data-page-node-id="d9DBmCFwuk03WmwkC8HnR8">科技互联网</option>
-                  <option value="其他" data-page-node-id="CRLtnfFPQj6s0Xq3YwNnoX">其他</option>
+            <div class="field">
+              <label>所属行业 <span style="color:var(--muted); font-weight:400;">(可选)</span></label>
+              <div class="wrap">
+                <i>🏭</i>
+                <select id="industry">
+                  <option value="制造">制造业</option>
+                  <option value="服务">服务业</option>
+                  <option value="零售">零售电商</option>
+                  <option value="科技">科技互联网</option>
+                  <option value="其他">其他</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <div class="privacy" data-page-node-id="CH7rZajrII4TVH6DdGPXO9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#28B8A0" stroke-width="2" data-page-node-id="L8yD0vIEGBWSQAS9p5EotB">
-              <rect x="4" y="11" width="16" height="10" rx="2" data-page-node-id="k9f0WNcOVHz9y8Hm6nptuK"/>
-              <path d="M8 11V7a4 4 0 0 1 8 0v4" data-page-node-id="iGtrUcMsUasvW0V5AYfNVv"/>
+          <div class="privacy">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#28B8A0" stroke-width="2">
+              <rect x="4" y="11" width="16" height="10" rx="2"/>
+              <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
             </svg>
-            <span data-page-node-id="GwaEkz08XZy9q8cAdZLi2l">数据不会保存，已脱敏处理 — 仅在你的浏览器内完成计算</span>
+            <span>数据不会保存，已脱敏处理 — 仅在你的浏览器内完成计算</span>
           </div>
         </div>
-        <div class="btn-row" data-page-node-id="ZWwtoN5bX79HfXPkeRblZe">
-          <button class="btn-primary" id="genBtn" data-page-node-id="j5Mc1uxfBLjjLJh5FlPACm">一键生成诊断报告 →</button>
-          <button class="btn-secondary" id="sampleBtn" data-page-node-id="RIfpdeCBjnXe16djASD3UD">试试示例</button>
+        <div class="btn-row">
+          <button class="btn-primary" id="genBtn">一键生成诊断报告 →</button>
+          <button class="btn-secondary" id="sampleBtn">试试示例</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ========== 结果区 ========== -->
-  <section class="result-section" id="result" data-page-node-id="B8HewZ6TorbCKHo8X48zbD">
-    <div class="container" data-page-node-id="d6DfyBIWf2SHs0PfUbdtV8">
+  <section class="result-section" id="result">
+    <div class="container">
 
-      <div class="result-head-bar" data-page-node-id="WPjfcYqDzGcy7OGqLX0rDB">
-        <h2 data-page-node-id="t020ysLbMbgoXYM8YB3JaM">📋 你的企业诊断报告</h2>
-        <div class="meta" id="resultMeta" data-page-node-id="EXEBIIqaVoQDJuoEUBT5IL"></div>
+      <div class="result-head-bar">
+        <h2>📋 你的企业诊断报告</h2>
+        <div class="meta" id="resultMeta"></div>
       </div>
 
       <!-- 综合评分 -->
-      <div class="overview-card" data-page-node-id="31rgLP7vTVz8mzvc444jY3">
-        <div class="overview-ring" data-page-node-id="oP8IoNMVL2fXB5JuniPGFq">
-          <svg viewBox="0 0 200 200" data-page-node-id="KL46OhCYXi6381fn61E1Co">
-            <circle cx="100" cy="100" r="86" stroke="rgba(255,255,255,0.12)" stroke-width="12" fill="none" data-page-node-id="Ay0y3rWpiCu14Vg5KFlsDs"/>
+      <div class="overview-card">
+        <div class="overview-ring">
+          <svg viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="86" stroke="rgba(255,255,255,0.12)" stroke-width="12" fill="none"/>
             <circle id="overviewCircle" cx="100" cy="100" r="86"
                     stroke="url(#mainGrad)" stroke-width="12" fill="none"
-                    stroke-linecap="round"
-                    stroke-dasharray="540"
-                    stroke-dashoffset="540"
-                    style="filter: drop-shadow(0 0 8px rgba(40,184,160,0.7));" data-page-node-id="a2HEYWHqM2SumTfqbBfDkY"/>
-            <defs data-page-node-id="pdGsfKzaVhqOKF3dAE9CeS">
-              <linearGradient id="mainGrad" x1="0" y1="0" x2="1" y2="1" data-page-node-id="NIN5N2Wm5Rc1k7lTy7MVBA">
-                <stop offset="0%" stop-color="#28B8A0" data-page-node-id="fUuURZicLPEcMMArDoeTGs"/>
-                <stop offset="100%" stop-color="#22C0E0" data-page-node-id="NpchO34Ffh2FSjSrDIbIca"/>
+                    stroke-linecap="round" stroke-dasharray="540" stroke-dashoffset="540"
+                    style="filter: drop-shadow(0 0 8px rgba(40,184,160,0.7));"/>
+            <defs>
+              <linearGradient id="mainGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#28B8A0"/>
+                <stop offset="100%" stop-color="#22C0E0"/>
               </linearGradient>
             </defs>
           </svg>
-          <div class="center" data-page-node-id="P7sRRqogo3hSD1SX0Y5JyQ">
-            <div class="num" id="scoreNum" data-page-node-id="S0sqtKUGKoaOmkMg15PM1P">--</div>
-            <div class="lbl" data-page-node-id="gWs5SlMKACkdZC8rlEYKLV">综合健康度</div>
+          <div class="center">
+            <div class="num" id="scoreNum">--</div>
+            <div class="lbl">综合健康度</div>
           </div>
         </div>
-        <div class="overview-info" data-page-node-id="5Jr01PohEmvUpP7Va6XBKH">
-          <h3 data-page-node-id="c2AWypP01TUJqX6QfUsejv">总体评估</h3>
-          <div class="verdict" id="scoreVerdict" data-page-node-id="GyHEb2yH1DWHtGVnHBIiIe">--</div>
-          <div class="desc" id="scoreDesc" data-page-node-id="cogfssD8p39VQkIKz3EMgZ"></div>
-          <span class="tag tag-warn" id="scoreTag" data-page-node-id="aNhqOLVHvAyMZTRyKIkYv1">--</span>
+        <div class="overview-info">
+          <h3>OVERALL ASSESSMENT</h3>
+          <div class="verdict" id="scoreVerdict">--</div>
+          <div class="desc" id="scoreDesc"></div>
+          <span class="tag tag-warn" id="scoreTag">--</span>
         </div>
       </div>
 
       <!-- 4 个指标 -->
-      <div class="metrics-grid" id="metrics" data-page-node-id="EupViLdBbg2X8Jl7umPgZr"></div>
+      <div class="metrics-grid" id="metrics"></div>
 
       <!-- 诊断结论 -->
-      <div class="panel conclusion" data-page-node-id="mURgCok6G3q7z0C83DDy7T">
-        <div class="panel-head" data-page-node-id="8ljbipLqi5CX99GLo7bv5t">🔍 诊断结论</div>
-        <p id="conclusion" data-page-node-id="NHJNnyiZJP1629Z7fz3qcM"></p>
+      <div class="panel conclusion">
+        <div class="panel-head">🔍 诊断结论</div>
+        <p id="conclusion"></p>
       </div>
 
       <!-- 改善建议 -->
-      <div class="panel" data-page-node-id="jvOUdsUfpAIrbeJf05g4Al">
-        <div class="panel-head" data-page-node-id="epD94iN9Es9HXz5sYxcomy">💡 改善建议</div>
-        <div class="advice-grid" id="advice" data-page-node-id="UtTBpyqDBPrJoMD8OLky6N"></div>
+      <div class="panel">
+        <div class="panel-head">💡 改善建议</div>
+        <div class="advice-grid" id="advice"></div>
       </div>
 
       <!-- CTA -->
-      <div class="cta-section" data-page-node-id="53mivz8GyHKKgHHGGY4Mrn">
-        <h3 data-page-node-id="tCgIxTVBbma1YEZ3RWs3pQ">想要一份定制化的改善方案？</h3>
-        <p data-page-node-id="XJGnvFnogs4Yz2uE0PEWZh">联系咨询师，获得针对你企业的专属诊断与陪跑方案 — 我们会在 24 小时内回复。</p>
-        <div class="cta-actions" data-page-node-id="jyvC1b4UAKrxIlYnFMUBZx">
-          <a class="cta-phone" href="tel:15158195310" data-page-node-id="1Ri3hapWPmzcFDK7KmmgtC">📞 15158195310</a>
-          <a class="cta-wechat" href="#contact" data-page-node-id="XBkgdvsTSlf5Ah8x3x0up8">💬 添加微信咨询</a>
+      <div class="cta-section">
+        <h3>想要一份定制化的改善方案？</h3>
+        <p>联系咨询师，获得针对你企业的专属诊断与陪跑方案 — 我们会在 24 小时内回复。</p>
+        <div class="cta-actions">
+          <a class="cta-phone" href="tel:15158195310">📞 15158195310</a>
+          <a class="cta-wechat" href="index.html#contact">💬 联系我们</a>
         </div>
       </div>
     </div>
   </section>
 
-  <footer data-page-node-id="QrY3KSGeP36Pm7erVGJqt4">
-    © 百鲸咨询 版权所有 · 数据仅用于本次诊断，不会保存或上传<br data-page-node-id="jeqy4CXAjlQImi0QAGXjmm">
-    <a href="https://beian.miit.gov.cn" target="_blank" data-page-node-id="3qBVMqs5pNbtkwCx4YIy9s">浙ICP备2023042992号</a>
+  <!-- ========== 页脚 ========== -->
+  <footer class="site-footer">
+    <div class="f-brand">百鲸咨询 · 让 AI 真正长在业务里</div>
+    <div>© 百鲸咨询 版权所有 · 数据仅用于本次诊断，不会保存或上传</div>
+    <div><a href="https://beian.miit.gov.cn" target="_blank">浙ICP备2023042992号</a></div>
   </footer>
 
   <script>
+    // —— 导航栏滚动状态 + 滚动显现 ——
+    (function () {
+      var header = document.getElementById('siteHeader');
+      if (header) {
+        var onScroll = function () { header.classList.toggle('scrolled', window.scrollY > 12); };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
+      var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (els.length && !reduce && 'IntersectionObserver' in window) {
+        els.forEach(function (el) { el.style.opacity = '0'; el.style.transform = 'translateY(26px)'; });
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+        els.forEach(function (el, i) {
+          el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
+          io.observe(el);
+        });
+      }
+    })();
+
     const peopleEl = document.getElementById('people');
     const revenueEl = document.getElementById('revenue');
     const costEl = document.getElementById('cost');
@@ -899,16 +919,16 @@
 
       // 改善建议
       const items = [];
-      if (capLevel !== 'good') items.push({ n: 1, t: '提升组织人效', d: '梳理岗位职责与流程，建立以结果为导向的绩效考核体系，让每个岗位都有清晰的产出目标。' });
-      if (costLevel !== 'good') items.push({ n: 2, t: '优化成本结构', d: '盘点成本结构，识别高耗低效环节，通过精益管理与数字化手段压缩非必要支出。' });
-      if (effLevel !== 'good') items.push({ n: 3, t: '改善盈利能力', d: '聚焦高毛利业务，砍掉亏损产品线；同时提升定价与议价能力，扩大利润空间。' });
-      if (loadLevel === 'bad') items.push({ n: 4, t: '降低人员负荷', d: '人均人力成本过高，可能预示组织臃肿或人均产出不足 — 需要重设编制、流程自动化或业务外包。' });
-      items.push({ n: 5, t: '明确权责机制', d: '建立清晰的权责体系与协作机制，避免"推责扯皮"，让问题有人负责、目标有人担当。' });
-      items.push({ n: 6, t: '借力 AI 工具', d: '引入 AI 应用培训与 FDE 工程实施，用数字化工具降低人工成本、提升决策效率与组织响应速度。' });
+      if (capLevel !== 'good') items.push({ t: '提升组织人效', d: '梳理岗位职责与流程，建立以结果为导向的绩效考核体系，让每个岗位都有清晰的产出目标。' });
+      if (costLevel !== 'good') items.push({ t: '优化成本结构', d: '盘点成本结构，识别高耗低效环节，通过精益管理与数字化手段压缩非必要支出。' });
+      if (effLevel !== 'good') items.push({ t: '改善盈利能力', d: '聚焦高毛利业务，砍掉亏损产品线；同时提升定价与议价能力，扩大利润空间。' });
+      if (loadLevel === 'bad') items.push({ t: '降低人员负荷', d: '人均人力成本过高，可能预示组织臃肿或人均产出不足 — 需要重设编制、流程自动化或业务外包。' });
+      items.push({ t: '明确权责机制', d: '建立清晰的权责体系与协作机制，避免"推责扯皮"，让问题有人负责、目标有人担当。' });
+      items.push({ t: '借力 AI 工具', d: '引入 AI 应用培训与 FDE 工程实施，用数字化工具降低人工成本、提升决策效率与组织响应速度。' });
 
-      document.getElementById('advice').innerHTML = items.slice(0, 6).map((a) => `
+      document.getElementById('advice').innerHTML = items.slice(0, 6).map((a, i) => `
         <div class="advice-card">
-          <span class="no">${a.n.toString().padStart(2,'0')}</span>
+          <span class="no">${(i + 1).toString().padStart(2, '0')}</span>
           <h4>${a.t}</h4>
           <p>${a.d}</p>
         </div>
