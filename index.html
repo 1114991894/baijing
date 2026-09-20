@@ -358,12 +358,23 @@
 
     .tool-dropdown {
       max-height: 0;
+      opacity: 0;
+      visibility: hidden;
       overflow: hidden;
-      transition: max-height 0.3s ease;
+      z-index: 60;
+      transition: max-height 0.3s ease, opacity 0.25s ease, visibility 0.3s;
     }
 
     .tool-dropdown.open {
-      max-height: 300px;
+      max-height: 320px;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* 页脚内的定位容器需要高于上方内容，避免菜单被压住 */
+    .site-footer .footer-tools { z-index: 60; }
+    @media (max-width: 767px) {
+      .tool-dropdown { min-width: 200px; }
     }
 
     /* 合作客户 logo 卡片 */
@@ -695,7 +706,9 @@
 
     /* —— 深色页脚 —— */
     .site-footer {
-      position: relative; overflow: hidden;
+      position: relative;
+      /* 注意：不能用 overflow:hidden，会把向上弹出的「AI管理小工具」菜单裁掉 */
+      overflow-x: clip; overflow-y: visible;
       background: linear-gradient(180deg, #04182F 0%, #03101F 100%);
     }
     .site-footer::before {
@@ -1531,7 +1544,7 @@
           <p class="mt-2" data-page-node-id="57vZVBKGorzpLtWABrf6XZ">&copy; 百鲸咨询 版权所有</p>
         </div>
         
-        <div class="relative text-center md:text-right" data-page-node-id="RMqTIKKDaLbm5TYUr8abnq">
+        <div class="relative footer-tools text-center md:text-right" data-page-node-id="RMqTIKKDaLbm5TYUr8abnq">
           <button id="toolBtn" class="bg-primary hover:bg-primary/90 text-dark font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg inline-flex items-center gap-2" data-page-node-id="Cvggt5BD9XWithg2CCtupY">
             <i class="fas fa-cog" data-page-node-id="g5Dxy8qSun2T2k0xkMXc0H"></i>
             AI管理小工具（试用）
@@ -1661,7 +1674,10 @@
 
       const SUPABASE_URL = 'https://mxtxwjprmfstbheiempi.supabase.co';
       const SUPABASE_ANON_KEY = 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
-      const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      // 容错：Supabase CDN 未加载时不能让后面所有交互（导航/下拉菜单/弹窗）一起失效
+      const supabaseClient = (typeof supabase !== 'undefined')
+        ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
       const menuBtn = document.getElementById('menuBtn');
     const closeBtn = document.getElementById('closeBtn');
     const mobileNav = document.getElementById('mobileNav');
@@ -1740,6 +1756,7 @@
           employee_count: document.getElementById('dEmployees').value || null,
           requirement: document.getElementById('dNeed').value.trim() || null
         };
+        if (!supabaseClient) throw new Error('数据服务未加载，请刷新页面重试');
         const { error } = await supabaseClient.from('diagnosis_leads').insert([payload]);
         if (error) throw error;
         diagFormWrap.classList.add('hidden');
@@ -1882,6 +1899,7 @@
 
     async function fetchArticles() {
       try {
+        if (!supabaseClient) throw new Error('数据服务未加载');
         const { data, error } = await supabaseClient
           .from('articles')
           .select('*')
