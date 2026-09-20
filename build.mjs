@@ -160,7 +160,9 @@ function copyStaticFiles() {
     'article-detail.html', 'article-default-cover.svg',
     'home-banner.png', 'logo0（透明）.png', 'CNAME', 'robots.txt',
     '_redirects', '404.html',
-    'home-banner.svg', 'home-banner-诊断.svg', 'wechat-qrcode.jpg'
+    'home-banner.svg', 'home-banner-诊断.svg', 'wechat-qrcode.jpg',
+    // 工具页面：sitemap 中已声明这些 URL，必须复制到 dist，否则搜索引擎抓取 404
+    '目标测算工具.html', '战略解码工具.html', '组织架构生成工具.html', '股权架构生成工具.html'
   ];
   const dirs = ['articles', 'api'];
   const consultantImgs = ['consultant-lilaoshi.png', 'consultant-liuquanan.png', 'consultant-wanglaoshi.png', '刘诠案老师.jpg', '微信公众号.jpg', '企业诊断.html'];

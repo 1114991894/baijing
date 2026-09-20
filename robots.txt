@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /%E5%92%A8%E8%AF%A2%E5%B8%88%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2.html
 
 Sitemap: https://baijingzixun.top/sitemap.xml
