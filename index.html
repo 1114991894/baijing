@@ -370,13 +370,17 @@
       padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
       gap: 10px;
     }
-    .mobile-cta-bar a {
+    .mobile-cta-bar a,
+    .mobile-cta-bar button {
       flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
       padding: 13px 0; border-radius: 12px;
       font-size: 15px; font-weight: 700; letter-spacing: 0.5px;
+      font-family: inherit;
+      border: none; cursor: pointer;
       transition: transform .12s ease;
     }
-    .mobile-cta-bar a:active { transform: scale(0.97); }
+    .mobile-cta-bar a:active,
+    .mobile-cta-bar button:active { transform: scale(0.97); }
     .mobile-cta-bar .cta-call {
       background: linear-gradient(135deg, #083E78, #0a4d92); color: #fff;
     }
@@ -504,14 +508,14 @@
 
   <!-- 首页 Banner（双图自动轮播） -->
   <section id="banner" class="relative w-full overflow-hidden bg-primary" aria-label="品牌宣传轮播" data-page-node-id="ZtOAW6YvRUMkju7F7uo6Rm">
-    <div class="relative w-full aspect-[4/3] sm:aspect-video" data-page-node-id="DRKkdqNWcADIlQ6bjnUEj0">
+    <div class="relative w-full aspect-video" data-page-node-id="DRKkdqNWcADIlQ6bjnUEj0">
       <!-- 第 1 张：品牌 banner -->
       <div class="banner-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-100 pointer-events-auto" data-page-node-id="CNOGOAwymw0YkXmHDFT0vc">
-        <picture data-page-node-id="zlxhbwqCdezVcsJXQC1GoE">
+        <picture class="block w-full" data-page-node-id="zlxhbwqCdezVcsJXQC1GoE">
           <source srcset="home-banner.svg" type="image/svg+xml" data-page-node-id="FAAnB1chAbN9VwF98r0J74">
           <img src="home-banner.png"
                alt="百鲸咨询 - AI+管理变革，打造稳定核心竞争力企业，12年专注企业管理落地陪跑辅导"
-               class="block w-full h-full object-cover object-center"
+               class="block w-full h-auto sm:h-full sm:object-cover object-center"
                loading="eager"
                width="1600"
                height="900" data-page-node-id="hbGerLzdTb1y62xCyaOUqt">
@@ -1068,7 +1072,7 @@
   <!-- 移动端底部快捷联系栏 -->
   <div class="mobile-cta-bar md:hidden" aria-label="快捷联系">
     <a href="tel:15158195310" class="cta-call"><i class="fas fa-phone-volume"></i>电话咨询</a>
-    <button type="button" id="openDiagModal" class="cta-diag" style="border:none;cursor:pointer;"><i class="fas fa-bolt"></i>免费企业诊断</button>
+    <button type="button" id="openDiagModal" class="cta-diag"><i class="fas fa-bolt"></i>免费企业诊断</button>
   </div>
 
   <!-- 免费企业诊断 - 信息填写弹窗 -->

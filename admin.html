@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>文章管理后台 - 百鲸咨询</title>
+  <title>管理后台 - 百鲸咨询</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -54,8 +54,8 @@
         <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
           <i class="fas fa-lock text-primary text-2xl"></i>
         </div>
-        <h1 class="text-2xl font-bold text-secondary">文章管理后台</h1>
-        <p class="text-sm text-secondary/50 mt-2">请登录以管理精选文章</p>
+        <h1 class="text-2xl font-bold text-secondary">管理后台</h1>
+        <p class="text-sm text-secondary/50 mt-2">请登录以管理文章与客户信息</p>
       </div>
       <form id="loginForm" class="space-y-4">
         <div>
@@ -82,7 +82,7 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4 flex-wrap">
         <div class="flex items-center gap-3">
           <i class="fas fa-blog text-primary text-2xl"></i>
-          <h1 class="text-lg font-bold text-secondary">文章管理后台</h1>
+          <h1 class="text-lg font-bold text-secondary">管理后台</h1>
         </div>
         <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
           <button id="navList" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-list mr-1"></i>文章列表</button>
@@ -368,6 +368,8 @@
       document.getElementById('emptyAddBtn').addEventListener('click', () => switchToForm('add'));
       document.getElementById('navAdd').addEventListener('click', () => switchToForm('add'));
       document.getElementById('navList').addEventListener('click', switchToListView);
+      document.getElementById('navLeads').addEventListener('click', switchToLeadsView);
+      document.getElementById('leadsRefreshBtn').addEventListener('click', loadLeads);
       document.getElementById('cancelBtn').addEventListener('click', switchToListView);
       document.getElementById('articleForm').addEventListener('submit', handleFormSubmit);
       document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
