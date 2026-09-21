@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="Kzqr3Dgm7BcJo8RLcwIUny">
   
   <!-- SEO Meta Tags -->
-  <title>百鲸咨询 - AI 咨询与企业管理项目制落地 | 战略·组织·薪酬绩效·AI应用</title>
+  <title>百鲸咨询 - 管理咨询 + AI 工程化项目制落地 | 战略·组织·薪酬绩效·AI应用</title>
   <meta name="description" content="百鲸咨询，12年管理咨询沉淀 × AI 工程化交付能力。以项目制方式提供企业诊断、战略定位、组织优化、薪酬绩效、股权激励、数字化转型，以及 AI 应用培训、FDE 工程实施、AI 企业诊断等一体化落地服务，累计服务 1000+ 企业。" data-page-node-id="bs00uMi5fZcXuuQOBwtCqS">
   <meta name="keywords" content="百鲸咨询,AI咨询,AI咨询公司,企业管理咨询,AI应用培训,FDE工程实施,AI企业诊断,战略定位,组织优化,薪酬管理,绩效考核,股权激励,合伙模式,人才体系,数字化转型,管理咨询,杭州咨询公司" data-page-node-id="4RhGBn5daaCzVHmKwSrHza">
   <meta name="author" content="百鲸咨询" data-page-node-id="6fMOhgcWFgAWc5HG8wkJ7w">
@@ -30,7 +30,7 @@
   <meta name="twitter:image" content="https://baijingzixun.top/logo0（透明）.png" data-page-node-id="15bCj6iR5AoH58nB6ELbGI">
   
   <!-- Additional Meta Tags -->
-  <meta name="theme-color" content="#083E78" data-page-node-id="1a7WxUEetAUx31aSdHGApJ">
+  <meta name="theme-color" content="#020A14" data-page-node-id="1a7WxUEetAUx31aSdHGApJ">
   <meta name="mobile-web-app-capable" content="yes" data-page-node-id="ciMOFXkjaSrHebIzEnYFB5">
   <meta name="apple-mobile-web-app-title" content="百鲸咨询" data-page-node-id="jCskESnRREP6tVdefy5OPC">
   <meta name="application-name" content="百鲸咨询" data-page-node-id="YEkNpBC9mS6ffuTAb4NFJK">
@@ -243,7 +243,7 @@
   <!-- 引入谷歌字体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="xX6DEMU0XFs2i4YDZ9mhtc">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-page-node-id="jBQVDubrCqm9ecrAMu4qai">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" data-page-node-id="AhA0qPjsttuE3EPuWgVcbV">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@500;600;700;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" data-page-node-id="AhA0qPjsttuE3EPuWgVcbV">
   <!-- 引入Supabase客户端 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
@@ -260,9 +260,13 @@
             section: '#F4FAFF',
             neutral: '#E2E8F0',
             secondary: '#333333',
+            gold: '#C4A965',
+            goldlight: '#E0C887',
+            ink: '#04182F',
           },
           fontFamily: {
             sans: ['Noto Sans SC', 'system-ui', 'sans-serif'],
+            serif: ['Noto Serif SC', 'serif'],
             num: ['Sora', 'Noto Sans SC', 'system-ui', 'sans-serif'],
           },
           boxShadow: {
@@ -490,17 +494,222 @@
       .svc-card > div:first-child { margin-bottom: 18px; }
     }
 
-    /* ===================== 高级感设计系统 v2 ===================== */
+    /* ===================== 高级感设计系统 v4 (Consulting × AI Premium) ===================== */
     :root {
-      --ink-950: #03101F;
+      --ink-950: #020A14;
       --ink-900: #04182F;
       --ink-800: #062A50;
       --ink-700: #083E78;
       --brand: #28B8A0;
       --brand-2: #22C0E0;
+      --gold: #C4A965;
+      --gold-light: #E0C887;
+      --gold-dark: #A68B4A;
       --hair-w: rgba(255,255,255,.10);
       --hair-b: rgba(8,62,120,.10);
+      --hair-gold: rgba(196,169,101,.22);
       --font-num: 'Sora', 'Noto Sans SC', system-ui, sans-serif;
+      --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+    }
+
+    /* —— AI 科技装饰：节点网络背景 —— */
+    .ai-mesh-bg {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .ai-mesh-bg::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 15% 30%, rgba(40,184,160,.15) 0%, transparent 1.5%),
+        radial-gradient(circle at 35% 70%, rgba(34,192,224,.12) 0%, transparent 1.5%),
+        radial-gradient(circle at 60% 40%, rgba(196,169,101,.12) 0%, transparent 1.5%),
+        radial-gradient(circle at 80% 20%, rgba(40,184,160,.10) 0%, transparent 1.5%),
+        radial-gradient(circle at 90% 80%, rgba(34,192,224,.10) 0%, transparent 1.5%),
+        radial-gradient(circle at 50% 90%, rgba(196,169,101,.08) 0%, transparent 1.5%);
+    }
+    .ai-mesh-bg::after {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(0deg, transparent 49.5%, rgba(255,255,255,.04) 49.5%, rgba(255,255,255,.04) 50.5%, transparent 50.5%),
+        linear-gradient(90deg, transparent 49.5%, rgba(255,255,255,.04) 49.5%, rgba(255,255,255,.04) 50.5%, transparent 50.5%);
+      background-size: 120px 120px;
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, #000, transparent 70%);
+      mask-image: radial-gradient(circle at 50% 50%, #000, transparent 70%);
+    }
+
+    /* —— AI 电路装饰线 —— */
+    .circuit-line {
+      position: absolute; pointer-events: none; opacity: .15;
+    }
+
+    /* —— 深色区加强版（更多层次）—— */
+    .section-dark-premium {
+      position: relative; overflow: hidden; color: #fff;
+      background:
+        radial-gradient(900px 460px at 8% -8%, rgba(34,192,224,.14), transparent 60%),
+        radial-gradient(700px 360px at 92% 4%, rgba(40,184,160,.10), transparent 62%),
+        radial-gradient(500px 280px at 50% 100%, rgba(196,169,101,.08), transparent 60%),
+        linear-gradient(170deg, #020A14 0%, #04182F 45%, #062A50 70%, #020A14 100%);
+    }
+
+    /* —— 服务区科技纹理背景 —— */
+    .tech-section-bg {
+      position: relative;
+      background:
+        radial-gradient(600px 300px at 100% 0%, rgba(196,169,101,.04), transparent 60%),
+        radial-gradient(500px 250px at 0% 100%, rgba(40,184,160,.03), transparent 60%),
+        linear-gradient(180deg, #FFFFFF 0%, #FAFBFD 100%);
+    }
+
+    /* —— 仪表盘风格数据卡 —— */
+    .dashboard-card {
+      position: relative; overflow: hidden;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(196,169,101,.12);
+      border-radius: 16px;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      transition: transform .4s cubic-bezier(.22,.61,.36,1), border-color .4s, background .4s, box-shadow .4s;
+    }
+    .dashboard-card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(196,169,101,.4), transparent);
+    }
+    .dashboard-card::after {
+      content: ""; position: absolute; top: -30px; right: -30px;
+      width: 80px; height: 80px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(40,184,160,.10), transparent 70%);
+      pointer-events: none;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(196,169,101,.30);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 20px 50px -20px rgba(196,169,101,.12);
+    }
+
+    /* —— 咨询×AI 双标签 —— */
+    .dual-badge {
+      display: inline-flex; align-items: center; gap: 0;
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      border-radius: 6px; overflow: hidden; border: 1px solid rgba(196,169,101,.20);
+    }
+    .dual-badge .badge-c { padding: 5px 10px; background: rgba(196,169,101,.10); color: var(--gold); }
+    .dual-badge .badge-a { padding: 5px 10px; background: rgba(40,184,160,.10); color: var(--brand); }
+
+    /* —— 节点连接装饰（服务区间）—— */
+    .node-connector {
+      position: relative; width: 100%; height: 40px; overflow: hidden;
+    }
+    .node-connector::before {
+      content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(180deg, transparent, rgba(196,169,101,.30), transparent);
+    }
+    .node-connector::after {
+      content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold); box-shadow: 0 0 12px rgba(196,169,101,.5);
+    }
+
+    /* ===================== AI 仪表盘动态效果 ===================== */
+
+    /* LIVE 指示灯脉冲 */
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(40,184,160,.5); }
+      50% { opacity: .7; box-shadow: 0 0 0 6px rgba(40,184,160,0); }
+    }
+    .live-dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: #28B8A0; margin-right: 5px;
+      animation: livePulse 1.6s ease-in-out infinite;
+    }
+
+    /* 圆环仪表 — 旋转渐变 */
+    @keyframes gaugeRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes gaugePulse {
+      0%, 100% { filter: drop-shadow(0 0 4px rgba(40,184,160,.4)); }
+      50% { filter: drop-shadow(0 0 12px rgba(196,169,101,.5)); }
+    }
+    .gauge-ring {
+      animation: gaugeRotate 8s linear infinite, gaugePulse 3s ease-in-out infinite;
+    }
+    .gauge-inner {
+      animation: gaugePulse 3s ease-in-out infinite;
+    }
+
+    /* 进度条填充动画 */
+    @keyframes barFill {
+      from { width: 0%; }
+    }
+    .bar-track { height: 4px; border-radius: 2px; background: rgba(255,255,255,.08); overflow: hidden; position: relative; }
+    .bar-fill {
+      height: 100%; border-radius: 2px; width: 0%;
+      transition: width 1.4s cubic-bezier(.22,.61,.36,1);
+      position: relative;
+    }
+    .bar-fill::after {
+      content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 20px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35));
+      animation: barShine 2.5s ease-in-out infinite;
+    }
+    @keyframes barShine {
+      0%, 100% { opacity: 0; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(-10px); }
+    }
+
+    /* 扫描线 */
+    @keyframes scanLine {
+      0% { top: 0%; opacity: 0; }
+      10% { opacity: .5; }
+      90% { opacity: .5; }
+      100% { top: 100%; opacity: 0; }
+    }
+    .scan-line {
+      position: absolute; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(40,184,160,.4), rgba(196,169,101,.3), transparent);
+      animation: scanLine 3.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* 数据流粒子 */
+    @keyframes particleFloat {
+      0% { transform: translate(0, 0); opacity: 0; }
+      20% { opacity: .6; }
+      80% { opacity: .6; }
+      100% { transform: translate(15px, -25px); opacity: 0; }
+    }
+    .ai-particle {
+      position: absolute; width: 3px; height: 3px; border-radius: 50%;
+      background: rgba(40,184,160,.5);
+      animation: particleFloat 3s ease-out infinite;
+    }
+
+    /* 卡片入场浮升 */
+    @keyframes cardFloat {
+      0% { transform: translateY(20px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    /* 数字闪烁更新 */
+    @keyframes numFlicker {
+      0%, 100% { text-shadow: 0 0 0 transparent; }
+      50% { text-shadow: 0 0 10px rgba(40,184,160,.4); }
+    }
+    .num-flicker { animation: numFlicker 2s ease-in-out infinite; }
+
+    /* 卡片底部数据流线条 */
+    @keyframes dataStream {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+    .data-stream-bar {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 1px; overflow: hidden;
+    }
+    .data-stream-bar::before {
+      content: ""; position: absolute; top: 0; left: 0; width: 40%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(40,184,160,.5), rgba(196,169,101,.4), transparent);
+      animation: dataStream 4s linear infinite;
     }
 
     body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -510,19 +719,20 @@
     .reveal.in { opacity: 1 !important; transform: none !important; }
     @media (prefers-reduced-motion: reduce) { .reveal { transition: none !important; } }
 
-    /* —— 深色区块（网格 + 双光晕）—— */
+    /* —— 深色区块（网格 + 三重光晕 + 金线）—— */
     .section-dark {
       position: relative; overflow: hidden; color: #fff;
       background:
-        radial-gradient(900px 460px at 12% -12%, rgba(34,192,224,.22), transparent 62%),
-        radial-gradient(760px 400px at 90% 6%, rgba(40,184,160,.17), transparent 64%),
-        linear-gradient(165deg, #04182F 0%, #062A50 52%, #03101F 100%);
+        radial-gradient(900px 460px at 12% -12%, rgba(34,192,224,.18), transparent 62%),
+        radial-gradient(760px 400px at 90% 6%, rgba(40,184,160,.13), transparent 64%),
+        radial-gradient(600px 300px at 50% 100%, rgba(196,169,101,.10), transparent 60%),
+        linear-gradient(165deg, #020A14 0%, #04182F 48%, #062A50 72%, #020A14 100%);
     }
     .section-dark::before {
       content: ""; position: absolute; inset: 0; pointer-events: none;
       background-image:
-        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
       background-size: 62px 62px;
       -webkit-mask-image: radial-gradient(circle at 50% 26%, #000 0%, transparent 76%);
       mask-image: radial-gradient(circle at 50% 26%, #000 0%, transparent 76%);
@@ -530,59 +740,67 @@
     .section-dark > * { position: relative; z-index: 1; }
     .section-dark::after {
       content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; z-index: 2;
-      background: linear-gradient(90deg, transparent, rgba(40,184,160,.6), transparent);
+      background: linear-gradient(90deg, transparent, rgba(196,169,101,.5), rgba(40,184,160,.4), transparent);
     }
 
-    /* —— 英文小标签 —— */
+    /* —— 英文小标签（金色高级感）—— */
     .eyebrow {
       display: inline-flex; align-items: center; gap: 10px;
       font-family: var(--font-num);
       font-size: 11.5px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase;
-      color: var(--brand);
+      color: var(--gold);
     }
     .eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; opacity: .75; }
     .eyebrow.center::after { content: ""; width: 24px; height: 1px; background: currentColor; opacity: .75; }
 
-    /* —— 章节标题组 —— */
+    /* —— 章节标题组（衬线体 + 金色短线）—— */
     .sec-head { text-align: center; margin-bottom: 54px; }
     .sec-head .eyebrow { margin-bottom: 16px; }
     .sec-head h2 {
-      font-size: clamp(27px, 3.3vw, 40px); font-weight: 800; line-height: 1.22;
-      letter-spacing: -.025em; color: #0B2545;
+      font-family: var(--font-serif);
+      font-size: clamp(27px, 3.3vw, 42px); font-weight: 700; line-height: 1.22;
+      letter-spacing: -.015em; color: #0B2545;
     }
     .sec-head p { margin-top: 14px; font-size: 15px; color: rgba(11,37,69,.52); }
     .sec-head.on-dark h2 { color: #fff; }
     .sec-head.on-dark p { color: rgba(255,255,255,.55); }
     .sec-rule {
       width: 52px; height: 2px; margin: 22px auto 0; border-radius: 2px;
-      background: linear-gradient(90deg, var(--brand), var(--brand-2));
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--brand));
     }
 
-    /* —— 深色玻璃卡 —— */
+    /* —— 深色玻璃卡（金边高级感）—— */
     .glass-card {
       position: relative; border-radius: 18px;
-      background: rgba(255,255,255,.045);
+      background: rgba(255,255,255,.04);
       border: 1px solid var(--hair-w);
       backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      transition: transform .4s cubic-bezier(.22,.61,.36,1), border-color .4s, background .4s;
+      transition: transform .4s cubic-bezier(.22,.61,.36,1), border-color .4s, background .4s, box-shadow .4s;
+    }
+    .glass-card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(196,169,101,.5), transparent);
+      opacity: 0; transition: opacity .4s;
     }
     .glass-card:hover {
       transform: translateY(-6px);
-      border-color: rgba(40,184,160,.42);
-      background: rgba(255,255,255,.075);
+      border-color: rgba(196,169,101,.35);
+      background: rgba(255,255,255,.07);
+      box-shadow: 0 20px 50px -20px rgba(196,169,101,.15);
     }
+    .glass-card:hover::before { opacity: 1; }
 
-    /* —— 实力数据 —— */
+    /* —— 实力数据（金色渐变）—— */
     .stat-num {
       font-family: var(--font-num);
       font-size: clamp(30px, 3.6vw, 46px); font-weight: 800;
       letter-spacing: -.03em; line-height: 1;
-      background: linear-gradient(180deg, #FFFFFF 0%, #8FE3D2 100%);
+      background: linear-gradient(180deg, #FFFFFF 0%, #E0C887 50%, #C4A965 100%);
       -webkit-background-clip: text; background-clip: text; color: transparent;
     }
     .stat-label { margin-top: 12px; font-size: 13.5px; color: rgba(255,255,255,.58); letter-spacing: .02em; }
 
-    /* —— 服务卡片 v2 —— */
+    /* —— 服务卡片 v3（金色顶线 + 高级悬浮）—— */
     .svc-card {
       position: relative; overflow: hidden;
       background: #fff; border: 1px solid var(--hair-b); border-radius: 18px;
@@ -591,38 +809,39 @@
     }
     .svc-card::before {
       content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--brand), var(--brand-2));
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--brand));
       transform: scaleX(0); transform-origin: left;
       transition: transform .5s cubic-bezier(.22,.61,.36,1);
     }
     .svc-card:hover {
       transform: translateY(-6px);
-      border-color: rgba(40,184,160,.35);
-      box-shadow: 0 26px 50px -20px rgba(8,62,120,.26);
+      border-color: rgba(196,169,101,.35);
+      box-shadow: 0 26px 50px -20px rgba(8,62,120,.26), 0 0 0 1px rgba(196,169,101,.08);
     }
     .svc-card:hover::before { transform: scaleX(1); }
     .svc-card > div:first-child {
-      width: 50px; height: 50px; border-radius: 14px;
+      width: 52px; height: 52px; border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
       font-size: 19px; margin-bottom: 22px; color: var(--ink-700);
-      background: linear-gradient(135deg, rgba(40,184,160,.14), rgba(34,192,224,.11));
-      border: 1px solid rgba(40,184,160,.22);
-      transition: color .35s, background .35s, border-color .35s, transform .35s;
+      background: linear-gradient(135deg, rgba(196,169,101,.12), rgba(40,184,160,.10));
+      border: 1px solid rgba(196,169,101,.22);
+      transition: color .35s, background .35s, border-color .35s, transform .35s, box-shadow .35s;
     }
     .svc-card:hover > div:first-child {
       color: #fff;
-      background: linear-gradient(135deg, #28B8A0, #22C0E0);
+      background: linear-gradient(135deg, #C4A965, #A68B4A);
       border-color: transparent;
       transform: translateY(-2px);
+      box-shadow: 0 10px 24px -8px rgba(196,169,101,.55);
     }
     .svc-card h3 {
       font-size: 17.5px; font-weight: 700; color: #0B2545;
       letter-spacing: -.01em; margin-bottom: 12px;
     }
     .svc-card p { font-size: 14.5px; line-height: 1.85; color: rgba(11,37,69,.62); }
-    .svc-card-ai { background: linear-gradient(160deg, #FFFFFF 0%, #F2FBF9 100%); }
+    .svc-card-ai { background: linear-gradient(160deg, #FFFFFF 0%, #F8F6F0 100%); }
 
-    /* —— 关于卡片 —— */
+    /* —— 关于卡片（金色竖线 + 深度阴影）—— */
     .about-card {
       position: relative; overflow: hidden;
       background: #fff; border: 1px solid var(--hair-b); border-radius: 20px;
@@ -630,54 +849,54 @@
     }
     .about-card::before {
       content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-      background: linear-gradient(180deg, var(--brand), var(--brand-2));
+      background: linear-gradient(180deg, var(--gold), var(--gold-light), var(--brand));
     }
     .about-card p { font-size: 15.5px; line-height: 2; color: rgba(11,37,69,.70); }
     .about-card p + p { margin-top: 18px; }
 
-    /* —— 服务流程 —— */
+    /* —— 服务流程（金色 step 索引 + 高级图标）—— */
     .step-card {
       position: relative; background: #fff; border: 1px solid var(--hair-b); border-radius: 18px;
       padding: 30px 26px;
       transition: transform .42s cubic-bezier(.22,.61,.36,1), box-shadow .42s, border-color .42s;
     }
     .step-card:hover {
-      transform: translateY(-6px); border-color: rgba(40,184,160,.35);
+      transform: translateY(-6px); border-color: rgba(196,169,101,.35);
       box-shadow: 0 26px 50px -22px rgba(8,62,120,.24);
     }
     .step-idx {
       font-family: var(--font-num); font-size: 12.5px; font-weight: 700;
-      letter-spacing: .16em; color: var(--brand);
+      letter-spacing: .16em; color: var(--gold);
     }
     .step-ico {
       width: 52px; height: 52px; border-radius: 15px; margin: 18px 0 20px;
       display: flex; align-items: center; justify-content: center; font-size: 20px;
-      color: var(--ink-700);
-      background: linear-gradient(135deg, rgba(40,184,160,.14), rgba(34,192,224,.11));
-      border: 1px solid rgba(40,184,160,.22);
-      transition: color .35s, background .35s, border-color .35s;
+      color: var(--brand);
+      background: linear-gradient(135deg, rgba(40,184,160,.14), rgba(196,169,101,.10));
+      border: 1px solid rgba(196,169,101,.22);
+      transition: color .35s, background .35s, border-color .35s, box-shadow .35s;
     }
+    .glass-card:hover .step-ico,
     .step-card:hover .step-ico {
-      color: #fff; background: linear-gradient(135deg, #28B8A0, #22C0E0); border-color: transparent;
+      color: #020A14; background: linear-gradient(135deg, #C4A965, #A68B4A); border-color: transparent;
+      box-shadow: 0 10px 24px -8px rgba(196,169,101,.5);
     }
     .step-card h3 { font-size: 17px; font-weight: 700; color: #0B2545; margin-bottom: 10px; }
     .step-card p { font-size: 14px; line-height: 1.85; color: rgba(11,37,69,.60); }
 
-    /* —— 导航栏 —— */
+    /* —— 导航栏（更精致的毛玻璃 + 金色底线）—— */
     .site-header {
-      background: rgba(255,255,255,.78);
-      backdrop-filter: saturate(180%) blur(18px);
-      -webkit-backdrop-filter: saturate(180%) blur(18px);
+      background: rgba(255,255,255,.80);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
       border-bottom: 1px solid rgba(8,62,120,.08);
       transition: background .35s, box-shadow .35s, border-color .35s;
     }
     .site-header.scrolled {
-      background: rgba(255,255,255,.93);
+      background: rgba(255,255,255,.95);
       box-shadow: 0 10px 30px -18px rgba(8,62,120,.35);
-      border-bottom-color: rgba(8,62,120,.12);
+      border-bottom: 1px solid rgba(196,169,101,.12);
     }
-    /* 部分手机浏览器（微信内置浏览器等）不支持 backdrop-filter，
-       半透明背景会直接透出页面内容导致导航看不清：移动端直接用纯白不透明 */
     @media (max-width: 767px) {
       .site-header, .site-header.scrolled { background: #fff; }
     }
@@ -690,7 +909,7 @@
     }
     .nav-link::after {
       content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
-      background: linear-gradient(90deg, var(--brand), var(--brand-2));
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
       border-radius: 2px; transform: scaleX(0); transform-origin: center;
       transition: transform .35s cubic-bezier(.22,.61,.36,1);
     }
@@ -702,9 +921,10 @@
       background: linear-gradient(135deg, #083E78, #0B4E92); color: #fff;
       font-size: 13.5px; font-weight: 600; padding: 10px 20px; border-radius: 10px;
       box-shadow: 0 8px 22px -10px rgba(8,62,120,.6);
-      transition: transform .3s, box-shadow .3s;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+      border: 1px solid rgba(196,169,101,.15);
     }
-    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -10px rgba(8,62,120,.7); }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -10px rgba(8,62,120,.7); border-color: rgba(196,169,101,.4); }
     .nav-cta::after {
       content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
@@ -712,21 +932,24 @@
     }
     .nav-cta:hover::after { left: 120%; }
 
-    /* —— 深色页脚 —— */
+    /* —— 深色页脚（更深 + 金色顶线）—— */
     .site-footer {
       position: relative;
-      /* 注意：不能用 overflow:hidden，会把向上弹出的「AI管理小工具」菜单裁掉 */
       overflow-x: clip; overflow-y: visible;
-      background: linear-gradient(180deg, #04182F 0%, #03101F 100%);
+      background: linear-gradient(180deg, #020A14 0%, #04182F 50%, #020A14 100%);
     }
     .site-footer::before {
       content: ""; position: absolute; inset: 0; pointer-events: none;
       background-image:
-        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
       background-size: 56px 56px;
       -webkit-mask-image: radial-gradient(circle at 50% 0%, #000, transparent 70%);
       mask-image: radial-gradient(circle at 50% 0%, #000, transparent 70%);
+    }
+    .site-footer::after {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; z-index: 2;
+      background: linear-gradient(90deg, transparent, rgba(196,169,101,.4), transparent);
     }
     .site-footer > * { position: relative; z-index: 1; }
 
@@ -738,34 +961,34 @@
     }
     .svc-card a:hover { color: var(--brand-2); gap: 11px; }
 
-    /* —— 咨询师卡片 —— */
+    /* —— 咨询师卡片（金色头像环 + 高级阴影）—— */
     .consult-card {
       display: flex; flex-direction: column; overflow: hidden;
       background: #fff; border: 1px solid var(--hair-b); border-radius: 20px;
       transition: transform .42s cubic-bezier(.22,.61,.36,1), box-shadow .42s, border-color .42s;
     }
     .consult-card:hover {
-      transform: translateY(-6px); border-color: rgba(40,184,160,.35);
+      transform: translateY(-6px); border-color: rgba(196,169,101,.35);
       box-shadow: 0 28px 54px -24px rgba(8,62,120,.26);
     }
     .consult-avatar {
       position: relative; width: 112px; height: 112px; margin: 34px auto 0;
       border-radius: 50%; padding: 3px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--brand));
       transition: box-shadow .4s;
     }
     .consult-avatar img {
       width: 100%; height: 100%; border-radius: 50%;
       object-fit: cover; background: #F4FAFF; display: block;
     }
-    .consult-card:hover .consult-avatar { box-shadow: 0 14px 32px -12px rgba(40,184,160,.75); }
+    .consult-card:hover .consult-avatar { box-shadow: 0 14px 32px -12px rgba(196,169,101,.75); }
     .consult-card h3 { letter-spacing: -.01em; }
     .consult-card h3 + p {
       font-size: 14.5px; font-weight: 600; letter-spacing: .02em;
-      color: var(--brand) !important; margin-top: 6px;
+      color: var(--gold-dark) !important; margin-top: 6px;
     }
 
-    /* —— 项目案例卡片 —— */
+    /* —— 项目案例卡片（金色悬浮边框 + 成果数字金色渐变）—— */
     .proj-card {
       position: relative; overflow: hidden; margin-bottom: 28px;
       background: #fff; border: 1px solid var(--hair-b); border-radius: 20px;
@@ -773,34 +996,42 @@
     }
     .proj-card:last-child { margin-bottom: 0; }
     .proj-card:hover {
-      transform: translateY(-4px); border-color: rgba(40,184,160,.30);
+      transform: translateY(-4px); border-color: rgba(196,169,101,.30);
       box-shadow: 0 30px 60px -28px rgba(8,62,120,.28);
     }
     .proj-card h4 { letter-spacing: -.005em; }
     .proj-card .bg-accent\/10 {
-      border: 1px solid rgba(40,184,160,.16);
-      background: linear-gradient(160deg, rgba(40,184,160,.10), rgba(34,192,224,.05)) !important;
+      border: 1px solid rgba(196,169,101,.16);
+      background: linear-gradient(160deg, rgba(196,169,101,.10), rgba(40,184,160,.05)) !important;
     }
     .proj-card .bg-accent\/10 p:first-child {
       font-family: var(--font-num); letter-spacing: -.02em;
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
 
-    /* —— 联系面板 —— */
+    /* —— 联系面板（金色左线 + 更深阴影）—— */
     .contact-panel {
       position: relative; background: #fff; border: 1px solid var(--hair-b);
       border-radius: 22px; padding: 48px;
       box-shadow: 0 34px 70px -38px rgba(8,62,120,.30);
     }
+    .contact-panel::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: linear-gradient(180deg, var(--gold), var(--gold-light), var(--brand));
+      border-radius: 22px 0 0 22px;
+    }
     @media (max-width: 767px) { .contact-panel { padding: 26px 22px; } }
 
     /* —— 文章卡片 —— */
+    /* —— 文章卡片（金色悬浮 + 更精致的图片放大）—— */
     .article-card {
       display: flex; flex-direction: column; overflow: hidden;
       background: #fff; border: 1px solid var(--hair-b); border-radius: 18px;
       transition: transform .42s cubic-bezier(.22,.61,.36,1), box-shadow .42s, border-color .42s;
     }
     .article-card:hover {
-      transform: translateY(-6px); border-color: rgba(40,184,160,.32);
+      transform: translateY(-6px); border-color: rgba(196,169,101,.32);
       box-shadow: 0 26px 52px -22px rgba(8,62,120,.24);
     }
     .article-card img { transition: transform .7s cubic-bezier(.22,.61,.36,1); }
@@ -809,18 +1040,42 @@
       display: block; font-size: 17.5px; font-weight: 700; line-height: 1.45;
       color: #0B2545; letter-spacing: -.01em; transition: color .3s;
     }
-    .article-title:hover { color: var(--ink-700); }
+    .article-title:hover { color: var(--gold-dark); }
     .article-more {
       display: inline-flex; align-items: center; gap: 6px;
-      font-size: 13.5px; font-weight: 700; color: var(--brand);
+      font-size: 13.5px; font-weight: 700; color: var(--gold);
       transition: gap .3s, color .3s;
     }
-    .article-more:hover { color: var(--brand-2); gap: 10px; }
+    .article-more:hover { color: var(--gold-dark); gap: 10px; }
 
-    /* —— 通用分隔线（替代旧 section-divider）—— */
+    /* —— 通用分隔线（金色渐变）—— */
     .section-divider {
-      background: linear-gradient(90deg, transparent, var(--brand), var(--brand-2), transparent) !important;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--brand), transparent) !important;
       height: 2px !important; width: 72px !important;
+    }
+
+    /* —— premium hero 背景（微妙的金色光晕）—— */
+    .hero-bg {
+      background:
+        radial-gradient(800px 400px at 80% 10%, rgba(196,169,101,.05), transparent 60%),
+        linear-gradient(135deg, #FFFFFF 0%, #F8F6F0 50%, #F4FAFF 100%);
+    }
+
+    /* —— premium section 过渡（底部金色渐隐线）—— */
+    .section-transition {
+      position: relative;
+    }
+    .section-transition::after {
+      content: ""; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0;
+      width: 120px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(196,169,101,.3), transparent);
+    }
+
+    /* —— client logo card 金色悬浮 —— */
+    .client-logo-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(196,169,101,.5);
+      box-shadow: 0 10px 28px rgba(196,169,101,.10);
     }
   </style>
 </head>
@@ -880,80 +1135,121 @@
       </div>
   </div>
 
-  <!-- 首页 Banner（双图自动轮播） -->
-  <section id="banner" class="relative w-full overflow-hidden bg-primary" aria-label="品牌宣传轮播" data-page-node-id="ZtOAW6YvRUMkju7F7uo6Rm">
-    <div class="relative w-full aspect-video" data-page-node-id="DRKkdqNWcADIlQ6bjnUEj0">
-      <!-- 第 1 张：品牌 banner -->
-      <div class="banner-slide absolute inset-0 transition-opacity duration-700 ease-in-out opacity-100 pointer-events-auto" data-page-node-id="CNOGOAwymw0YkXmHDFT0vc">
-        <picture class="block w-full" data-page-node-id="zlxhbwqCdezVcsJXQC1GoE">
-          <source srcset="home-banner.svg" type="image/svg+xml" data-page-node-id="FAAnB1chAbN9VwF98r0J74">
-          <img src="home-banner.png"
-               alt="百鲸咨询 - AI+管理变革，打造稳定核心竞争力企业，12年专注企业管理落地陪跑辅导"
-               class="block w-full h-auto sm:h-full sm:object-cover object-center"
-               loading="eager"
-               width="1600"
-               height="900" data-page-node-id="hbGerLzdTb1y62xCyaOUqt">
-        </picture>
-      </div>
-      <!-- 第 2 张：企业诊断 banner（点击跳诊断页） -->
-      <a href="企业诊断.html" target="_blank" rel="noopener"
-         class="banner-slide absolute inset-0 block transition-opacity duration-700 ease-in-out opacity-0 pointer-events-none"
-         aria-label="免费企业诊断" data-page-node-id="IInVHBhdpk9QEJGxgoWBcT">
-        <img src="home-banner-诊断.svg"
-             alt="企业健康诊断 - 3 个数字秒懂企业现状，免费生成 AI 诊断报告"
-             class="block w-full h-auto sm:h-full sm:object-cover object-center"
-             loading="lazy"
-             width="1600"
-             height="900" data-page-node-id="tc2rzqGHhNQ9YmJgy1eN2s">
-      </a>
-    </div>
+  <!-- 品牌定位与实力数据（深色 premium） -->
+  <section id="intro" class="section-dark-premium py-24 md:py-32" aria-label="品牌定位与实力数据">
+    <div class="ai-mesh-bg"></div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+        <div class="reveal">
+          <div class="dual-badge mb-6">
+            <span class="badge-c">CONSULTING</span>
+            <span class="badge-a">× AI ENGINEERING</span>
+          </div>
+          <h1 class="font-extrabold text-white" style="font-family:var(--font-serif);font-size:clamp(30px,4.8vw,56px);line-height:1.14;letter-spacing:-.02em;font-weight:700;">
+            管理咨询 + AI 工程<br>让方案<span style="background:linear-gradient(100deg,#E0C887,#C4A965);-webkit-background-clip:text;background-clip:text;color:transparent;">真正落地</span>
+          </h1>
+          <p class="mt-7 text-white/55 leading-relaxed" style="font-size:16px;max-width:560px;">
+            百鲸咨询 · 12 年管理咨询沉淀 × AI 工程化交付能力。以<strong class="text-white font-semibold">项目制</strong>方式，为企业提供从诊断、方案、实施到陪跑的一体化服务，把管理方案变成系统、流程与工具。
+          </p>
+          <div class="mt-9 flex flex-wrap gap-3.5">
+            <a href="企业诊断.html" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 font-bold rounded-xl px-6 py-3.5 transition-transform hover:-translate-y-0.5"
+               style="background:linear-gradient(135deg,#C4A965,#A68B4A);color:#020A14;box-shadow:0 14px 34px -14px rgba(196,169,101,.85);border:1px solid rgba(224,200,135,.3);">
+              <i class="fas fa-bolt"></i>免费企业诊断
+            </a>
+            <a href="#home"
+               class="inline-flex items-center gap-2 font-semibold rounded-xl px-6 py-3.5 text-white transition-colors hover:bg-white/10"
+               style="border:1px solid rgba(196,169,101,.25);">
+              了解服务 <i class="fas fa-arrow-down text-xs opacity-70"></i>
+            </a>
+          </div>
+        </div>
 
-    <!-- 指示点 -->
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2.5 z-10" data-page-node-id="FuU2TqvaVHVC27sxpYSp43">
-      <button class="banner-dot w-6 h-3 rounded-full bg-white shadow-md transition-all duration-300" data-index="0" aria-label="第 1 张" data-page-node-id="EdCEqbEvnelX2f7Nmw1dON"></button>
-      <button class="banner-dot w-3 h-3 rounded-full bg-white/40 shadow-md transition-all duration-300" data-index="1" aria-label="第 2 张" data-page-node-id="OyhqAfLve0prmsGlSUcXS7"></button>
-    </div>
-  </section>
+        <!-- 右侧 AI 仪表盘卡片 -->
+        <div class="hidden lg:block reveal">
+          <div class="dashboard-card p-7" id="aiDashboard">
+            <!-- 扫描线 -->
+            <div class="scan-line"></div>
+            <!-- 数据流粒子 -->
+            <div class="ai-particle" style="left:20%;top:80%;animation-delay:0s;"></div>
+            <div class="ai-particle" style="left:60%;top:60%;animation-delay:1s;background:rgba(196,169,101,.5);"></div>
+            <div class="ai-particle" style="left:80%;top:90%;animation-delay:2s;"></div>
+            <!-- 底部数据流 -->
+            <div class="data-stream-bar"></div>
 
-  <!-- 品牌定位与实力数据（深色） -->
-  <section id="intro" class="section-dark py-20 md:py-28" aria-label="品牌定位与实力数据">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-4xl reveal">
-        <span class="eyebrow">AI Consulting · Project Delivery</span>
-        <h1 class="mt-6 font-extrabold text-white" style="font-size:clamp(30px,4.6vw,56px);line-height:1.14;letter-spacing:-.03em;">
-          让 AI 真正长在<span style="background:linear-gradient(100deg,#28B8A0,#22C0E0);-webkit-background-clip:text;background-clip:text;color:transparent;">业务里</span>
-        </h1>
-        <p class="mt-6 text-white/60 leading-relaxed" style="font-size:16.5px;max-width:660px;">
-          百鲸咨询 · 12 年管理咨询沉淀 × AI 工程化交付能力。我们以<strong class="text-white font-semibold">项目制</strong>方式，为企业提供从诊断、方案、实施到陪跑的一体化服务，把管理方案真正变成系统、流程与工具。
-        </p>
-        <div class="mt-9 flex flex-wrap gap-3.5">
-          <a href="企业诊断.html" target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 font-bold rounded-xl px-6 py-3.5 transition-transform hover:-translate-y-0.5"
-             style="background:linear-gradient(135deg,#28B8A0,#22C0E0);color:#062451;box-shadow:0 14px 34px -14px rgba(40,184,160,.85);">
-            <i class="fas fa-bolt"></i>免费企业诊断
-          </a>
-          <a href="#home"
-             class="inline-flex items-center gap-2 font-semibold rounded-xl px-6 py-3.5 text-white transition-colors hover:bg-white/10"
-             style="border:1px solid rgba(255,255,255,.18);">
-            了解服务 <i class="fas fa-arrow-down text-xs opacity-70"></i>
-          </a>
+            <div class="flex items-center justify-between mb-5 relative">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,rgba(40,184,160,.18),rgba(196,169,101,.14));border:1px solid rgba(40,184,160,.22);">
+                  <i class="fas fa-chart-simple" style="color:#28B8A0;font-size:14px;"></i>
+                </div>
+                <span style="font-family:var(--font-num);font-size:12px;font-weight:600;letter-spacing:.16em;color:rgba(255,255,255,.50);">ENTERPRISE HEALTH</span>
+              </div>
+              <span style="font-family:var(--font-num);font-size:11px;color:var(--brand);font-weight:600;display:flex;align-items:center;">
+                <span class="live-dot"></span>LIVE
+              </span>
+            </div>
+            <div class="flex items-center gap-4 mb-5 relative">
+              <div class="gauge-ring" style="width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:conic-gradient(from 0deg, #28B8A0 0deg, #C4A965 120deg, #22C0E0 200deg, rgba(255,255,255,.08) 200deg 360deg);position:relative;">
+                <div class="gauge-inner" style="position:absolute;inset:4px;border-radius:50%;background:#04182F;display:flex;align-items:center;justify-content:center;">
+                  <span class="num-flicker" id="gaugeNum" style="font-family:var(--font-num);font-size:24px;font-weight:800;color:#fff;">0</span>
+                </div>
+              </div>
+              <div>
+                <div style="font-family:var(--font-num);font-size:13px;font-weight:600;color:rgba(255,255,255,.70);">综合健康度</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.40);margin-top:3px;">AI 诊断模型 v2.1</div>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span style="font-size:12px;color:rgba(255,255,255,.55);">组织效能</span>
+                  <span style="font-family:var(--font-num);font-size:12px;font-weight:700;color:#28B8A0;" data-count="78">0</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill" data-w="78" style="background:linear-gradient(90deg,#28B8A0,#22C0E0);"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span style="font-size:12px;color:rgba(255,255,255,.55);">薪酬竞争力</span>
+                  <span style="font-family:var(--font-num);font-size:12px;font-weight:700;color:#C4A965;" data-count="45">0</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill" data-w="45" style="background:linear-gradient(90deg,#A68B4A,#C4A965);"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span style="font-size:12px;color:rgba(255,255,255,.55);">AI 应用度</span>
+                  <span style="font-family:var(--font-num);font-size:12px;font-weight:700;color:#C4A965;" data-count="31">0</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill" data-w="31" style="background:linear-gradient(90deg,#A68B4A,#C4A965);"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 pt-4 border-t border-white/8 flex items-center gap-2">
+              <i class="fas fa-circle-info" style="font-size:11px;color:rgba(255,255,255,.30);"></i>
+              <span style="font-size:11px;color:rgba(255,255,255,.35);">基于 1000+ 企业样本数据模型</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-14 md:mt-16">
-        <div class="glass-card p-6 sm:p-7 reveal">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-16 md:mt-20">
+        <div class="dashboard-card p-6 sm:p-7 reveal">
           <div class="stat-num">12<span class="text-[0.46em] font-bold">年</span></div>
           <div class="stat-label">管理咨询行业深耕</div>
         </div>
-        <div class="glass-card p-6 sm:p-7 reveal">
+        <div class="dashboard-card p-6 sm:p-7 reveal">
           <div class="stat-num">1000<span class="text-[0.46em] font-bold">+</span></div>
           <div class="stat-label">累计服务企业</div>
         </div>
-        <div class="glass-card p-6 sm:p-7 reveal">
+        <div class="dashboard-card p-6 sm:p-7 reveal">
           <div class="stat-num">8<span class="text-[0.46em] font-bold">大</span></div>
           <div class="stat-label">咨询陪跑产品</div>
         </div>
-        <div class="glass-card p-6 sm:p-7 reveal">
+        <div class="dashboard-card p-6 sm:p-7 reveal">
           <div class="stat-num">4<span class="text-[0.46em] font-bold">大</span></div>
           <div class="stat-label">AI 应用产品</div>
         </div>
@@ -963,14 +1259,14 @@
 
   <main data-page-node-id="zcavCiKzO94txk4WOOZf9t">
     <!-- 首页/英雄区 -->
-    <section id="home" class="hero-bg py-20 md:py-32" data-page-node-id="1cQw8I0Xp7oCbkG7u8St3l">
+    <section id="home" class="tech-section-bg py-20 md:py-32" data-page-node-id="1cQw8I0Xp7oCbkG7u8St3l">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8" data-page-node-id="GMegfgSqUwuo67eP6mO5n1">
         <!-- 公司介绍 -->
         <div class="max-w-4xl mx-auto mb-24 reveal" data-page-node-id="hiyDiwnLAl01GmqGpJXX0b">
           <div class="sec-head" style="margin-bottom:36px;">
             <span class="eyebrow center">About Baijing</span>
             <h2 data-page-node-id="bTo6Y2lkSzCMrbUrJHVDXf">关于百鲸咨询</h2>
-            <p>12 年只做一件事：让管理真正落地</p>
+            <p>12 年专注一件事：管理咨询 + AI 工程化落地</p>
           </div>
           <div class="about-card" data-page-node-id="5SEARpdzZvLHczpGBr6KsQ">
             <p data-page-node-id="2nBUZHS06XGaUbgBMxrObD">
@@ -988,7 +1284,7 @@
         <!-- 核心产品与服务 -->
         <div class="max-w-7xl mx-auto" data-page-node-id="glHilpeujGaDeyeVDwY42K">
           <div class="sec-head reveal">
-            <span class="eyebrow center">Products &amp; Services</span>
+            <span class="eyebrow center">Consulting &amp; AI Products</span>
             <h2 data-page-node-id="2PDVG0ZbfgY9NjsoKMrVdM">核心产品与服务</h2>
             <p>咨询陪跑 × AI 应用，两类服务互为支撑，覆盖企业管理升级到 AI 落地的全过程</p>
             <div class="sec-rule"></div>
@@ -996,8 +1292,8 @@
 
           <!-- 第一类：咨询陪跑 -->
           <div class="flex items-center gap-4 mb-7 reveal" data-page-node-id="fjuyKPbsaVWHaZEsFqNkli">
-            <span class="text-white text-[12.5px] font-semibold px-4 py-1.5 rounded-full whitespace-nowrap" style="letter-spacing:.16em;background:linear-gradient(135deg,#083E78,#0B4E92);" data-page-node-id="sHF4wpiiS5fG7L7DRNjU5j">咨询陪跑</span>
-            <span class="flex-1 h-px" style="background:linear-gradient(90deg,rgba(8,62,120,.18),transparent);" data-page-node-id="Yuq1ANGpt3GYNDh036dipA"></span>
+            <span class="text-white text-[12.5px] font-semibold px-4 py-1.5 rounded-full whitespace-nowrap" style="letter-spacing:.16em;background:linear-gradient(135deg,#A68B4A,#C4A965);" data-page-node-id="sHF4wpiiS5fG7L7DRNjU5j">咨询陪跑</span>
+            <span class="flex-1 h-px" style="background:linear-gradient(90deg,rgba(196,169,101,.25),transparent);" data-page-node-id="Yuq1ANGpt3GYNDh036dipA"></span>
             <span class="text-[12.5px] text-secondary/45 whitespace-nowrap tracking-wide" data-page-node-id="qCNLVGzoMpBj1kCbNgvDUo">8 大咨询产品</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-page-node-id="tH8tQ2HR9n9msrO1uJPWnK">
@@ -1068,7 +1364,7 @@
 
           <!-- 第二类：AI 应用 -->
           <div class="flex items-center gap-4 mt-14 mb-7 reveal" data-page-node-id="Ch3vxPOeNlOVsETWvmye0v">
-            <span class="text-[12.5px] font-semibold px-4 py-1.5 rounded-full whitespace-nowrap" style="letter-spacing:.16em;background: linear-gradient(90deg,#28B8A0,#22C0E0); color:#062451;" data-page-node-id="YZOup0iVlliNS87hss5S7J">AI 应用</span>
+            <span class="text-white text-[12.5px] font-semibold px-4 py-1.5 rounded-full whitespace-nowrap" style="letter-spacing:.16em;background:linear-gradient(135deg,#28B8A0,#22C0E0);" data-page-node-id="YZOup0iVlliNS87hss5S7J">AI 应用</span>
             <span class="flex-1 h-px" style="background:linear-gradient(90deg,rgba(40,184,160,.30),transparent);" data-page-node-id="WomcWxOquzYD23gyNZwWo0"></span>
             <span class="text-[12.5px] text-secondary/45 whitespace-nowrap tracking-wide" data-page-node-id="L6xRz17olVqOg36p8sbHU2">4 大 AI 产品</span>
           </div>
@@ -1113,10 +1409,11 @@
       </div>
     </section>
 
-    <!-- 项目制服务流程 -->
-    <section id="process" class="py-20 md:py-28 bg-section" aria-label="项目制服务流程">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="sec-head reveal">
+    <!-- 项目制服务流程（深色 premium） -->
+    <section id="process" class="section-dark-premium py-24 md:py-32" aria-label="项目制服务流程">
+      <div class="ai-mesh-bg"></div>
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="sec-head on-dark reveal">
           <span class="eyebrow center">How We Work</span>
           <h2>项目制服务流程</h2>
           <p>诊断 · 方案 · 实施 · 陪跑 —— 四步闭环，每一步都有明确交付物</p>
@@ -1124,29 +1421,29 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          <div class="step-card reveal">
+          <div class="glass-card p-7 reveal">
             <div class="step-idx">STEP 01</div>
             <div class="step-ico"><i class="fas fa-stethoscope"></i></div>
-            <h3>企业诊断</h3>
-            <p>用数据看清现状：人效、成本结构、利润与组织健康度，锁定真正卡住增长的那几个问题。</p>
+            <h3 style="color:#fff;">企业诊断</h3>
+            <p style="color:rgba(255,255,255,.55);">用数据看清现状：人效、成本结构、利润与组织健康度，锁定真正卡住增长的那几个问题。</p>
           </div>
-          <div class="step-card reveal">
+          <div class="glass-card p-7 reveal">
             <div class="step-idx">STEP 02</div>
             <div class="step-ico"><i class="fas fa-drafting-compass"></i></div>
-            <h3>方案共创</h3>
-            <p>不套模板。基于诊断结论与行业基准，与您一起打磨可执行的管理与 AI 落地方案。</p>
+            <h3 style="color:#fff;">方案共创</h3>
+            <p style="color:rgba(255,255,255,.55);">不套模板。基于诊断结论与行业基准，与您一起打磨可执行的管理与 AI 落地方案。</p>
           </div>
-          <div class="step-card reveal">
+          <div class="glass-card p-7 reveal">
             <div class="step-idx">STEP 03</div>
             <div class="step-ico"><i class="fas fa-screwdriver-wrench"></i></div>
-            <h3>项目实施</h3>
-            <p>把方案变成制度、系统与 AI 工具，落到岗位、落到流程、落到每个人的日常动作上。</p>
+            <h3 style="color:#fff;">项目实施</h3>
+            <p style="color:rgba(255,255,255,.55);">把方案变成制度、系统与 AI 工具，落到岗位、落到流程、落到每个人的日常动作上。</p>
           </div>
-          <div class="step-card reveal">
+          <div class="glass-card p-7 reveal">
             <div class="step-idx">STEP 04</div>
             <div class="step-ico"><i class="fas fa-route"></i></div>
-            <h3>陪跑落地</h3>
-            <p>长期陪跑复盘，按月校准目标与动作，确保成果持续沉淀，而不是做完一份报告就结束。</p>
+            <h3 style="color:#fff;">陪跑落地</h3>
+            <p style="color:rgba(255,255,255,.55);">长期陪跑复盘，按月校准目标与动作，确保成果持续沉淀，而不是做完一份报告就结束。</p>
           </div>
         </div>
       </div>
@@ -1156,9 +1453,9 @@
     <section id="consultants" class="py-20 md:py-32 bg-white" data-page-node-id="mixABCttq4kuBlFI5chBht">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8" data-page-node-id="Vf8HJ9KXushCSZ2uLi575n">
         <div class="sec-head reveal">
-          <span class="eyebrow center">Consultants</span>
-          <h2 data-page-node-id="DyGQJdB53paD3gWYuMq5Gu">咨询师</h2>
-          <p>既懂管理理论，更懂企业实际运营痛点</p>
+          <span class="eyebrow center">Expert Team</span>
+          <h2 data-page-node-id="DyGQJdB53paD3gWYuMq5Gu">咨询师团队</h2>
+          <p>既懂管理理论，更懂 AI 工程落地</p>
           <div class="sec-rule"></div>
         </div>
 
@@ -1214,7 +1511,7 @@
         <div class="sec-head reveal">
           <span class="eyebrow center">Case Studies</span>
           <h2 data-page-node-id="G4lBR5Hhmj1x6u6opMh2dC">项目案例</h2>
-          <p>以结果为导向，用数据说话</p>
+          <p>以结果为导向，用数据说话 · 咨询 + AI 双轮驱动</p>
           <div class="sec-rule"></div>
         </div>
 
@@ -1224,7 +1521,7 @@
             <div class="md:flex" data-page-node-id="U4HeJ6dwCQ577GWQ1ocIrK">
               <div class="md:w-1/3 relative" data-page-node-id="bDwpQZ6q8P0AI44CzPleEj">
                 <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80" alt="某控股集团全案咨询项目" class="w-full h-full object-cover" data-page-node-id="Y5be8gfRgYM0dOiRSRyHlv">
-                <div class="absolute inset-0 bg-primary/80 flex items-center justify-center" data-page-node-id="XD1rBP51RsUCJBBwWs8Oug">
+                <div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(2,10,20,.88),rgba(8,62,120,.85));" data-page-node-id="XD1rBP51RsUCJBBwWs8Oug">
                   <h3 class="text-2xl font-bold text-white text-center px-6" data-page-node-id="AEqyMgU8Un4gCkrPmx1Tpd">某控股集团全案咨询项目</h3>
                 </div>
               </div>
@@ -1276,7 +1573,7 @@
             <div class="md:flex" data-page-node-id="7KHmMcpG5N5a01n932GPxA">
               <div class="md:w-1/3 relative" data-page-node-id="Yj0VzNWvc5xWaFBn2mGdCB">
                 <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80" alt="某科技企业股权激励项目" class="w-full h-full object-cover" data-page-node-id="FtJNz2bsykSIYTnRjsboC0">
-                <div class="absolute inset-0 bg-primary/80 flex items-center justify-center" data-page-node-id="GRMJQ4qQaCZDOPMPE70zri">
+                <div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(2,10,20,.88),rgba(8,62,120,.85));" data-page-node-id="GRMJQ4qQaCZDOPMPE70zri">
                   <h3 class="text-2xl font-bold text-white text-center px-6" data-page-node-id="iqtBYJ26q87w1aNoveU6wq">某科技企业股权激励项目</h3>
                 </div>
               </div>
@@ -1328,7 +1625,7 @@
             <div class="md:flex" data-page-node-id="3ZA7ZbuLzf9eFX4zmuWPHe">
               <div class="md:w-1/3 relative" data-page-node-id="lzCODH8kQAJfLmXMLdVXsJ">
                 <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&q=80" alt="某零售企业数字化升级项目" class="w-full h-full object-cover" data-page-node-id="ZdnUi9qAAz6e2yzB7P7P0N">
-                <div class="absolute inset-0 bg-primary/80 flex items-center justify-center" data-page-node-id="Ln2SR6ncjWAWoCMMTjf2T8">
+                <div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(2,10,20,.88),rgba(8,62,120,.85));" data-page-node-id="Ln2SR6ncjWAWoCMMTjf2T8">
                   <h3 class="text-2xl font-bold text-white text-center px-6" data-page-node-id="JfjVzWpk4FMhMOAJRKkCEx">某零售企业数字化升级项目</h3>
                 </div>
               </div>
@@ -1405,9 +1702,9 @@
     <section id="articles" class="py-20 md:py-32 bg-section" data-page-node-id="AHCyjyksp04YeGaceSKHGL">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8" data-page-node-id="bYhAjG0SibZv69Z8gd9KbX">
         <div class="sec-head reveal">
-          <span class="eyebrow center">Insights</span>
+          <span class="eyebrow center">AI &amp; Management Insights</span>
           <h2 data-page-node-id="XsJPAkJV5RDQMlsAxJUHdo">精选文章</h2>
-          <p>深度洞察企业管理实践，助力企业战略落地</p>
+          <p>深度洞察企业管理与 AI 落地实践，助力企业战略落地</p>
           <div class="sec-rule"></div>
         </div>
         <div id="articlesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mt-12" data-page-node-id="04bmYBzV60f0Zy9ZGpTZEM">
@@ -1437,7 +1734,7 @@
     <section id="contact" class="py-20 md:py-32 bg-white" data-page-node-id="49JGVtDNjbMZ1c6YUgW0X6">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8" data-page-node-id="gXVWCA1rvzynZlt7DlVwXo">
         <div class="sec-head reveal">
-          <span class="eyebrow center">Contact</span>
+          <span class="eyebrow center">Start Your Journey</span>
           <h2 data-page-node-id="PXAmanHpeZLnbNBppLCiGM">联系我们</h2>
           <p>一次沟通，可能改变企业三年的走向</p>
           <div class="sec-rule"></div>
@@ -1656,7 +1953,7 @@
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
     <script>
-    // ===================== 高级感交互：滚动显现 + 导航栏状态 =====================
+    // ===================== 高级感交互：滚动显现 + 导航栏状态 + AI 仪表盘动态 =====================
     (function () {
       var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1677,6 +1974,74 @@
         var onScroll = function () { header.classList.toggle('scrolled', window.scrollY > 12); };
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
+      }
+
+      // ===================== AI 仪表盘动态数据 =====================
+      var dashboard = document.getElementById('aiDashboard');
+      if (dashboard && !reduce && 'IntersectionObserver' in window) {
+        var triggered = false;
+        var dIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting && !triggered) {
+              triggered = true;
+              dIo.unobserve(e.target);
+              animateDashboard();
+            }
+          });
+        }, { threshold: 0.3 });
+        dIo.observe(dashboard);
+      } else if (dashboard) {
+        animateDashboard();
+      }
+
+      function animateDashboard() {
+        // 圆环数字 count-up (0 -> 62)
+        var gaugeNum = document.getElementById('gaugeNum');
+        if (gaugeNum) {
+          countUp(gaugeNum, 0, 62, 1500);
+        }
+        // 进度条填充
+        var bars = document.querySelectorAll('.bar-fill');
+        bars.forEach(function (bar, i) {
+          var w = bar.getAttribute('data-w');
+          setTimeout(function () {
+            bar.style.width = w + '%';
+          }, 200 + i * 250);
+        });
+        // 进度条数字 count-up
+        var countEls = document.querySelectorAll('[data-count]');
+        countEls.forEach(function (el, i) {
+          var target = parseInt(el.getAttribute('data-count'), 10);
+          setTimeout(function () {
+            countUp(el, 0, target, 1200);
+          }, 250 + i * 250);
+        });
+        // 定期微动：数字小幅波动
+        setInterval(function () {
+          countEls.forEach(function (el) {
+            var base = parseInt(el.getAttribute('data-count'), 10);
+            var delta = Math.floor(Math.random() * 3) - 1;
+            el.textContent = Math.max(0, base + delta);
+          });
+          if (gaugeNum) {
+            var baseG = 62;
+            var deltaG = Math.floor(Math.random() * 3) - 1;
+            gaugeNum.textContent = Math.max(0, baseG + deltaG);
+          }
+        }, 3500);
+      }
+
+      function countUp(el, from, to, duration) {
+        var start = null;
+        function step(ts) {
+          if (!start) start = ts;
+          var progress = Math.min((ts - start) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var val = Math.round(from + (to - from) * eased);
+          el.textContent = val;
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
       }
     })();
 

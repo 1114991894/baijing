@@ -60,8 +60,9 @@
       @apply bg-primary hover:bg-primary/90 text-dark font-semibold py-3 px-6 rounded-md transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 w-full;
     }
   </style>
+  <link rel="stylesheet" href="premium-enhance.css">
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 bg-section">
+<body class="min-h-screen flex items-center justify-center p-4 bg-section" style="background:linear-gradient(135deg,#020A14 0%,#04182F 50%,#062A50 100%);">
   <div class="w-full max-w-md">
     <!-- Logo -->
     <div class="text-center mb-8">
@@ -71,7 +72,7 @@
     </div>
     
     <!-- 登录表单 -->
-    <div class="bg-white rounded-xl p-8 login-card border border-primary/10">
+    <div class="bg-white rounded-xl p-8 login-card border border-primary/10 reveal card-gold-hover">
       <form id="loginForm">
         <div class="mb-6">
           <label for="phone" class="block text-secondary font-medium mb-2">
@@ -151,5 +152,6 @@
       window.location.href = 'dashboard.html';
     }
   </script>
+  <script src="premium-enhance.js"></script>
 </body>
 </html>

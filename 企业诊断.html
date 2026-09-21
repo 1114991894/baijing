@@ -557,6 +557,7 @@
       .result-section { padding-bottom: 70px; }
     }
   </style>
+  <link rel="stylesheet" href="premium-enhance.css">
 </head>
 <body>
 
@@ -576,7 +577,8 @@
   </header>
 
   <!-- ========== Hero ========== -->
-  <section class="hero section-dark">
+  <section class="hero section-dark section-dark-premium">
+    <div class="ai-mesh-bg"></div>
     <div class="container hero-inner">
       <div>
         <span class="eyebrow">Free Diagnostic · 30 Seconds</span>
@@ -719,7 +721,7 @@
   </section>
 
   <!-- ========== 结果区 ========== -->
-  <section class="result-section" id="result">
+  <section class="result-section reveal" id="result">
     <div class="container">
 
       <div class="result-head-bar">
@@ -760,19 +762,19 @@
       <div class="metrics-grid" id="metrics"></div>
 
       <!-- 诊断结论 -->
-      <div class="panel conclusion">
+      <div class="panel conclusion card-gold-hover reveal">
         <div class="panel-head">🔍 诊断结论</div>
         <p id="conclusion"></p>
       </div>
 
       <!-- 改善建议 -->
-      <div class="panel">
+      <div class="panel card-gold-hover reveal">
         <div class="panel-head">💡 改善建议</div>
         <div class="advice-grid" id="advice"></div>
       </div>
 
       <!-- CTA -->
-      <div class="cta-section">
+      <div class="cta-section reveal">
         <h3>想要一份定制化的改善方案？</h3>
         <p>联系咨询师，获得针对你企业的专属诊断与陪跑方案 — 我们会在 24 小时内回复。</p>
         <div class="cta-actions">
@@ -958,5 +960,6 @@
       generate();
     });
   </script>
+  <script src="premium-enhance.js"></script>
 </body>
 </html>

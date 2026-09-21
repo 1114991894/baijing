@@ -1,0 +1,286 @@
+/* ====================================================================
+   premium-enhance.css — 全站动效 & 科技感增强
+   适用于所有子页面（企业诊断、工具页、文章、登录、404等）
+   ==================================================================== */
+
+/* —— CSS 变量（与首页 v4 系统一致）—— */
+:root {
+  --ink-950: #020A14;
+  --ink-900: #04182F;
+  --ink-800: #062A50;
+  --ink-700: #083E78;
+  --brand: #28B8A0;
+  --brand-2: #22C0E0;
+  --gold: #C4A965;
+  --gold-light: #E0C887;
+  --gold-dark: #A68B4A;
+  --font-num: 'Sora', 'Noto Sans SC', system-ui, sans-serif;
+  --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+}
+
+/* —— 滚动显现（默认隐藏，JS 加 .in 后显示）—— */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* —— AI 科技装饰：节点网络背景 —— */
+.ai-mesh-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.ai-mesh-bg::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 30%, rgba(40,184,160,.15) 0%, transparent 1.5%),
+    radial-gradient(circle at 35% 70%, rgba(34,192,224,.12) 0%, transparent 1.5%),
+    radial-gradient(circle at 60% 40%, rgba(196,169,101,.12) 0%, transparent 1.5%),
+    radial-gradient(circle at 80% 20%, rgba(40,184,160,.10) 0%, transparent 1.5%),
+    radial-gradient(circle at 90% 80%, rgba(34,192,224,.10) 0%, transparent 1.5%);
+}
+.ai-mesh-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(0deg, transparent 49.5%, rgba(255,255,255,.04) 49.5%, rgba(255,255,255,.04) 50.5%, transparent 50.5%),
+    linear-gradient(90deg, transparent 49.5%, rgba(255,255,255,.04) 49.5%, rgba(255,255,255,.04) 50.5%, transparent 50.5%);
+  background-size: 120px 120px;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000, transparent 70%);
+  mask-image: radial-gradient(circle at 50% 50%, #000, transparent 70%);
+}
+
+/* —— 深色 premium 区块 —— */
+.section-dark-premium {
+  position: relative; overflow: hidden; color: #fff;
+  background:
+    radial-gradient(900px 460px at 8% -8%, rgba(34,192,224,.14), transparent 60%),
+    radial-gradient(700px 360px at 92% 4%, rgba(40,184,160,.10), transparent 62%),
+    radial-gradient(500px 280px at 50% 100%, rgba(196,169,101,.08), transparent 60%),
+    linear-gradient(170deg, #020A14 0%, #04182F 45%, #062A50 70%, #020A14 100%);
+}
+
+/* —— 科技浅色背景 —— */
+.tech-section-bg {
+  position: relative;
+  background:
+    radial-gradient(600px 300px at 100% 0%, rgba(196,169,101,.04), transparent 60%),
+    radial-gradient(500px 250px at 0% 100%, rgba(40,184,160,.03), transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #FAFBFD 100%);
+}
+
+/* —— 玻璃卡片（深色区用）—— */
+.glass-card {
+  position: relative; overflow: hidden;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(196,169,101,.12);
+  border-radius: 16px;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  transition: transform .4s cubic-bezier(.22,.61,.36,1), border-color .4s, background .4s, box-shadow .4s;
+}
+.glass-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196,169,101,.4), transparent);
+}
+.glass-card::after {
+  content: ""; position: absolute; top: -30px; right: -30px;
+  width: 80px; height: 80px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(40,184,160,.10), transparent 70%);
+  pointer-events: none;
+}
+.glass-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(196,169,101,.30);
+  background: rgba(255,255,255,.06);
+  box-shadow: 0 20px 50px -20px rgba(196,169,101,.12);
+}
+
+/* —— 仪表盘风格卡片（浅色区用）—— */
+.dashboard-card-light {
+  position: relative; overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(8,62,120,.08);
+  border-radius: 16px;
+  transition: transform .4s cubic-bezier(.22,.61,.36,1), border-color .4s, box-shadow .4s;
+}
+.dashboard-card-light::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--brand), var(--gold), transparent);
+  transform: scaleX(0); transform-origin: left; transition: transform .5s cubic-bezier(.22,.61,.36,1);
+}
+.dashboard-card-light:hover {
+  transform: translateY(-3px);
+  border-color: rgba(196,169,101,.25);
+  box-shadow: 0 16px 40px -16px rgba(8,62,120,.12);
+}
+.dashboard-card-light:hover::before { transform: scaleX(1); }
+
+/* —— LIVE 指示灯脉冲 —— */
+@keyframes livePulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(40,184,160,.5); }
+  50% { opacity: .7; box-shadow: 0 0 0 6px rgba(40,184,160,0); }
+}
+.live-dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: #28B8A0; margin-right: 5px;
+  animation: livePulse 1.6s ease-in-out infinite;
+}
+
+/* —— 扫描线 —— */
+@keyframes scanLine {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: .5; }
+  90% { opacity: .5; }
+  100% { top: 100%; opacity: 0; }
+}
+.scan-line {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(40,184,160,.4), rgba(196,169,101,.3), transparent);
+  animation: scanLine 3.5s ease-in-out infinite;
+  pointer-events: none; z-index: 5;
+}
+
+/* —— 数据流粒子 —— */
+@keyframes particleFloat {
+  0% { transform: translate(0, 0); opacity: 0; }
+  20% { opacity: .6; }
+  80% { opacity: .6; }
+  100% { transform: translate(15px, -25px); opacity: 0; }
+}
+.ai-particle {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%;
+  background: rgba(40,184,160,.5);
+  animation: particleFloat 3s ease-out infinite;
+  pointer-events: none;
+}
+
+/* —— 底部数据流线条 —— */
+@keyframes dataStream {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+.data-stream-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px; overflow: hidden;
+}
+.data-stream-bar::before {
+  content: ""; position: absolute; top: 0; left: 0; width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(40,184,160,.5), rgba(196,169,101,.4), transparent);
+  animation: dataStream 4s linear infinite;
+}
+
+/* —— 进度条填充 —— */
+.bar-track { height: 4px; border-radius: 2px; background: rgba(255,255,255,.08); overflow: hidden; position: relative; }
+.bar-track-light { height: 4px; border-radius: 2px; background: rgba(8,62,120,.08); overflow: hidden; position: relative; }
+.bar-fill {
+  height: 100%; border-radius: 2px; width: 0%;
+  transition: width 1.4s cubic-bezier(.22,.61,.36,1);
+  position: relative;
+}
+.bar-fill::after {
+  content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 20px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35));
+  animation: barShine 2.5s ease-in-out infinite;
+}
+@keyframes barShine {
+  0%, 100% { opacity: 0; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(-10px); }
+}
+
+/* —— 数字闪烁 —— */
+@keyframes numFlicker {
+  0%, 100% { text-shadow: 0 0 0 transparent; }
+  50% { text-shadow: 0 0 10px rgba(40,184,160,.4); }
+}
+.num-flicker { animation: numFlicker 2s ease-in-out infinite; }
+
+/* —— 圆环旋转 —— */
+@keyframes gaugeRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.gauge-ring { animation: gaugeRotate 8s linear infinite; }
+
+/* —— 浮入动画 —— */
+@keyframes floatIn {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* —— 渐变文字 —— */
+.gradient-text-gold {
+  background: linear-gradient(100deg, #E0C887, #C4A965);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.gradient-text-brand {
+  background: linear-gradient(100deg, #28B8A0, #22C0E0);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* —— 金色边框输入框 —— */
+.input-premium {
+  transition: border-color .3s, box-shadow .3s, background .3s;
+}
+.input-premium:focus {
+  border-color: rgba(196,169,101,.40) !important;
+  box-shadow: 0 0 0 3px rgba(196,169,101,.10) !important;
+  background: rgba(196,169,101,.02) !important;
+}
+
+/* —— 按钮金光扫过 —— */
+.btn-shimmer { position: relative; overflow: hidden; }
+.btn-shimmer::after {
+  content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+  transition: left .6s ease;
+}
+.btn-shimmer:hover::after { left: 150%; }
+
+/* —— 卡片 hover 金色边框 —— */
+.card-gold-hover {
+  transition: border-color .4s, transform .4s, box-shadow .4s;
+}
+.card-gold-hover:hover {
+  border-color: rgba(196,169,101,.35) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px -14px rgba(196,169,101,.18);
+}
+
+/* —— 标题入场 —— */
+@keyframes titleFadeUp {
+  0% { transform: translateY(16px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.title-anim { animation: titleFadeUp .8s cubic-bezier(.22,.61,.36,1) both; }
+
+/* —— 节点装饰 —— */
+.node-dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 12px rgba(196,169,101,.5);
+}
+
+/* —— 背景渐变光晕 —— */
+.glow-bg {
+  position: relative;
+}
+.glow-bg::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(400px 200px at 50% 0%, rgba(40,184,160,.06), transparent 60%);
+}
+
+/* —— 表格行 hover —— */
+.tr-premium { transition: background .3s; }
+.tr-premium:hover { background: rgba(40,184,160,.04) !important; }
+
+/* —— 标签 chip —— */
+.chip-ai {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;
+  letter-spacing: .1em; color: var(--brand);
+  background: rgba(40,184,160,.10); border: 1px solid rgba(40,184,160,.22);
+}
+.chip-consult {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;
+  letter-spacing: .1em; color: var(--gold);
+  background: rgba(196,169,101,.10); border: 1px solid rgba(196,169,101,.22);
+}
+
+/* —— reduced motion —— */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .scan-line, .ai-particle, .data-stream-bar, .live-dot, .gauge-ring,
+  .num-flicker, .bar-fill::after, .btn-shimmer::after { animation: none !important; }
+}

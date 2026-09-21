@@ -16,7 +16,7 @@
     <style>
         body {
             font-family: 'Microsoft YaHei', sans-serif;
-            background-color: #F4FAFF;
+            background: linear-gradient(180deg, #FAFBFD 0%, #F4FAFF 100%);
             padding: 20px;
         }
         .calculator-wrapper {
@@ -95,10 +95,11 @@
             color: #666666;
         }
     </style>
+    <link rel="stylesheet" href="premium-enhance.css">
 </head>
 <body>
 
-<div class="calculator-wrapper">
+<div class="calculator-wrapper reveal glow-bg">
     <!-- 修改标题 -->
     <h2 style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
         公司目标测算（<span id="yearDisplay">2027</span>年）
@@ -255,7 +256,7 @@
         }
     });
   </script>
-
+  <script src="premium-enhance.js"></script>
 
 </body>
 </html>
