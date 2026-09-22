@@ -428,6 +428,46 @@
     .mobile-cta-bar .cta-diag {
       background: linear-gradient(135deg, #28B8A0, #22C0E0); color: #062451;
     }
+    /* 电脑端悬浮咨询按钮（仅桌面端显示，与移动端底栏互补） */
+    .desktop-fab {
+      position: fixed; right: 28px; bottom: 28px; z-index: 45;
+      display: none; align-items: center; gap: 10px;
+      padding: 13px 22px 13px 14px;
+      border: 1px solid rgba(224,200,135,.55); border-radius: 999px;
+      font-family: inherit; font-size: 15px; font-weight: 700; letter-spacing: .3px;
+      color: #0B2545; cursor: pointer;
+      background: linear-gradient(135deg, #A68B4A, #C4A965 46%, #E0C887);
+      box-shadow: 0 18px 40px -16px rgba(196,169,101,.95), 0 8px 20px -10px rgba(2,10,20,.55);
+      transition: transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s, opacity .3s, visibility .3s;
+    }
+    .desktop-fab:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 48px -16px rgba(196,169,101,1), 0 10px 24px -10px rgba(2,10,20,.6);
+    }
+    .desktop-fab:active { transform: translateY(-1px) scale(.98); }
+    .desktop-fab .fab-ico {
+      width: 32px; height: 32px; flex: none; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: #E0C887; background: rgba(2,10,20,.9);
+    }
+    .desktop-fab .fab-halo {
+      position: absolute; inset: 0; border-radius: 999px;
+      border: 1px solid rgba(196,169,101,.6); pointer-events: none;
+      animation: fabHalo 2.8s ease-out infinite;
+    }
+    @keyframes fabHalo {
+      0% { transform: scale(1); opacity: .8; }
+      70%, 100% { transform: scale(1.16); opacity: 0; }
+    }
+    /* 页脚出现时让位，避免遮挡页脚「AI管理小工具」按钮 */
+    .desktop-fab.is-hidden {
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transform: translateY(10px) scale(.96);
+    }
+    @media (min-width: 768px) { .desktop-fab { display: inline-flex; } }
+    @media (prefers-reduced-motion: reduce) {
+      .desktop-fab .fab-halo { animation: none; opacity: 0; }
+    }
     /* 免费企业诊断 - 信息填写弹窗 */
     .diag-modal-overlay {
       position: fixed; inset: 0; z-index: 60;
@@ -2095,6 +2135,13 @@
     <button type="button" id="openDiagModal" class="cta-diag"><i class="fas fa-bolt"></i>免费企业诊断</button>
   </div>
 
+  <!-- 电脑端悬浮咨询按钮（移动端隐藏，打开与移动端一致的免费诊断弹窗） -->
+  <button type="button" id="desktopFab" class="desktop-fab" aria-label="免费咨询诊断">
+    <span class="fab-halo" aria-hidden="true"></span>
+    <span class="fab-ico"><i class="fas fa-headset"></i></span>
+    免费咨询诊断
+  </button>
+
   <!-- 免费企业诊断 - 信息填写弹窗 -->
   <div id="diagModal" class="diag-modal-overlay" role="dialog" aria-modal="true" aria-label="免费企业诊断信息填写">
     <div class="diag-modal">
@@ -2324,6 +2371,18 @@
     document.getElementById('diagDoneBtn').addEventListener('click', closeDiagModal);
     diagModal.addEventListener('click', (e) => { if (e.target === diagModal) closeDiagModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDiagModal(); });
+
+    // 电脑端悬浮按钮：打开与移动端一致的诊断弹窗；滚动到页脚时自动让位
+    const desktopFab = document.getElementById('desktopFab');
+    if (desktopFab) {
+      desktopFab.addEventListener('click', openDiagModal);
+      const footTools = document.querySelector('.site-footer .footer-tools');
+      if (footTools && 'IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+          entries.forEach((en) => desktopFab.classList.toggle('is-hidden', en.isIntersecting));
+        }, { threshold: 0, rootMargin: '0px 0px 140px 0px' }).observe(footTools);
+      }
+    }
 
     diagForm.addEventListener('submit', async (e) => {
       e.preventDefault();
