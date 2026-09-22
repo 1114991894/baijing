@@ -187,7 +187,8 @@ function copyStaticFiles() {
     // 合作客户 logo 墙
     'logos/baishi.jpeg', 'logos/baosheng.png', 'logos/meimin.png', 'logos/putuoshan.jpg',
     'logos/zhidao.jpg', 'logos/zhiwuyan.jpg', 'logos/zhongjian.jpg', 'logos/zhongnan.jpeg',
-    'logos/zhongtian.jpg', 'logos/zhongtong.jpg'
+    'logos/zhongtian.jpg', 'logos/zhongtong.jpg', 'logos/abaocailanzi.jpg', 'logos/baoshengbinguan.jpg',
+    'logos/suntaihe.jpg', 'logos/oulun.jpg', 'logos/xinrui.jpg'
   ];
   const dirs = ['articles', 'api'];
   const consultantImgs = ['consultant-lilaoshi.png', 'consultant-liuquanan.png', 'consultant-wanglaoshi.png', 'consultant-chenlaoshi.png', 'consultant-zhoulaoshi.png', 'consultant-sunlaoshi.png', '刘诠案老师.jpg', '微信公众号.jpg', '企业诊断.html'];
