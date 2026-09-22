@@ -462,18 +462,23 @@
       box-shadow: 0 0 0 3px rgba(40,184,160,.15);
     }
     .diag-field textarea { resize: vertical; min-height: 76px; }
-    /* 抽屉导航项 */
+    /* 抽屉导航项（深色科技） */
     .mobile-nav .nav-item {
       display: flex; align-items: center; gap: 14px;
       padding: 14px 4px;
-      border-bottom: 1px solid #F1F5F9;
-      font-size: 17px; font-weight: 500; color: #333;
+      border-bottom: 1px solid rgba(40,184,160,.12);
+      font-size: 17px; font-weight: 500; color: rgba(255,255,255,.82);
     }
     .mobile-nav .nav-item i {
       width: 36px; height: 36px; flex: none;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(40,184,160,0.1); color: #28B8A0;
+      background: rgba(40,184,160,.12); color: #28B8A0;
       border-radius: 10px; font-size: 15px;
+      transition: background .3s, color .3s, box-shadow .3s;
+    }
+    .mobile-nav .nav-item:hover i {
+      background: linear-gradient(135deg, #A68B4A, #C4A965); color: #0B2545;
+      box-shadow: 0 6px 16px -4px rgba(196,169,101,.45);
     }
 
     @media (max-width: 767px) {
@@ -884,50 +889,62 @@
     .step-card h3 { font-size: 17px; font-weight: 700; color: #0B2545; margin-bottom: 10px; }
     .step-card p { font-size: 14px; line-height: 1.85; color: rgba(11,37,69,.60); }
 
-    /* —— 导航栏（更精致的毛玻璃 + 金色底线）—— */
+    /* —— 导航栏（深色科技毛玻璃 + AI 光效）—— */
     .site-header {
-      background: rgba(255,255,255,.80);
-      backdrop-filter: saturate(180%) blur(20px);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      border-bottom: 1px solid rgba(8,62,120,.08);
+      background: rgba(2,10,20,.65);
+      backdrop-filter: saturate(160%) blur(24px);
+      -webkit-backdrop-filter: saturate(160%) blur(24px);
+      border-bottom: 1px solid rgba(40,184,160,.10);
       transition: background .35s, box-shadow .35s, border-color .35s;
+      position: relative;
+    }
+    .site-header::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(40,184,160,.45), rgba(196,169,101,.35), transparent);
+      pointer-events: none;
     }
     .site-header.scrolled {
-      background: rgba(255,255,255,.95);
-      box-shadow: 0 10px 30px -18px rgba(8,62,120,.35);
-      border-bottom: 1px solid rgba(196,169,101,.12);
+      background: rgba(2,10,20,.92);
+      box-shadow: 0 10px 30px -18px rgba(8,62,120,.50), 0 0 40px -20px rgba(40,184,160,.20);
+      border-bottom-color: rgba(40,184,160,.18);
+    }
+    .site-header.scrolled::before {
+      background: linear-gradient(90deg, transparent, rgba(196,169,101,.55), rgba(40,184,160,.45), transparent);
     }
     @media (max-width: 767px) {
-      .site-header, .site-header.scrolled { background: #fff; }
+      .site-header, .site-header.scrolled { background: rgba(2,10,20,.95); }
     }
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-      .site-header, .site-header.scrolled { background: #fff; }
+      .site-header, .site-header.scrolled { background: rgba(2,10,20,.95); }
     }
+    .logo-icon { transition: filter .4s, transform .4s; }
+    .logo-icon:hover { filter: drop-shadow(0 0 8px rgba(196,169,101,.45)); transform: scale(1.04); }
     .nav-link {
       position: relative; padding: 8px 2px; font-size: 15px; font-weight: 500;
-      letter-spacing: .01em; color: rgba(11,37,69,.72); transition: color .3s;
+      letter-spacing: .01em; color: rgba(255,255,255,.72); transition: color .3s;
     }
     .nav-link::after {
       content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
-      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--brand));
       border-radius: 2px; transform: scaleX(0); transform-origin: center;
       transition: transform .35s cubic-bezier(.22,.61,.36,1);
+      box-shadow: 0 0 8px rgba(196,169,101,.4);
     }
-    .nav-link:hover { color: var(--ink-700); }
+    .nav-link:hover { color: #fff; }
     .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
-    .nav-link.active { color: var(--ink-700); font-weight: 600; }
+    .nav-link.active { color: #fff; font-weight: 600; }
     .nav-cta {
       position: relative; overflow: hidden;
-      background: linear-gradient(135deg, #083E78, #0B4E92); color: #fff;
-      font-size: 13.5px; font-weight: 600; padding: 10px 20px; border-radius: 10px;
-      box-shadow: 0 8px 22px -10px rgba(8,62,120,.6);
+      background: linear-gradient(135deg, #A68B4A, #C4A965, #E0C887); color: #0B2545;
+      font-size: 13.5px; font-weight: 700; padding: 10px 20px; border-radius: 10px;
+      box-shadow: 0 8px 22px -10px rgba(196,169,101,.6);
       transition: transform .3s, box-shadow .3s, border-color .3s;
-      border: 1px solid rgba(196,169,101,.15);
+      border: 1px solid rgba(196,169,101,.45);
     }
-    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -10px rgba(8,62,120,.7); border-color: rgba(196,169,101,.4); }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 28px -8px rgba(196,169,101,.65); border-color: rgba(196,169,101,.7); }
     .nav-cta::after {
       content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
       transform: skewX(-18deg); transition: left .6s ease;
     }
     .nav-cta:hover::after { left: 120%; }
@@ -1097,7 +1114,7 @@
         <a href="https://g.baijingzixun.top" target="_blank" class="nav-cta ml-3" data-page-node-id="Hw1b6EGfuHYLnouu72k2dQ">百鲸 G 系统</a>
       </nav>
       
-      <button id="menuBtn" class="md:hidden text-secondary text-2xl p-2 rounded-full hover:bg-neutral/30 transition-colors" aria-label="打开菜单" data-page-node-id="9n5TpVWvSOycNJVwnqRn0Q">
+      <button id="menuBtn" class="md:hidden text-white text-2xl p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="打开菜单" data-page-node-id="9n5TpVWvSOycNJVwnqRn0Q">
         <i class="fas fa-bars" data-page-node-id="rHQPROhMtpbLCdXGlSkhqF"></i>
       </button>
     </div>
@@ -1108,13 +1125,13 @@
   <div id="mobileOverlay" class="mobile-overlay fixed inset-0 bg-black/50 z-40 md:hidden" data-page-node-id="41zBI5mrKq9Z2HF96Tt291"></div>
 
   <!-- 移动端导航 -->
-  <div id="mobileNav" class="mobile-nav fixed top-0 right-0 h-full w-72 bg-white shadow-xl p-6 z-50 border-l border-neutral flex flex-col" data-page-node-id="eYWCBFg68KSPoIL7Mqp1Ze">
+  <div id="mobileNav" class="mobile-nav fixed top-0 right-0 h-full w-72 bg-[#020A14] shadow-xl p-6 z-50 border-l border-[#28B8A0]/15 flex flex-col" data-page-node-id="eYWCBFg68KSPoIL7Mqp1Ze">
       <div class="flex justify-between items-center mb-8" data-page-node-id="2MHgIL0v9NqDhE7c3AfMm7">
         <div class="flex items-center gap-3">
           <img src="logo0（透明）.png" alt="百鲸咨询logo" class="h-9 w-auto">
-          <h3 class="text-xl font-bold text-secondary" data-page-node-id="u2PDa2vPFuMHoUwuUoHx7z">百鲸咨询</h3>
+          <h3 class="text-xl font-bold text-white" data-page-node-id="u2PDa2vPFuMHoUwuUoHx7z">百鲸咨询</h3>
         </div>
-        <button id="closeBtn" class="text-secondary text-xl p-2 rounded-full hover:bg-neutral/30 transition-colors" aria-label="关闭菜单" data-page-node-id="0bIr22aRQEgRjTkdo4zT6I">
+        <button id="closeBtn" class="text-white/70 text-xl p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="关闭菜单" data-page-node-id="0bIr22aRQEgRjTkdo4zT6I">
           <i class="fas fa-times" data-page-node-id="lhcIrlF4LONmiHfHOP2Jvd"></i>
         </button>
       </div>
@@ -1128,10 +1145,10 @@
       <a href="https://g.baijingzixun.top" target="_blank" class="mt-6 bg-accent hover:bg-hover text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm text-center inline-flex items-center justify-center gap-2" data-page-node-id="3UuMEwxxRCQ0Ir71a8p04j">
         <i class="fas fa-rocket"></i>进入百鲸 G 系统
       </a>
-      <div class="mt-auto pt-6 text-center text-sm text-secondary/60">
+      <div class="mt-auto pt-6 text-center text-sm text-white/55">
         <i class="fas fa-phone text-accent mr-1"></i>
-        <a href="tel:15158195310" class="font-semibold text-secondary hover:text-primary">15158195310</a>
-        <div class="text-xs mt-1 text-secondary/50">工作日 9:00 - 18:00</div>
+        <a href="tel:15158195310" class="font-semibold text-white hover:text-white/80">15158195310</a>
+        <div class="text-xs mt-1 text-white/45">工作日 9:00 - 18:00</div>
       </div>
   </div>
 
