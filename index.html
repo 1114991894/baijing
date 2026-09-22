@@ -822,6 +822,7 @@
       transform: translateY(-6px);
       border-color: rgba(196,169,101,.35);
       box-shadow: 0 26px 50px -20px rgba(8,62,120,.26), 0 0 0 1px rgba(196,169,101,.08);
+      background: linear-gradient(160deg, #FCF7EA 0%, #EFF5F3 100%);
     }
     .svc-card:hover::before { transform: scaleX(1); }
     .svc-card > div:first-child {
@@ -845,6 +846,7 @@
     }
     .svc-card p { font-size: 14.5px; line-height: 1.85; color: rgba(11,37,69,.62); }
     .svc-card-ai { background: linear-gradient(160deg, #FFFFFF 0%, #F8F6F0 100%); }
+    .svc-card-ai:hover { background: linear-gradient(160deg, #FBF4E1 0%, #EDF4F1 100%); }
 
     /* —— 关于卡片（金色竖线 + 深度阴影）—— */
     .about-card {
@@ -1010,8 +1012,8 @@
 
     /* —— 项目案例卡片（金色悬浮边框 + 成果数字金色渐变）—— */
     .proj-card {
-      position: relative; overflow: hidden; margin-bottom: 28px;
-      background: #fff; border: 1px solid var(--hair-b); border-radius: 20px;
+      position: relative; overflow: hidden; margin-bottom: 18px;
+      background: #fff; border: 1px solid var(--hair-b); border-radius: 16px;
       transition: transform .42s cubic-bezier(.22,.61,.36,1), box-shadow .42s, border-color .42s;
     }
     .proj-card:last-child { margin-bottom: 0; }
@@ -1521,6 +1523,47 @@
               </p>
             </div>
           </div>
+          <!-- 咨询师案例4：组织与合伙 -->
+          <div class="consult-card reveal" data-page-node-id="consultChenCard">
+            <div class="consult-avatar" data-page-node-id="consultChenAvatar">
+              <img src="consultant-chenlaoshi.png" alt="陈老师 - 组织与合伙机制专家" class="w-full h-full object-cover" data-page-node-id="consultChenImg">
+            </div>
+            <div class="p-8 flex flex-col flex-1" data-page-node-id="consultChenBody">
+              <h3 class="text-2xl font-bold text-center text-secondary mb-2" data-page-node-id="consultChenName">陈老师</h3>
+              <p class="text-accent font-semibold mb-4 text-lg text-center" data-page-node-id="consultChenTitle">高级合伙人 | 组织与合伙机制专家</p>
+              <p class="text-secondary/80 mb-6 leading-relaxed flex-1" data-page-node-id="consultChenDesc">
+                18年企业管理咨询经验，历任大型制造集团运营高管，擅长组织架构设计、合伙模式与股权顶层设计，主导60+组织变革项目落地。
+              </p>
+            </div>
+          </div>
+
+          <!-- 咨询师案例5：AI工程落地 -->
+          <div class="consult-card reveal" data-page-node-id="consultZhouCard">
+            <div class="consult-avatar" data-page-node-id="consultZhouAvatar">
+              <img src="consultant-zhoulaoshi.png" alt="周老师 - FDE前线部署工程师" class="w-full h-full object-cover" data-page-node-id="consultZhouImg">
+            </div>
+            <div class="p-8 flex flex-col flex-1" data-page-node-id="consultZhouBody">
+              <h3 class="text-2xl font-bold text-center text-secondary mb-2" data-page-node-id="consultZhouName">周老师</h3>
+              <p class="text-accent font-semibold mb-4 text-lg text-center" data-page-node-id="consultZhouTitle">FDE前线部署工程师 | AI落地专家</p>
+              <p class="text-secondary/80 mb-6 leading-relaxed flex-1" data-page-node-id="consultZhouDesc">
+                8年数字化工程实施经验，主导30+企业AI应用落地，擅长AI应用培训、企业级软件部署与业务流程再造，坚持驻场陪跑式交付。
+              </p>
+            </div>
+          </div>
+
+          <!-- 咨询师案例6：人才与薪酬绩效 -->
+          <div class="consult-card reveal" data-page-node-id="consultSunCard">
+            <div class="consult-avatar" data-page-node-id="consultSunAvatar">
+              <img src="consultant-sunlaoshi.png" alt="孙老师 - 人才体系与薪酬绩效专家" class="w-full h-full object-cover" data-page-node-id="consultSunImg">
+            </div>
+            <div class="p-8 flex flex-col flex-1" data-page-node-id="consultSunBody">
+              <h3 class="text-2xl font-bold text-center text-secondary mb-2" data-page-node-id="consultSunName">孙老师</h3>
+              <p class="text-accent font-semibold mb-4 text-lg text-center" data-page-node-id="consultSunTitle">人才体系咨询师 | 薪酬绩效专家</p>
+              <p class="text-secondary/80 mb-6 leading-relaxed flex-1" data-page-node-id="consultSunDesc">
+                10年人力资源咨询经验，专注人才梯队建设与薪酬绩效体系设计，服务制造、零售、科技等行业50+企业，让人力真正成为增长引擎。
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1539,15 +1582,15 @@
           <!-- 项目案例1 -->
           <div class="proj-card reveal" data-page-node-id="ucylOOXUOfDtesnZv9Tquc">
             <div class="md:flex" data-page-node-id="U4HeJ6dwCQ577GWQ1ocIrK">
-              <div class="md:w-1/3 relative" data-page-node-id="bDwpQZ6q8P0AI44CzPleEj">
+              <div class="md:w-1/4 relative" data-page-node-id="bDwpQZ6q8P0AI44CzPleEj">
                 <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80" alt="某控股集团全案咨询项目" class="w-full h-full object-cover" data-page-node-id="Y5be8gfRgYM0dOiRSRyHlv">
                 <div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(2,10,20,.88),rgba(8,62,120,.85));" data-page-node-id="XD1rBP51RsUCJBBwWs8Oug">
-                  <h3 class="text-2xl font-bold text-white text-center px-6" data-page-node-id="AEqyMgU8Un4gCkrPmx1Tpd">某控股集团全案咨询项目</h3>
+                  <h3 class="text-xl md:text-2xl font-bold text-white text-center px-4" data-page-node-id="AEqyMgU8Un4gCkrPmx1Tpd">某控股集团全案咨询项目</h3>
                 </div>
               </div>
-              <div class="md:w-2/3 p-8 md:p-10" data-page-node-id="cak627iIDJ4rAa3Z8so3QG">
+              <div class="md:w-3/4 p-6 md:p-7" data-page-node-id="cak627iIDJ4rAa3Z8so3QG">
                 <div class="mb-6" data-page-node-id="mBnp0pPeorKB91cjmVT7uA">
-                  <h4 class="font-bold text-lg text-secondary mb-3 flex items-center" data-page-node-id="EDHjvZbuF4Xp54qdavVXRC">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center" data-page-node-id="EDHjvZbuF4Xp54qdavVXRC">
                     <i class="fas fa-exclamation-circle text-accent mr-2" data-page-node-id="48BIJxKzZwhGkP16VZ5ahu"></i>项目背景
                   </h4>
                   <p class="text-secondary/80 leading-relaxed" data-page-node-id="vtQ4Hs9UAbYKhs6rK2wllu">
@@ -1555,7 +1598,7 @@
                   </p>
                 </div>
                 <div class="mb-6" data-page-node-id="yXcXfC799HrKwiSv5CEkRt">
-                  <h4 class="font-bold text-lg text-secondary mb-3 flex items-center" data-page-node-id="eVt1RRzcAriFHfDMlZvQtx">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center" data-page-node-id="eVt1RRzcAriFHfDMlZvQtx">
                     <i class="fas fa-tasks text-accent mr-2" data-page-node-id="qtY0ZSod1Gc626NSVzrKrb"></i>解决方案
                   </h4>
                   <ul class="text-secondary/80 leading-relaxed space-y-2" data-page-node-id="i9D3IMbrrlFD1ObvEn8tJT">
@@ -1566,20 +1609,20 @@
                   </ul>
                 </div>
                 <div data-page-node-id="RVMUxFQbho3jeT6WGOZ1vp">
-                  <h4 class="font-bold text-lg text-secondary mb-3 flex items-center" data-page-node-id="VSC4fGuAYlMlEF7CQizJ5j">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center" data-page-node-id="VSC4fGuAYlMlEF7CQizJ5j">
                     <i class="fas fa-chart-line text-accent mr-2" data-page-node-id="kgkNNvlwfqzoLKrelDSlxP"></i>项目成果
                   </h4>
                   <div class="grid grid-cols-3 gap-4" data-page-node-id="2H6KfDLId59BFQtEx3rarS">
-                    <div class="text-center p-4 bg-accent/10 rounded-lg" data-page-node-id="wKFUWFHqc7kaeQAev20dNf">
-                      <p class="text-3xl font-bold text-accent" data-page-node-id="S0uajzguUkFY02Cz0gfpQi">30%</p>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg" data-page-node-id="wKFUWFHqc7kaeQAev20dNf">
+                      <p class="text-2xl font-bold text-accent" data-page-node-id="S0uajzguUkFY02Cz0gfpQi">30%</p>
                       <p class="text-sm text-secondary/80 mt-1" data-page-node-id="4IOhnXk53CYQ4wvuqsLgkb">人效提升</p>
                     </div>
-                    <div class="text-center p-4 bg-accent/10 rounded-lg" data-page-node-id="TINzqBSGzNaBLwPEyn130O">
-                      <p class="text-3xl font-bold text-accent" data-page-node-id="1S0DbRpxPnr6NSSYNNIOrQ">100%</p>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg" data-page-node-id="TINzqBSGzNaBLwPEyn130O">
+                      <p class="text-2xl font-bold text-accent" data-page-node-id="1S0DbRpxPnr6NSSYNNIOrQ">100%</p>
                       <p class="text-sm text-secondary/80 mt-1" data-page-node-id="P3warHpJor4WLqoUA72GW6">营收增长翻番</p>
                     </div>
-                    <div class="text-center p-4 bg-accent/10 rounded-lg" data-page-node-id="6ZmwynqqFrnafzunHh1Z52">
-                      <p class="text-3xl font-bold text-accent" data-page-node-id="uJHAY4bZbn0Qq0pmOOnEtx">50%</p>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg" data-page-node-id="6ZmwynqqFrnafzunHh1Z52">
+                      <p class="text-2xl font-bold text-accent" data-page-node-id="uJHAY4bZbn0Qq0pmOOnEtx">50%</p>
                       <p class="text-sm text-secondary/80 mt-1" data-page-node-id="uNTCKjjQi374aJGdLi2Y4C">核心人才留存率</p>
                     </div>
                   </div>
@@ -1591,15 +1634,15 @@
           <!-- 项目案例2 -->
           <div class="proj-card reveal" data-page-node-id="ZY1fHJGDRDQ9LDnujFzb3d">
             <div class="md:flex" data-page-node-id="7KHmMcpG5N5a01n932GPxA">
-              <div class="md:w-1/3 relative" data-page-node-id="Yj0VzNWvc5xWaFBn2mGdCB">
+              <div class="md:w-1/4 relative" data-page-node-id="Yj0VzNWvc5xWaFBn2mGdCB">
                 <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80" alt="某科技企业股权激励项目" class="w-full h-full object-cover" data-page-node-id="FtJNz2bsykSIYTnRjsboC0">
                 <div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(2,10,20,.88),rgba(8,62,120,.85));" data-page-node-id="GRMJQ4qQaCZDOPMPE70zri">
-                  <h3 class="text-2xl font-bold text-white text-center px-6" data-page-node-id="iqtBYJ26q87w1aNoveU6wq">某科技企业股权激励项目</h3>
+                  <h3 class="text-xl md:text-2xl font-bold text-white text-center px-4" data-page-node-id="iqtBYJ26q87w1aNoveU6wq">某科技企业股权激励项目</h3>
                 </div>
               </div>
-              <div class="md:w-2/3 p-8 md:p-10" data-page-node-id="9j86I7QGsMffTDpRyiBnp2">
+              <div class="md:w-3/4 p-6 md:p-7" data-page-node-id="9j86I7QGsMffTDpRyiBnp2">
                 <div class="mb-6" data-page-node-id="IVk9G1lPmJ6XJkx32oFOtc">
-                  <h4 class="font-bold text-lg text-secondary mb-3 flex items-center" data-page-node-id="fmwwGSccALtDUxaRjHh3z7">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center" data-page-node-id="fmwwGSccALtDUxaRjHh3z7">
                     <i class="fas fa-exclamation-circle text-accent mr-2" data-page-node-id="wwzcKV8tG8g0mWbmBkvJRH"></i>项目背景
                   </h4>
                   <p class="text-secondary/80 leading-relaxed" data-page-node-id="VGQEdfUmlZyX0XuZL0yc63">
@@ -1607,7 +1650,7 @@
                   </p>
                 </div>
                 <div class="mb-6" data-page-node-id="R8uA07Vwn0EQDBw16tRGdk">
-                  <h4 class="font-bold text-lg text-secondary mb-3 flex items-center" data-page-node-id="jYQjcoUfkR6g27TJGD7WRF">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center" data-page-node-id="jYQjcoUfkR6g27TJGD7WRF">
                     <i class="fas fa-tasks text-accent mr-2" data-page-node-id="inTz0Fip58cXUpHBuDYvsZ"></i>解决方案
                   </h4>
                   <ul class="text-secondary/80 leading-relaxed space-y-2" data-page-node-id="LGGDHgYszu5o5QCn8Kc6nE">
@@ -1618,20 +1661,20 @@
                   </ul>
                 </div>
                 <div data-page-node-id="ahj83K6uFSDOvQllT33RDX">
-                  <h4 class="font-bold text-lg text-secondary mb-3 flex items-center" data-page-node-id="5O4UKX7gBPFFDX7Zopod6y">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center" data-page-node-id="5O4UKX7gBPFFDX7Zopod6y">
                     <i class="fas fa-chart-line text-accent mr-2" data-page-node-id="WEqs9QZBP3IZXA96bkMghE"></i>项目成果
                   </h4>
                   <div class="grid grid-cols-3 gap-4" data-page-node-id="H5aEMO7htGnqSxd7srhYBB">
-                    <div class="text-center p-4 bg-accent/10 rounded-lg" data-page-node-id="VLMIFPMvHvMR6zDlwLABPh">
-                      <p class="text-3xl font-bold text-accent" data-page-node-id="F7x04ALYH5ctQrlmAyKFL2">80%</p>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg" data-page-node-id="VLMIFPMvHvMR6zDlwLABPh">
+                      <p class="text-2xl font-bold text-accent" data-page-node-id="F7x04ALYH5ctQrlmAyKFL2">80%</p>
                       <p class="text-sm text-secondary/80 mt-1" data-page-node-id="J1jvqOoP5lQsYQhJ6S2LDx">人才流失率降低</p>
                     </div>
-                    <div class="text-center p-4 bg-accent/10 rounded-lg" data-page-node-id="FwHikPlwOH6o3tdJaOseHK">
-                      <p class="text-3xl font-bold text-accent" data-page-node-id="ppd2QV5imMAUOQE7SDhyYQ">40%</p>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg" data-page-node-id="FwHikPlwOH6o3tdJaOseHK">
+                      <p class="text-2xl font-bold text-accent" data-page-node-id="ppd2QV5imMAUOQE7SDhyYQ">40%</p>
                       <p class="text-sm text-secondary/80 mt-1" data-page-node-id="wSC3B2rEQUGh0oBZiSY8zD">研发效率提升</p>
                     </div>
-                    <div class="text-center p-4 bg-accent/10 rounded-lg" data-page-node-id="5QkJ8raeig8C13NLOa9P1r">
-                      <p class="text-3xl font-bold text-accent" data-page-node-id="HRHXRLG37A0R9NMwHVbQs4">60%</p>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg" data-page-node-id="5QkJ8raeig8C13NLOa9P1r">
+                      <p class="text-2xl font-bold text-accent" data-page-node-id="HRHXRLG37A0R9NMwHVbQs4">60%</p>
                       <p class="text-sm text-secondary/80 mt-1" data-page-node-id="ZXBdDSQjZxuHrHgBWs6gym">员工满意度提升</p>
                     </div>
                   </div>
@@ -1643,15 +1686,15 @@
           <!-- 项目案例3 -->
           <div class="proj-card reveal" data-page-node-id="x6p3GFzngXjkAb0hCp4Msv">
             <div class="md:flex" data-page-node-id="3ZA7ZbuLzf9eFX4zmuWPHe">
-              <div class="md:w-1/3 relative" data-page-node-id="lzCODH8kQAJfLmXMLdVXsJ">
+              <div class="md:w-1/4 relative" data-page-node-id="lzCODH8kQAJfLmXMLdVXsJ">
                 <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&q=80" alt="某零售企业数字化升级项目" class="w-full h-full object-cover" data-page-node-id="ZdnUi9qAAz6e2yzB7P7P0N">
                 <div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(2,10,20,.88),rgba(8,62,120,.85));" data-page-node-id="Ln2SR6ncjWAWoCMMTjf2T8">
-                  <h3 class="text-2xl font-bold text-white text-center px-6" data-page-node-id="JfjVzWpk4FMhMOAJRKkCEx">某零售企业数字化升级项目</h3>
+                  <h3 class="text-xl md:text-2xl font-bold text-white text-center px-4" data-page-node-id="JfjVzWpk4FMhMOAJRKkCEx">某零售企业数字化升级项目</h3>
                 </div>
               </div>
-              <div class="md:w-2/3 p-8 md:p-10" data-page-node-id="GkmOGzY1bVwJBgu8a6fzeH">
+              <div class="md:w-3/4 p-6 md:p-7" data-page-node-id="GkmOGzY1bVwJBgu8a6fzeH">
                 <div class="mb-6" data-page-node-id="7lEDWudy1F85FsHSqJiXpo">
-                  <h4 class="font-bold text-lg text-secondary mb-3 flex items-center" data-page-node-id="AUufHeldtYxDEiDMvVelbf">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center" data-page-node-id="AUufHeldtYxDEiDMvVelbf">
                     <i class="fas fa-exclamation-circle text-accent mr-2" data-page-node-id="VdKIYP0HJ86xpKQs8CjB28"></i>项目背景
                   </h4>
                   <p class="text-secondary/80 leading-relaxed" data-page-node-id="XV0B62IuthnkoXPGi7VVLT">
@@ -1659,7 +1702,7 @@
                   </p>
                 </div>
                 <div class="mb-6" data-page-node-id="FrWmUtXHsMxHJ4oS8qCJGI">
-                  <h4 class="font-bold text-lg text-secondary mb-3 flex items-center" data-page-node-id="mlE1WJG0hY4brTqWdF6INs">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center" data-page-node-id="mlE1WJG0hY4brTqWdF6INs">
                     <i class="fas fa-tasks text-accent mr-2" data-page-node-id="ziVBl9xCpRBqRSPpRsVVVW"></i>解决方案
                   </h4>
                   <ul class="text-secondary/80 leading-relaxed space-y-2" data-page-node-id="ay4nAwFEx8Qdk8YA723HyT">
@@ -1670,21 +1713,176 @@
                   </ul>
                 </div>
                 <div data-page-node-id="TzsE8tjSVwNdedsAetYa0e">
-                  <h4 class="font-bold text-lg text-secondary mb-3 flex items-center" data-page-node-id="bZXKexmjyWOTuGPost2i1a">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center" data-page-node-id="bZXKexmjyWOTuGPost2i1a">
                     <i class="fas fa-chart-line text-accent mr-2" data-page-node-id="qpqAQnL1JuOClsgAb0UBeC"></i>项目成果
                   </h4>
                   <div class="grid grid-cols-3 gap-4" data-page-node-id="ZWF6w9qiRcfJYPiyFBg9Bo">
-                    <div class="text-center p-4 bg-accent/10 rounded-lg" data-page-node-id="Q2lFR5v1fYI9Uk19dis1WV">
-                      <p class="text-3xl font-bold text-accent" data-page-node-id="kCdCqg8xMM3PM9tQLIXhUh">50%</p>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg" data-page-node-id="Q2lFR5v1fYI9Uk19dis1WV">
+                      <p class="text-2xl font-bold text-accent" data-page-node-id="kCdCqg8xMM3PM9tQLIXhUh">50%</p>
                       <p class="text-sm text-secondary/80 mt-1" data-page-node-id="9RWBAFQ1LwWUteU8ukNl6s">库存周转率提升</p>
                     </div>
-                    <div class="text-center p-4 bg-accent/10 rounded-lg" data-page-node-id="gE0dgGhJoZrpR3TAt8M4QA">
-                      <p class="text-3xl font-bold text-accent" data-page-node-id="yGkefZav7Iro6WMkr4ehNT">20%</p>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg" data-page-node-id="gE0dgGhJoZrpR3TAt8M4QA">
+                      <p class="text-2xl font-bold text-accent" data-page-node-id="yGkefZav7Iro6WMkr4ehNT">20%</p>
                       <p class="text-sm text-secondary/80 mt-1" data-page-node-id="S9ekTRu6ndxVRn9hyfBQXs">运营成本降低</p>
                     </div>
-                    <div class="text-center p-4 bg-accent/10 rounded-lg" data-page-node-id="xNPvXXr8ZGgaIaFl07T3dX">
-                      <p class="text-3xl font-bold text-accent" data-page-node-id="ZkwYe46teqVMERDETfL3Fw">35%</p>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg" data-page-node-id="xNPvXXr8ZGgaIaFl07T3dX">
+                      <p class="text-2xl font-bold text-accent" data-page-node-id="ZkwYe46teqVMERDETfL3Fw">35%</p>
                       <p class="text-sm text-secondary/80 mt-1" data-page-node-id="WAhCr1ylyoD6GNAB1GAQhk">销售预测准确率</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 项目案例4 -->
+          <div class="proj-card reveal" data-page-node-id="caseMfgOrg">
+            <div class="md:flex" data-page-node-id="caseMfgOrgFlex">
+              <div class="md:w-1/4 relative" data-page-node-id="caseMfgOrgImg">
+                <img src="https://images.unsplash.com/photo-1565043666747-69f6646db940?w=800&q=80" alt="某制造企业组织与合伙制升级项目" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(2,10,20,.88),rgba(8,62,120,.85));">
+                  <h3 class="text-xl md:text-2xl font-bold text-white text-center px-4">某制造企业组织与合伙制升级项目</h3>
+                </div>
+              </div>
+              <div class="md:w-3/4 p-6 md:p-7">
+                <div class="mb-5">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center">
+                    <i class="fas fa-exclamation-circle text-accent mr-2"></i>项目背景
+                  </h4>
+                  <p class="text-secondary/80 leading-relaxed">
+                    该制造企业快速发展后层级冗余、部门协同低效，核心骨干缺乏长期动力，组织活力明显不足，急需组织变革与机制创新双管齐下。
+                  </p>
+                </div>
+                <div class="mb-5">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center">
+                    <i class="fas fa-tasks text-accent mr-2"></i>解决方案
+                  </h4>
+                  <ul class="text-secondary/80 leading-relaxed space-y-2">
+                    <li>• 组织架构扁平化重塑，压缩决策层级</li>
+                    <li>• 重新定义岗位职级与职责边界，权责对等</li>
+                    <li>• 推行事业部合伙制，配套超额利润分享机制</li>
+                    <li>• 建立目标管理与复盘体系，确保执行闭环</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center">
+                    <i class="fas fa-chart-line text-accent mr-2"></i>项目成果
+                  </h4>
+                  <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center p-3 bg-accent/10 rounded-lg">
+                      <p class="text-2xl font-bold text-accent">40%</p>
+                      <p class="text-sm text-secondary/80 mt-1">决策效率提升</p>
+                    </div>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg">
+                      <p class="text-2xl font-bold text-accent">25%</p>
+                      <p class="text-sm text-secondary/80 mt-1">人效提升</p>
+                    </div>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg">
+                      <p class="text-2xl font-bold text-accent">90%</p>
+                      <p class="text-sm text-secondary/80 mt-1">核心骨干保留</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 项目案例5 -->
+          <div class="proj-card reveal" data-page-node-id="caseChainPay">
+            <div class="md:flex" data-page-node-id="caseChainPayFlex">
+              <div class="md:w-1/4 relative" data-page-node-id="caseChainPayImg">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="某连锁服务企业薪酬绩效重建项目" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(2,10,20,.88),rgba(8,62,120,.85));">
+                  <h3 class="text-xl md:text-2xl font-bold text-white text-center px-4">某连锁服务企业薪酬绩效重建项目</h3>
+                </div>
+              </div>
+              <div class="md:w-3/4 p-6 md:p-7">
+                <div class="mb-5">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center">
+                    <i class="fas fa-exclamation-circle text-accent mr-2"></i>项目背景
+                  </h4>
+                  <p class="text-secondary/80 leading-relaxed">
+                    门店快速扩张后薪酬结构混乱、考核流于形式，店长级人才断层严重，直接制约开店速度与服务品质。
+                  </p>
+                </div>
+                <div class="mb-5">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center">
+                    <i class="fas fa-tasks text-accent mr-2"></i>解决方案
+                  </h4>
+                  <ul class="text-secondary/80 leading-relaxed space-y-2">
+                    <li>• 岗位序列与薪酬宽带设计，兼顾内部公平与外部竞争力</li>
+                    <li>• 建立门店业绩对赌与超额奖励机制</li>
+                    <li>• 搭建店长储备人才梯队与任职认证体系</li>
+                    <li>• 上线数字化绩效看板，考核过程透明化</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center">
+                    <i class="fas fa-chart-line text-accent mr-2"></i>项目成果
+                  </h4>
+                  <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center p-3 bg-accent/10 rounded-lg">
+                      <p class="text-2xl font-bold text-accent">30%</p>
+                      <p class="text-sm text-secondary/80 mt-1">单店业绩提升</p>
+                    </div>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg">
+                      <p class="text-2xl font-bold text-accent">2倍</p>
+                      <p class="text-sm text-secondary/80 mt-1">店长储备数量</p>
+                    </div>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg">
+                      <p class="text-2xl font-bold text-accent">100%</p>
+                      <p class="text-sm text-secondary/80 mt-1">门店考核上线率</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 项目案例6 -->
+          <div class="proj-card reveal" data-page-node-id="caseTradeAi">
+            <div class="md:flex" data-page-node-id="caseTradeAiFlex">
+              <div class="md:w-1/4 relative" data-page-node-id="caseTradeAiImg">
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80" alt="某贸易企业AI应用落地项目" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(2,10,20,.88),rgba(8,62,120,.85));">
+                  <h3 class="text-xl md:text-2xl font-bold text-white text-center px-4">某贸易企业AI应用落地项目</h3>
+                </div>
+              </div>
+              <div class="md:w-3/4 p-6 md:p-7">
+                <div class="mb-5">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center">
+                    <i class="fas fa-exclamation-circle text-accent mr-2"></i>项目背景
+                  </h4>
+                  <p class="text-secondary/80 leading-relaxed">
+                    该贸易企业业务流程以手工操作为主，数据分散在各类表格中，报价与跟单效率低，管理者缺乏实时经营数据支撑决策。
+                  </p>
+                </div>
+                <div class="mb-5">
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center">
+                    <i class="fas fa-tasks text-accent mr-2"></i>解决方案
+                  </h4>
+                  <ul class="text-secondary/80 leading-relaxed space-y-2">
+                    <li>• 全员 AI 应用培训，从工具使用到工作流重塑</li>
+                    <li>• 部署智能报价与跟单助手，打通业务流程</li>
+                    <li>• 集成经营数据看板，关键指标实时可见</li>
+                    <li>• FDE 工程师驻场陪跑，按月迭代优化</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-bold text-base text-secondary mb-2.5 flex items-center">
+                    <i class="fas fa-chart-line text-accent mr-2"></i>项目成果
+                  </h4>
+                  <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center p-3 bg-accent/10 rounded-lg">
+                      <p class="text-2xl font-bold text-accent">60%</p>
+                      <p class="text-sm text-secondary/80 mt-1">报价响应提速</p>
+                    </div>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg">
+                      <p class="text-2xl font-bold text-accent">35%</p>
+                      <p class="text-sm text-secondary/80 mt-1">重复工作减少</p>
+                    </div>
+                    <div class="text-center p-3 bg-accent/10 rounded-lg">
+                      <p class="text-2xl font-bold text-accent">100%</p>
+                      <p class="text-sm text-secondary/80 mt-1">关键流程数据化</p>
                     </div>
                   </div>
                 </div>
@@ -1694,8 +1892,6 @@
         </div>
       </div>
     </section>
-
-    <!-- 合作客户 -->
     <section id="clients" class="py-16 md:py-24 bg-white" aria-label="合作客户" data-page-node-id="clientWallSection">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8" data-page-node-id="clientWallWrap">
         <div class="sec-head reveal" style="margin-bottom:40px;">

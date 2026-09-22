@@ -190,7 +190,7 @@ function copyStaticFiles() {
     'logos/zhongtian.jpg', 'logos/zhongtong.jpg'
   ];
   const dirs = ['articles', 'api'];
-  const consultantImgs = ['consultant-lilaoshi.png', 'consultant-liuquanan.png', 'consultant-wanglaoshi.png', '刘诠案老师.jpg', '微信公众号.jpg', '企业诊断.html'];
+  const consultantImgs = ['consultant-lilaoshi.png', 'consultant-liuquanan.png', 'consultant-wanglaoshi.png', 'consultant-chenlaoshi.png', 'consultant-zhoulaoshi.png', 'consultant-sunlaoshi.png', '刘诠案老师.jpg', '微信公众号.jpg', '企业诊断.html'];
 
   // 复制文件
   for (const f of [...staticFiles, ...consultantImgs]) {
