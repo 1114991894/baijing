@@ -24,10 +24,13 @@
     });
   }
 
-  // —— 导航栏滚动状态 ——
-  var header = document.getElementById('siteHeader');
-  if (header) {
-    var onScroll = function () { header.classList.toggle('scrolled', window.scrollY > 12); };
+  // —— 导航栏滚动状态（支持 #siteHeader / header.sticky.top-0 / header.bg-white）——
+  var headers = document.querySelectorAll('#siteHeader, header.sticky.top-0, header.bg-white.shadow-sm, header.bg-white.border-b');
+  if (headers.length > 0) {
+    var onScroll = function () {
+      var scrolled = window.scrollY > 12;
+      headers.forEach(function (h) { h.classList.toggle('scrolled', scrolled); });
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }
