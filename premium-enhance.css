@@ -286,13 +286,18 @@
 header.sticky.top-0,
 header.bg-white.shadow-sm,
 header.bg-white.border-b {
+  /* 固定悬浮：滚动时始终停在顶部，不随内容滚走
+     （注意：这里绝对不能写 position:relative，会覆盖 Tailwind 的 .sticky 导致导航栏滚走） */
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50;
   background: rgba(2,10,20,.88) !important;
   backdrop-filter: saturate(160%) blur(24px);
   -webkit-backdrop-filter: saturate(160%) blur(24px);
   border-bottom: 1px solid rgba(40,184,160,.15) !important;
   box-shadow: none !important;
   transition: background .35s, box-shadow .35s, border-color .35s;
-  position: relative;
 }
 .site-header::before,
 header.sticky.top-0::before,
@@ -318,11 +323,15 @@ header.bg-white.border-b.scrolled::before {
 }
 @media (max-width: 767px) {
   .site-header, .site-header.scrolled,
-  header.sticky.top-0, header.sticky.top-0.scrolled { background: rgba(2,10,20,.95) !important; }
+  header.sticky.top-0, header.sticky.top-0.scrolled,
+  header.bg-white.shadow-sm, header.bg-white.shadow-sm.scrolled,
+  header.bg-white.border-b, header.bg-white.border-b.scrolled { background: rgba(2,10,20,.95) !important; }
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .site-header, .site-header.scrolled,
-  header.sticky.top-0, header.sticky.top-0.scrolled { background: rgba(2,10,20,.95) !important; }
+  header.sticky.top-0, header.sticky.top-0.scrolled,
+  header.bg-white.shadow-sm, header.bg-white.shadow-sm.scrolled,
+  header.bg-white.border-b, header.bg-white.border-b.scrolled { background: rgba(2,10,20,.95) !important; }
 }
 
 /* Logo 圆角 + 发光（所有头部的 logo） */
@@ -358,15 +367,19 @@ header.bg-white.border-b a:hover {
   color: #fff !important;
 }
 
-/* 导航链接下划线动画 */
+/* 导航链接下划线动画（覆盖 .site-header 与文章页 header.sticky.top-0 两种结构） */
 .site-header .nav-link,
-.site-header nav a {
+.site-header nav a,
+header.sticky.top-0 .nav-link,
+header.sticky.top-0 nav a {
   color: rgba(255,255,255,.72) !important;
   position: relative;
   transition: color .3s;
 }
 .site-header .nav-link::after,
-.site-header nav a::after {
+.site-header nav a::after,
+header.sticky.top-0 .nav-link::after,
+header.sticky.top-0 nav a::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
   background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--brand));
   border-radius: 2px; transform: scaleX(0); transform-origin: center;
@@ -374,11 +387,17 @@ header.bg-white.border-b a:hover {
   box-shadow: 0 0 8px rgba(196,169,101,.4);
 }
 .site-header .nav-link:hover,
-.site-header nav a:hover { color: #fff !important; }
+.site-header nav a:hover,
+header.sticky.top-0 .nav-link:hover,
+header.sticky.top-0 nav a:hover { color: #fff !important; }
 .site-header .nav-link:hover::after,
 .site-header nav a:hover::after,
-.site-header .nav-link.active::after { transform: scaleX(1); }
-.site-header .nav-link.active { color: #fff !important; font-weight: 600; }
+.site-header .nav-link.active::after,
+header.sticky.top-0 .nav-link:hover::after,
+header.sticky.top-0 nav a:hover::after,
+header.sticky.top-0 .nav-link.active::after { transform: scaleX(1); }
+.site-header .nav-link.active,
+header.sticky.top-0 .nav-link.active { color: #fff !important; font-weight: 600; }
 
 /* 头部内按钮变金色 */
 .site-header .nav-cta,

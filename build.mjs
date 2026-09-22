@@ -88,6 +88,8 @@ function generateArticleHtml(article) {
     .btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border-radius:8px;font-weight:600;font-size:14px;color:#083E78;background:#fff;border:1px solid #E2E8F0;transition:all .3s ease;text-decoration:none;white-space:nowrap}
     .btn-secondary:hover{color:#fff;background:#083E78;border-color:#083E78}
   </style>
+  <!-- 全站统一样式：导航栏深色玻璃风与首页保持一致（绝对路径，文章页在 /article/ 子目录） -->
+  <link rel="stylesheet" href="${SITE_URL}/premium-enhance.css">
 </head>
 <body>
   <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-neutral/20">
@@ -119,6 +121,7 @@ function generateArticleHtml(article) {
       <p class="mt-1 text-blue-200">专注于企业战略落地·组织优化·股权激励·数字化转型</p>
     </div>
   </footer>
+  <script src="${SITE_URL}/premium-enhance.js"></script>
 </body>
 </html>`;
 }
@@ -175,6 +178,8 @@ function copyStaticFiles() {
     'home-banner.png', 'logo0（透明）.png', 'CNAME', 'robots.txt',
     '_redirects', '404.html',
     'home-banner.svg', 'home-banner-诊断.svg', 'wechat-qrcode.jpg',
+    // 全站动效/导航栏统一样式（子页面全部引用，必须复制，否则线上 404 → 导航栏样式不生效）
+    'premium-enhance.css', 'premium-enhance.js',
     // 工具页面：sitemap 中已声明这些 URL，必须复制到 dist，否则搜索引擎抓取 404
     '目标测算工具.html', '战略解码工具.html', '组织架构生成工具.html', '股权架构生成工具.html',
     // 管理后台（robots.txt 已 Disallow，不参与收录，但必须可访问）

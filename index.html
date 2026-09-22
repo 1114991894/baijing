@@ -889,14 +889,17 @@
     .step-card h3 { font-size: 17px; font-weight: 700; color: #0B2545; margin-bottom: 10px; }
     .step-card p { font-size: 14px; line-height: 1.85; color: rgba(11,37,69,.60); }
 
-    /* —— 导航栏（深色科技毛玻璃 + AI 光效）—— */
+    /* —— 导航栏（深色科技毛玻璃 + AI 光效；固定在顶部悬浮）—— */
     .site-header {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      z-index: 50;
       background: rgba(2,10,20,.88);
       backdrop-filter: saturate(160%) blur(24px);
       -webkit-backdrop-filter: saturate(160%) blur(24px);
       border-bottom: 1px solid rgba(40,184,160,.15);
       transition: background .35s, box-shadow .35s, border-color .35s;
-      position: relative;
     }
     .site-header::before {
       content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
