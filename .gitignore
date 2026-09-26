@@ -21,3 +21,7 @@ __pycache__/
 # Local tool caches (do not track)
 .codegraph/
 .omo/
+
+# 首页弹窗海报的本地排版/逐帧工程（仅用于再导出动图，不参与站点构建与部署）
+_poster-tmp/
+vibe_images/

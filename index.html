@@ -1167,6 +1167,64 @@
       border-color: rgba(196,169,101,.5);
       box-shadow: 0 10px 28px rgba(196,169,101,.10);
     }
+
+    /* ===== 首页「AI 改革落地」动态海报弹窗（独立新增，不影响原有诊断弹窗与页面数据） ===== */
+    .promo-pop-overlay {
+      position: fixed; inset: 0; z-index: 70;
+      display: none; align-items: center; justify-content: center; padding: 20px;
+      background: rgba(2,10,20,.68);
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    }
+    .promo-pop-overlay.open { display: flex; }
+    .promo-pop {
+      position: relative; width: min(760px, 94vw); min-width: 0;
+      animation: promoIn .34s cubic-bezier(.22,1,.36,1);
+    }
+    @keyframes promoIn {
+      from { transform: translateY(26px) scale(.96); opacity: 0; }
+      to   { transform: none; opacity: 1; }
+    }
+    .promo-pop-media {
+      display: block; background: #020A14;
+      border-radius: 18px; overflow: hidden; line-height: 0;
+      box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(196,169,101,.35);
+    }
+    .promo-pop-media picture { display: block; width: 100%; min-width: 0; }
+    .promo-pop-media img {
+      display: block; width: 100%; max-width: 100%; min-width: 0; height: auto;
+      max-height: calc(100vh - 132px); object-fit: contain;
+    }
+    .promo-pop-close {
+      position: absolute; top: -14px; right: -14px; width: 40px; height: 40px;
+      border-radius: 50%; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.94); color: #0B2545; font-size: 17px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.35);
+      transition: transform .22s ease, background .22s ease;
+    }
+    .promo-pop-close:hover { transform: rotate(90deg); background: #fff; }
+    .promo-pop-close:focus-visible { outline: 2px solid #28B8A0; outline-offset: 3px; }
+    .promo-pop-hint {
+      margin-top: 14px; text-align: center;
+      color: rgba(255,255,255,.72); font-size: 12.5px; letter-spacing: .6px;
+    }
+    .promo-pop-hint b { color: #E0C887; font-weight: 600; }
+    body.promo-lock { overflow: hidden; }
+    /* 窄屏：横版海报高度较矮，改为居中浮层而非贴底抽屉，避免像一条横幅 */
+    @media (max-width: 639px) {
+      .promo-pop-overlay { padding: 16px; }
+      .promo-pop { width: 100%; }
+      .promo-pop-media { border-radius: 14px; box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 0 1px rgba(196,169,101,.22); }
+      .promo-pop-media img { max-height: calc(100vh - 150px); }
+      .promo-pop-close { top: -13px; right: -4px; width: 34px; height: 34px; font-size: 15px;
+        background: rgba(2,10,20,.72); color: #fff; }
+      .promo-pop-hint { font-size: 11.5px; margin-top: 11px; }
+    }
+    /* 尊重系统「减少动态效果」偏好 */
+    @media (prefers-reduced-motion: reduce) {
+      .promo-pop { animation: none; }
+      .promo-pop-close { transition: none; }
+    }
   </style>
 </head>
 <body data-page-node-id="wpEXmDpkHr4hVOD2vu1hYF">
@@ -2174,6 +2232,21 @@
     免费咨询诊断
   </button>
 
+  <!-- 首页「AI 改革落地」动态海报弹窗（每次进入首页自动弹出，点击海报跳转 AI 企业诊断） -->
+  <div id="promoPop" class="promo-pop-overlay" role="dialog" aria-modal="true" aria-label="AI 改革落地专项介绍">
+    <div class="promo-pop">
+      <button type="button" id="promoPopClose" class="promo-pop-close" aria-label="关闭弹窗"><i class="fas fa-times"></i></button>
+      <a class="promo-pop-media" href="企业诊断.html" target="_blank" rel="noopener" aria-label="打开 AI 企业诊断">
+        <picture>
+          <source type="image/webp" srcset="home-ai-poster.webp">
+          <img src="home-ai-poster.gif" width="960" height="540" decoding="async"
+               alt="百鲸咨询 AI 改革落地专项：AI 企业诊断、AI 应用培训、FDE 工程实施、企业级软件应用，12 年沉淀，服务 1000+ 企业">
+        </picture>
+      </a>
+      <p class="promo-pop-hint">点击海报即可<b>免费领取 AI 企业诊断报告</b> · 关闭后不影响正常浏览</p>
+    </div>
+  </div>
+
   <!-- 免费企业诊断 - 信息填写弹窗 -->
   <div id="diagModal" class="diag-modal-overlay" role="dialog" aria-modal="true" aria-label="免费企业诊断信息填写">
     <div class="diag-modal">
@@ -2664,6 +2737,38 @@
 
     // 初始化加载文章
     fetchArticles().then(renderArticles);
+  </script>
+  <script>
+    /* 首页「AI 改革落地」动态海报弹窗：每次进入首页自动弹出（独立新增逻辑，不读写任何业务数据） */
+    (function () {
+      var pop = document.getElementById('promoPop');
+      if (!pop) return;
+      var opened = false;
+
+      function open() {
+        if (opened) return;
+        opened = true;
+        pop.classList.add('open');
+        document.body.classList.add('promo-lock');
+        var btn = document.getElementById('promoPopClose');
+        if (btn) btn.focus({ preventScroll: true });
+      }
+
+      function close() {
+        pop.classList.remove('open');
+        document.body.classList.remove('promo-lock');
+      }
+
+      document.getElementById('promoPopClose').addEventListener('click', close);
+      pop.addEventListener('click', function (e) { if (e.target === pop) close(); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && pop.classList.contains('open')) close();
+      });
+
+      // 等首屏资源就绪后再弹，避免与 banner 抢渲染帧
+      if (document.readyState === 'complete') setTimeout(open, 500);
+      else window.addEventListener('load', function () { setTimeout(open, 500); });
+    })();
   </script>
 </body>
 </html>
