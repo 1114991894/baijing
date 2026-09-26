@@ -190,8 +190,9 @@ function copyStaticFiles() {
     'logos/zhongtian.jpg', 'logos/zhongtong.jpg', 'logos/abaocailanzi.jpg', 'logos/baoshengbinguan.jpg',
     'logos/suntaihe.jpg', 'logos/oulun.jpg', 'logos/xinrui.jpg',
     // 首页「AI 改革落地」弹窗动态海报（index.html 自动弹窗引用，必须复制，否则线上 404 只剩空白弹窗）
-    // webp 为动图主资源，gif 为老浏览器兜底，两者都要进 dist
-    'home-ai-poster.webp', 'home-ai-poster.gif'
+    // 无后缀为桌面横版，-m 为窄屏竖版；webp 为动图主资源，gif 为老浏览器兜底，四者都要进 dist
+    'home-ai-poster.webp', 'home-ai-poster.gif',
+    'home-ai-poster-m.webp', 'home-ai-poster-m.gif'
   ];
   const dirs = ['articles', 'api'];
   const consultantImgs = ['consultant-lilaoshi.png', 'consultant-liuquanan.png', 'consultant-wanglaoshi.png', 'consultant-chenlaoshi.png', 'consultant-zhoulaoshi.png', 'consultant-sunlaoshi.png', '刘诠案老师.jpg', '微信公众号.jpg', '企业诊断.html'];

@@ -1210,15 +1210,16 @@
     }
     .promo-pop-hint b { color: #E0C887; font-weight: 600; }
     body.promo-lock { overflow: hidden; }
-    /* 窄屏：横版海报高度较矮，改为居中浮层而非贴底抽屉，避免像一条横幅 */
+    /* 窄屏走竖版海报（与 <picture> 断点一致），贴底抽屉能容纳 2:3 的高度 */
     @media (max-width: 639px) {
-      .promo-pop-overlay { padding: 16px; }
+      .promo-pop-overlay { align-items: flex-end; padding: 0; }
       .promo-pop { width: 100%; }
-      .promo-pop-media { border-radius: 14px; box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 0 1px rgba(196,169,101,.22); }
-      .promo-pop-media img { max-height: calc(100vh - 150px); }
-      .promo-pop-close { top: -13px; right: -4px; width: 34px; height: 34px; font-size: 15px;
-        background: rgba(2,10,20,.72); color: #fff; }
-      .promo-pop-hint { font-size: 11.5px; margin-top: 11px; }
+      .promo-pop-media { border-radius: 18px 18px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(196,169,101,.22); }
+      .promo-pop-media img { max-height: calc(100vh - 148px); }
+      .promo-pop-close { top: 10px; right: 10px; width: 36px; height: 36px; font-size: 16px;
+        background: rgba(2,10,20,.62); color: #fff; }
+      .promo-pop-close:focus-visible { outline-width: 2px; }
+      .promo-pop-hint { display: none; }
     }
     /* 尊重系统「减少动态效果」偏好 */
     @media (prefers-reduced-motion: reduce) {
@@ -2238,6 +2239,8 @@
       <button type="button" id="promoPopClose" class="promo-pop-close" aria-label="关闭弹窗"><i class="fas fa-times"></i></button>
       <a class="promo-pop-media" href="企业诊断.html" target="_blank" rel="noopener" aria-label="打开 AI 企业诊断">
         <picture>
+          <source media="(max-width: 639px)" type="image/webp" srcset="home-ai-poster-m.webp">
+          <source media="(max-width: 639px)" srcset="home-ai-poster-m.gif">
           <source type="image/webp" srcset="home-ai-poster.webp">
           <img src="home-ai-poster.gif" width="960" height="540" decoding="async"
                alt="百鲸咨询 AI 改革落地专项：AI 企业诊断、AI 应用培训、FDE 工程实施、企业级软件应用，12 年沉淀，服务 1000+ 企业">
