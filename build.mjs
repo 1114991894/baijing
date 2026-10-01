@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, cpSync, statSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, cpSync, statSync, readdirSync, unlinkSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { execFileSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = __dirname;
@@ -218,6 +219,53 @@ function copyStaticFiles() {
   }
 }
 
+function localizeExternalAssets() {
+  const extractedStyles = [];
+  const processDirectory = directory => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) {
+        processDirectory(path);
+        continue;
+      }
+      if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
+
+      let html = readFileSync(path, 'utf8')
+        .replace(/<script\s+src="https:\/\/cdn\.tailwindcss\.com"><\/script>/g, '<link rel="stylesheet" href="/tailwind.css">')
+        .replace(/<link\b[^>]*href="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/6\.5\.1\/css\/all\.min\.css"[^>]*>/g, '<link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">')
+        .replace(/<script>\s*tailwind\.config\s*=[\s\S]*?<\/script>/g, '');
+
+      html = html.replace(/<style\s+type="text\/tailwindcss">([\s\S]*?)<\/style>/g, (_, css) => {
+        extractedStyles.push(css);
+        return '';
+      });
+      writeFileSync(path, html);
+    }
+  };
+  processDirectory(DIST);
+
+  const fontAwesomeDir = join(ROOT, 'node_modules', '@fortawesome', 'fontawesome-free');
+  const fontAwesomeCssDir = join(DIST, 'assets', 'fontawesome', 'css');
+  const fontAwesomeWebfontsDir = join(DIST, 'assets', 'fontawesome', 'webfonts');
+  mkdirSync(fontAwesomeCssDir, { recursive: true });
+  copyFileSync(join(fontAwesomeDir, 'css', 'all.min.css'), join(fontAwesomeCssDir, 'all.min.css'));
+  cpSync(join(fontAwesomeDir, 'webfonts'), fontAwesomeWebfontsDir, { recursive: true });
+
+  const inputPath = join(DIST, '.tailwind-input.css');
+  writeFileSync(inputPath, `${readFileSync(join(ROOT, 'tailwind.css'), 'utf8')}\n${extractedStyles.join('\n')}`);
+  try {
+    execFileSync(process.execPath, [
+      join(ROOT, 'node_modules', 'tailwindcss', 'lib', 'cli.js'),
+      '-c', join(ROOT, 'tailwind.config.cjs'),
+      '-i', inputPath,
+      '-o', join(DIST, 'tailwind.css'),
+      '--minify'
+    ], { cwd: ROOT, stdio: 'inherit' });
+  } finally {
+    if (existsSync(inputPath)) unlinkSync(inputPath);
+  }
+}
+
 function generateSitemap(articles) {
   const today = new Date().toISOString().slice(0, 10);
   const staticUrls = [
@@ -259,6 +307,9 @@ async function main() {
 
   // 复制静态资源（index.html 已由构建生成预渲染版；article-detail.html 保留原版 JS 逻辑）
   copyStaticFiles();
+
+  // Bundle utility styles and icons locally so visitors do not depend on external CDNs.
+  localizeExternalAssets();
 
   // 生成 sitemap（覆盖复制过来的旧版）
   const sitemap = generateSitemap(articles);
