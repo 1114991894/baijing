@@ -35,6 +35,9 @@ const SITE_URL = 'https://baijingzixun.top';
 // v2 站点的内容版本日期（内容有实质改动时手动更新，不要用构建当天日期，
 // 否则每次 CI 都会把所有页面的 lastmod 刷成当天，对搜索引擎是噪声）
 const V2_REV = '2026-10-18';
+// 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
+// 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
+const ASSET_VER = '20261018-2';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -306,6 +309,19 @@ ${excerpt ? `    <p class="lead" style="margin-top:18px;">${escapeHtml(excerpt)}
 </html>`;
 }
 
+/** 给 styles.css / booking.js 的引用加版本号，破缓存（GitHub Pages 的 max-age=600
+ *  会导致样式更新后老访客最多 10 分钟看到旧排版） */
+function addCacheBusting() {
+  for (const f of readdirSync(DIST).filter(f => f.endsWith('.html'))) {
+    const p = join(DIST, f);
+    const html = readFileSync(p, 'utf8');
+    const next = html
+      .replace(/(href="\/?)styles\.css(")/g, `$1styles.css?v=${ASSET_VER}$2`)
+      .replace(/(src="\/?)booking\.js(")/g, `$1booking.js?v=${ASSET_VER}$2`);
+    if (next !== html) writeFileSync(p, next);
+  }
+}
+
 /* ------------------------------------------------------------------
    存量功能页仍依赖 Tailwind / FontAwesome CDN → 本地化
    （v2 页面零外部依赖，这一遍对它们是无操作）
@@ -428,7 +444,8 @@ async function main() {
     console.log(`✅ ${articles.length} 个文章页面已生成到 dist/article/`);
   }
 
-  // 4) 存量页面外部依赖本地化
+  // 4) 资源版本号破缓存 + 存量页面外部依赖本地化
+  addCacheBusting();
   localizeExternalAssets();
 
   // 5) sitemap
