@@ -70,20 +70,15 @@ async function fetchArticles() {
 
 /* ------------------------------------------------------------------
    v2 站点：五页 + 样式 + 脚本 + assets 复制到 dist 根目录
+   页面清单动态扫描 v2/*.html —— 自动发文脚本新增的 story-N.html
+   不需要再回来改这里
    ------------------------------------------------------------------ */
-const V2_PAGES = [
-  'index.html',
-  'ai-training.html',
-  'efficiency.html',
-  'stories.html',
-  'story.html',
-  '404.html'
-];
-const V2_FILES = [...V2_PAGES, 'styles.css', 'booking.js', 'assets/logo.png', 'assets/qr.jpg',
+const V2_ASSETS = ['styles.css', 'booking.js', 'assets/logo.png', 'assets/qr.jpg',
   'assets/favicon.png', 'assets/apple-touch-icon.png'];
 
 function copyV2Site() {
-  for (const f of V2_FILES) {
+  const pages = readdirSync(V2).filter(f => f.endsWith('.html'));
+  for (const f of [...pages, ...V2_ASSETS]) {
     const src = join(V2, f);
     const dest = join(DIST, f);
     if (!existsSync(src)) {
@@ -94,7 +89,7 @@ function copyV2Site() {
   }
   // 旧的「咨询师登录」页引用根级 logo.png，顺手补一个，避免那张图 404
   copyFileSync(join(V2, 'assets', 'logo.png'), join(DIST, 'logo.png'));
-  console.log(`✅ v2 站点已复制到 dist 根目录（${V2_PAGES.length} 页 + 样式/脚本/图标）`);
+  console.log(`✅ v2 站点已复制到 dist 根目录（${pages.length} 页 + 样式/脚本/图标）`);
 }
 
 /** 手写递归复制：本机 Node 的 cpSync 复制某些目录会静默崩溃（exit 127），
@@ -106,6 +101,79 @@ function copyDir(src, dest) {
     const d = join(dest, entry.name);
     if (entry.isDirectory()) copyDir(s, d);
     else if (entry.isFile()) copyFileSync(s, d);
+  }
+}
+
+/* ------------------------------------------------------------------
+   翻车实录索引：唯一数据源 v2/_data/stories.json
+   —— stories.html / index.html 里的列表由这里渲染，新增文章只改 JSON，
+      不碰 HTML 结构（自动化发文依赖这一点）
+   ------------------------------------------------------------------ */
+function loadStories() {
+  const p = join(V2, '_data', 'stories.json');
+  if (!existsSync(p)) return { items: [] };
+  try {
+    return JSON.parse(readFileSync(p, 'utf8'));
+  } catch (err) {
+    console.warn('⚠️  stories.json 解析失败，列表将为空：', err.message);
+    return { items: [] };
+  }
+}
+
+const pad2 = n => String(n).padStart(2, '0');
+
+function storyItemHtml(s, withBreakpoint) {
+  const no = pad2(s.no);
+  const meta = withBreakpoint && s.breakpoint
+    ? `${escapeHtml(s.meta)} · 断点：${escapeHtml(s.breakpoint)}`
+    : escapeHtml(s.meta);
+  if (s.pending) {
+    return `      <li>
+        <div class="log-row static">
+          <span class="no2">${no}</span>
+          <span class="t">${escapeHtml(s.title)}</span>
+          <span class="meta">${meta}</span>
+          <span class="go pending">全文整理中</span>
+        </div>
+      </li>`;
+  }
+  return `      <li>
+        <a href="${escapeHtml(s.href)}">
+          <span class="no2">${no}</span>
+          <span class="t">${escapeHtml(s.title)}</span>
+          <span class="meta">${meta}</span>
+          <span class="go">读全文 →</span>
+        </a>
+      </li>`;
+}
+
+function renderStoryLists(items) {
+  const sorted = [...items].sort((a, b) => b.no - a.no);
+  const all = sorted.map(s => storyItemHtml(s, true)).join('\n');
+  const latest = [
+    ...sorted.slice(0, 2).map(s => storyItemHtml(s, false)),
+    `      <li>
+        <a href="stories.html">
+          <span class="no2">全部</span>
+          <span class="t">全部翻车实录 · 每三天更新一篇</span>
+          <span class="meta">杭州 / 长三角</span>
+          <span class="go">查看索引 →</span>
+        </a>
+      </li>`
+  ].join('\n');
+
+  for (const [file, marker, html] of [
+    ['stories.html', '<!--STORIES-->', all],
+    ['index.html', '<!--LATEST-->', latest]
+  ]) {
+    const p = join(DIST, file);
+    if (!existsSync(p)) continue;
+    const src = readFileSync(p, 'utf8');
+    if (!src.includes(marker)) {
+      console.warn(`⚠️  ${file} 缺少占位 ${marker}，列表未渲染`);
+      continue;
+    }
+    writeFileSync(p, src.replace(marker, html));
   }
 }
 
@@ -297,13 +365,17 @@ function localizeExternalAssets() {
   }
 }
 
-function generateSitemap(articles) {
+function generateSitemap(articles, stories = []) {
   const staticUrls = [
     { loc: `${SITE_URL}/`, lastmod: V2_REV, freq: 'weekly', pri: '1.0' },
     { loc: `${SITE_URL}/ai-training.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
     { loc: `${SITE_URL}/efficiency.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
     { loc: `${SITE_URL}/stories.html`, lastmod: V2_REV, freq: 'weekly', pri: '0.8' },
-    { loc: `${SITE_URL}/story.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.7' },
+    ...stories.filter(s => !s.pending).map(s => ({
+      loc: `${SITE_URL}/${s.href}`,
+      lastmod: s.date || V2_REV,
+      freq: 'monthly', pri: '0.7'
+    })),
     ...articles.map(a => ({
       loc: `${SITE_URL}/article/${a.id}.html`,
       lastmod: formatDate(a.updated_at || a.created_at) || V2_REV,
@@ -341,6 +413,11 @@ async function main() {
   // 2) v2 站点（复制到根，可覆盖 404.html 等同名旧文件）
   copyV2Site();
 
+  // 2.5) 翻车实录索引（数据源 v2/_data/stories.json）
+  const stories = loadStories().items || [];
+  renderStoryLists(stories);
+  console.log(`✅ 翻车实录索引已渲染（${stories.length} 篇）`);
+
   // 3) 历史文章静态页（v2 视觉）
   if (articles.length) {
     const articleDir = join(DIST, 'article');
@@ -355,8 +432,9 @@ async function main() {
   localizeExternalAssets();
 
   // 5) sitemap
-  writeFileSync(join(DIST, 'sitemap.xml'), generateSitemap(articles));
-  console.log(`✅ sitemap.xml 已生成（${articles.length + 10} 个 URL）`);
+  writeFileSync(join(DIST, 'sitemap.xml'), generateSitemap(articles, stories));
+  const urlCount = articles.length + stories.filter(s => !s.pending).length + 9;
+  console.log(`✅ sitemap.xml 已生成（${urlCount} 个 URL）`);
 
   console.log('🎉 构建完成！输出目录：dist/');
 }

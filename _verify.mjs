@@ -11,7 +11,8 @@ const PAGES = [
   ['efficiency', '/efficiency.html'],
   ['stories', '/stories.html'],
   ['story', '/story.html'],
-  ['article', '/article/test-1.html'],
+  ['story2', '/story-2.html'],
+  ['story3', '/story-3.html'],
   ['404', '/nope/xx']
 ];
 
