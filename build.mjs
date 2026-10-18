@@ -1,13 +1,40 @@
+/**
+ * 百鲸咨询 站点构建
+ * ---------------------------------------------------------------
+ * 线上站点 = v2/ 目录下的「现场笔记风」五页站（2026-10 改版）
+ *   v2/index.html        首页
+ *   v2/ai-training.html  AI培训
+ *   v2/efficiency.html   提效咨询
+ *   v2/stories.html      翻车实录（索引）
+ *   v2/story.html        翻车实录（单篇模板）
+ *   v2/styles.css / v2/booking.js / v2/assets/*
+ *
+ * 这些文件在构建时被复制到 dist/ 根目录，因此站内相对链接（styles.css、
+ * assets/logo.png）与线上 URL 完全一致。
+ *
+ * 根目录的 index.html 是改版前的旧首页，已不再部署，仅作备份/回滚参考。
+ * 旧版功能页（4 个测算工具、企业诊断、admin）保留可访问，样式沿用
+ * premium-enhance.css。
+ *
+ * Supabase 的 articles 仍会预渲染成 /article/{id}.html，沿用 v2 视觉，
+ * 目的是保住已被收录的旧文章链接不漏 404。
+ * ---------------------------------------------------------------
+ */
 import { createClient } from '@supabase/supabase-js';
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, cpSync, statSync, readdirSync, unlinkSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync, unlinkSync } from 'fs';
 import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { execFileSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = __dirname;
 const DIST = join(ROOT, 'dist');
+const V2 = join(ROOT, 'v2');
 const SITE_URL = 'https://baijingzixun.top';
+
+// v2 站点的内容版本日期（内容有实质改动时手动更新，不要用构建当天日期，
+// 否则每次 CI 都会把所有页面的 lastmod 刷成当天，对搜索引擎是噪声）
+const V2_REV = '2026-10-18';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -26,6 +53,11 @@ function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, c => map[c]);
 }
 
+/** JSON-LD 安全序列化：避免正文里的 </script> 提前闭合标签 */
+function jsonLd(obj) {
+  return JSON.stringify(obj).replace(/</g, '\\u003c');
+}
+
 async function fetchArticles() {
   const { data, error } = await supabase
     .from('articles')
@@ -36,189 +68,180 @@ async function fetchArticles() {
   return data || [];
 }
 
-function generateArticleHtml(article) {
-  const coverImg = article.cover_url && !article.cover_url.startsWith('data:')
-    ? article.cover_url
-    : `${SITE_URL}/article-default-cover.svg`;
-  const contentHtml = article.content || '';
-  const excerpt = article.excerpt || '';
-  const createdAt = formatDate(article.created_at);
-  const author = article.author || '百鲸咨询';
-  const articleUrl = `${SITE_URL}/article/${article.id}.html`;
+/* ------------------------------------------------------------------
+   v2 站点：五页 + 样式 + 脚本 + assets 复制到 dist 根目录
+   ------------------------------------------------------------------ */
+const V2_PAGES = [
+  'index.html',
+  'ai-training.html',
+  'efficiency.html',
+  'stories.html',
+  'story.html',
+  '404.html'
+];
+const V2_FILES = [...V2_PAGES, 'styles.css', 'booking.js', 'assets/logo.png', 'assets/qr.jpg',
+  'assets/favicon.png', 'assets/apple-touch-icon.png'];
 
-  // 注意：静态文章页位于 /article/ 子目录，所有根级资源必须用绝对 URL，否则子目录下相对路径会 404
-  return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="${escapeHtml(excerpt || '百鲸咨询 - 精选专业文章')}">
-  <meta property="og:title" content="${escapeHtml(article.title)} - 百鲸咨询">
-  <meta property="og:description" content="${escapeHtml(excerpt || '百鲸咨询 - 精选专业文章')}">
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="${articleUrl}">
-  <meta property="og:image" content="${coverImg}">
-  <meta property="og:site_name" content="百鲸咨询">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${escapeHtml(article.title)} - 百鲸咨询">
-  <meta name="twitter:description" content="${escapeHtml(excerpt || '百鲸咨询 - 精选专业文章')}">
-  <meta name="twitter:image" content="${coverImg}">
-  <link rel="canonical" href="${articleUrl}">
-  <link rel="icon" href="${SITE_URL}/logo0（透明）.png">
-  <title>${escapeHtml(article.title)} - 百鲸咨询</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script>tailwind.config={theme:{extend:{colors:{primary:'#083E78',accent:'#28B8A0',hover:'#22C0E0',section:'#F4FAFF',neutral:'#E2E8F0',secondary:'#333333'},fontFamily:{sans:['Noto Sans SC','system-ui','sans-serif']},boxShadow:{elevated:'0 10px 25px -5px rgba(0,0,0,.05), 0 8px 10px -6px rgba(0,0,0,.08)'}}}}</script>
-  <style>
-    body{font-family:'Noto Sans SC',sans-serif;color:#333;background:#F4FAFF}
-    .prose img{max-width:100%;height:auto;border-radius:8px;margin:1rem 0}
-    .prose h2{font-size:1.4rem;font-weight:700;margin:1.4rem 0 .6rem;color:#083E78}
-    .prose h3{font-size:1.15rem;font-weight:700;margin:1.1rem 0 .5rem;color:#083E78}
-    .prose p{line-height:1.9;margin:.7rem 0}
-    .prose ul,.prose ol{margin:.6rem 0 1rem 1.4rem}
-    .prose li{margin:.35rem 0;line-height:1.85}
-    .prose a{color:#28B8A0;text-decoration:underline;font-weight:500}
-    .prose a:hover{color:#22C0E0}
-    .prose table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:15px}
-    .prose th,.prose td{border:1px solid #E2E8F0;padding:8px 12px;text-align:left}
-    .prose th{background:#F4FAFF;color:#083E78;font-weight:600}
-    .prose blockquote{border-left:4px solid #28B8A0;background:#F4FAFF;padding:12px 16px;margin:1rem 0;color:#555;border-radius:0 8px 8px 0}
-    .prose blockquote p{margin:.3rem 0}
-    .prose hr{border:none;border-top:1px solid #E2E8F0;margin:1.6rem 0}
-    .btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border-radius:8px;font-weight:600;font-size:14px;color:#083E78;background:#fff;border:1px solid #E2E8F0;transition:all .3s ease;text-decoration:none;white-space:nowrap}
-    .btn-secondary:hover{color:#fff;background:#083E78;border-color:#083E78}
-  </style>
-  <!-- 全站统一样式：导航栏深色玻璃风与首页保持一致（绝对路径，文章页在 /article/ 子目录） -->
-  <link rel="stylesheet" href="${SITE_URL}/premium-enhance.css">
-</head>
-<body>
-  <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-neutral/20">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-      <a href="${SITE_URL}/index.html" class="flex items-center">
-        <img src="${SITE_URL}/logo0（透明）.png" style="width:25vw;max-width:140px;min-width:80px;height:auto;object-fit:contain;" alt="百鲸咨询logo">
-      </a>
-      <a href="${SITE_URL}/index.html" class="btn-secondary text-sm"><i class="fas fa-arrow-left mr-1"></i> 返回首页</a>
-    </div>
-  </header>
-
-  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <article class="max-w-4xl mx-auto bg-white rounded-2xl shadow-elevated border border-neutral/20 p-6 sm:p-8 md:p-10">
-      <img src="${escapeHtml(article.cover_url || `${SITE_URL}/article-default-cover.svg`)}" class="w-full rounded-xl mb-6 object-cover max-h-96" alt="${escapeHtml(article.title)}">
-      <div class="flex flex-wrap items-center text-sm text-secondary/50 mb-4 gap-2">
-        <span><i class="far fa-calendar-alt mr-1"></i>${createdAt}</span>
-        <span>·</span><span><i class="far fa-user mr-1"></i>${escapeHtml(author)}</span>
-        <span>·</span><span><i class="far fa-folder mr-1"></i>${escapeHtml(article.category || '咨询')}</span>
-      </div>
-      <h1 class="text-2xl md:text-3xl font-bold text-secondary mb-4 leading-snug">${escapeHtml(article.title)}</h1>
-      ${excerpt ? `<p class="text-secondary/70 text-lg mb-6 border-l-4 border-accent pl-4">${escapeHtml(excerpt)}</p>` : ''}
-      <div class="prose">${contentHtml}</div>
-    </article>
-  </main>
-
-  <footer class="bg-primary text-white text-center py-6 mt-12">
-    <div class="container mx-auto px-4 text-sm">
-      <p>&copy; 2026 百鲸咨询. All rights reserved.</p>
-      <p class="mt-1 text-blue-200">专注于企业战略落地·组织优化·股权激励·数字化转型</p>
-    </div>
-  </footer>
-  <script src="${SITE_URL}/premium-enhance.js"></script>
-</body>
-</html>`;
-}
-
-function generateIndexHtml(articles) {
-  // 关键修复：不再整页重造首页（那会把 banner 轮播 / 产品模块 / 联系我们等全部内容丢掉）。
-  // 正确做法：以源目录 index.html（完整版首页）为基础，仅把「精选文章」容器里的
-  // 「加载中...」占位替换为预渲染文章卡片，供爬虫抓取与首屏直出。
-  // 页面加载后，index.html 自带的 Supabase 动态加载逻辑会接管该容器（分页渲染），互不冲突。
-  const src = readFileSync(join(ROOT, 'index.html'), 'utf8');
-
-  const placeholder = [
-    '          <div class="text-center text-secondary/60 py-12" data-page-node-id="YCFMRSdz4Ewf4ZAqrU3CHA">',
-    '            <i class="fas fa-spinner fa-spin text-2xl mb-4" data-page-node-id="nBzLjT0lMmgkMWCJMstuhn"></i>',
-    '            <p data-page-node-id="RsGqTT4KDx1cpTbm3e5V1V">加载中...</p>',
-    '          </div>'
-  ].join('\n');
-
-  if (!src.includes(placeholder)) {
-    throw new Error('未在源 index.html 中找到文章占位符（articlesContainer 内的加载中块），请检查结构后再构建');
+function copyV2Site() {
+  for (const f of V2_FILES) {
+    const src = join(V2, f);
+    const dest = join(DIST, f);
+    if (!existsSync(src)) {
+      throw new Error(`v2 资源缺失：${f}（构建中止，避免线上白页）`);
+    }
+    mkdirSync(dirname(dest), { recursive: true });
+    copyFileSync(src, dest);
   }
-
-  const articleCards = articles.map(a => {
-    const coverImg = a.cover_url && !a.cover_url.startsWith('data:')
-      ? a.cover_url
-      : 'article-default-cover.svg';
-    return `<article class="article-card flex flex-col">
-          <a href="article/${a.id}.html" class="block shrink-0 overflow-hidden">
-            <img src="${escapeHtml(coverImg)}" alt="${escapeHtml(a.title)}" class="w-full h-48 object-cover" loading="lazy">
-          </a>
-          <div class="p-6 flex-1 flex flex-col">
-            <div class="flex items-center text-[12.5px] text-secondary/45 mb-3 shrink-0 tracking-wide">
-              <span><i class="far fa-calendar-alt mr-1"></i>${formatDate(a.created_at)}</span>
-              <span class="mx-2">·</span>
-              <span><i class="far fa-user mr-1"></i>${escapeHtml(a.author || '百鲸咨询')}</span>
-            </div>
-            <a href="article/${a.id}.html" class="article-title mb-3 line-clamp-2">${escapeHtml(a.title)}</a>
-            <p class="text-secondary/65 leading-relaxed mb-4 text-[14px] line-clamp-3 flex-1">${escapeHtml(a.excerpt || '')}</p>
-            <a href="article/${a.id}.html" class="article-more mt-auto">
-              阅读更多 <i class="fas fa-arrow-right text-xs"></i>
-            </a>
-          </div>
-        </article>`;
-  }).join('\n          ');
-
-  return src.replace(placeholder, articleCards);
+  // 旧的「咨询师登录」页引用根级 logo.png，顺手补一个，避免那张图 404
+  copyFileSync(join(V2, 'assets', 'logo.png'), join(DIST, 'logo.png'));
+  console.log(`✅ v2 站点已复制到 dist 根目录（${V2_PAGES.length} 页 + 样式/脚本/图标）`);
 }
 
-function copyStaticFiles() {
-  // 注意：index.html 使用构建生成的预渲染版，不从这里复制覆盖。
-  // article-detail.html 保留源目录原版（含 JS 动态加载逻辑，兼容 /article-detail.html?id= 旧链接）。
-  const staticFiles = [
-    'article-detail.html', 'article-default-cover.svg',
-    'home-banner.png', 'logo0（透明）.png', 'CNAME', 'robots.txt',
-    '_redirects', '404.html',
-    'home-banner.svg', 'home-banner-诊断.svg', 'wechat-qrcode.jpg',
-    // 全站动效/导航栏统一样式（子页面全部引用，必须复制，否则线上 404 → 导航栏样式不生效）
-    'premium-enhance.css', 'premium-enhance.js',
-    // 工具页面：sitemap 中已声明这些 URL，必须复制到 dist，否则搜索引擎抓取 404
-    '目标测算工具.html', '战略解码工具.html', '组织架构生成工具.html', '股权架构生成工具.html',
-    // 管理后台（robots.txt 已 Disallow，不参与收录，但必须可访问）
-    'admin.html', '咨询师登录页面.html', '企业诊断.html',
-    // 合作客户 logo 墙
-    'logos/baishi.jpeg', 'logos/baosheng.png', 'logos/meimin.png', 'logos/putuoshan.jpg',
-    'logos/zhidao.jpg', 'logos/zhiwuyan.jpg', 'logos/zhongjian.jpg', 'logos/zhongnan.jpeg',
-    'logos/zhongtian.jpg', 'logos/zhongtong.jpg', 'logos/abaocailanzi.jpg', 'logos/baoshengbinguan.jpg',
-    'logos/suntaihe.jpg', 'logos/oulun.jpg', 'logos/xinrui.jpg',
-    // 首页「AI 改革落地」弹窗动态海报（index.html 自动弹窗引用，必须复制，否则线上 404 只剩空白弹窗）
-    // 无后缀为桌面横版，-m 为窄屏竖版；webp 为动图主资源，gif 为老浏览器兜底，四者都要进 dist
-    'home-ai-poster.webp', 'home-ai-poster.gif',
-    'home-ai-poster-m.webp', 'home-ai-poster-m.gif'
-  ];
-  const dirs = ['articles', 'api'];
-  const consultantImgs = ['consultant-lilaoshi.png', 'consultant-liuquanan.png', 'consultant-wanglaoshi.png', 'consultant-chenlaoshi.png', 'consultant-zhoulaoshi.png', 'consultant-sunlaoshi.png', '刘诠案老师.jpg', '微信公众号.jpg', '企业诊断.html'];
+/** 手写递归复制：本机 Node 的 cpSync 复制某些目录会静默崩溃（exit 127），
+ *  用 readdirSync + copyFileSync 等价实现，行为稳定。 */
+function copyDir(src, dest) {
+  mkdirSync(dest, { recursive: true });
+  for (const entry of readdirSync(src, { withFileTypes: true })) {
+    const s = join(src, entry.name);
+    const d = join(dest, entry.name);
+    if (entry.isDirectory()) copyDir(s, d);
+    else if (entry.isFile()) copyFileSync(s, d);
+  }
+}
 
-  // 复制文件
-  for (const f of [...staticFiles, ...consultantImgs]) {
+/* ------------------------------------------------------------------
+   旧版静态资源（保留可访问的存量功能页）
+   ------------------------------------------------------------------ */
+function copyStaticFiles() {
+  // 注意：不再复制旧首页 index.html、banner、AI 海报、咨询师头像、logo 墙
+  // —— v2 站点均未引用，留在仓库里即可，不进 dist 可省 5MB+ 部署体积。
+  const staticFiles = [
+    'article-detail.html',                 // /article-detail.html?id= 旧链接兼容
+    'article-default-cover.svg',
+    'logo0（透明）.png',                    // 工具页 / 企业诊断页导航栏 logo
+    'CNAME', 'robots.txt', '_redirects',
+    'premium-enhance.css', 'premium-enhance.js', // 工具页共用导航栏样式
+    '目标测算工具.html', '战略解码工具.html',
+    '组织架构生成工具.html', '股权架构生成工具.html',
+    'admin.html', '咨询师登录页面.html', '企业诊断.html'
+  ];
+  // articles/ 只是 Supabase 建表说明（.sql/.md），api/ 是 Netlify 形态的
+  // serverless webhook，GitHub Pages 上都没有任何作用，不进 dist。
+  const dirs = [];
+
+  for (const f of staticFiles) {
     const src = join(ROOT, f);
     const dest = join(DIST, f);
     if (existsSync(src)) {
-      const destDir = dirname(dest);
-      if (!existsSync(destDir)) mkdirSync(destDir, { recursive: true });
+      mkdirSync(dirname(dest), { recursive: true });
       copyFileSync(src, dest);
     }
   }
-  // 复制目录
   for (const d of dirs) {
     const src = join(ROOT, d);
     const dest = join(DIST, d);
     if (existsSync(src)) {
-      if (!existsSync(dest)) mkdirSync(dest, { recursive: true });
-      cpSync(src, dest, { recursive: true });
+      mkdirSync(dest, { recursive: true });
+      copyDir(src, dest);
     }
   }
 }
 
+/* ------------------------------------------------------------------
+   文章静态页：布局换成 v2 视觉（原模板还是 Tailwind 深蓝，与新版割裂）
+   ------------------------------------------------------------------ */
+function generateArticleHtml(article) {
+  const cover = article.cover_url && !article.cover_url.startsWith('data:') ? article.cover_url : '';
+  const excerpt = article.excerpt || '';
+  const createdAt = formatDate(article.created_at);
+  const author = article.author || '百鲸咨询';
+  const category = article.category || '百鲸观察';
+  const articleUrl = `${SITE_URL}/article/${article.id}.html`;
+
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: excerpt,
+    datePublished: article.created_at || undefined,
+    dateModified: article.updated_at || article.created_at || undefined,
+    author: { '@type': 'Organization', name: author },
+    publisher: { '@type': 'Organization', name: '百鲸咨询' },
+    mainEntityOfPage: articleUrl,
+    articleSection: category
+  };
+
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(article.title)} — 百鲸咨询</title>
+<meta name="description" content="${escapeHtml(excerpt || '百鲸咨询 · AI培训 / 提效咨询 / FDE落地实施')}">
+<link rel="canonical" href="${articleUrl}">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:title" content="${escapeHtml(article.title)} — 百鲸咨询">
+<meta property="og:description" content="${escapeHtml(excerpt)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${articleUrl}">
+<meta property="og:site_name" content="百鲸咨询">
+${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/styles.css">
+<script type="application/ld+json">${jsonLd(ld)}</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/index.html"><img src="/assets/logo.png" alt="百鲸咨询" width="85" height="30"></a>
+    <nav class="topnav" aria-label="站内页面">
+      <a href="/index.html">首页</a>
+      <a href="/ai-training.html">AI培训</a>
+      <a href="/efficiency.html">提效咨询</a>
+      <a class="nav-hot" href="/stories.html">翻车实录</a>
+    </nav>
+  </div>
+</header>
+
+<article class="article">
+  <div class="wrap narrow">
+    <a class="back" href="/index.html">← 返回首页</a>
+    <p class="kicker">${escapeHtml(category)}</p>
+    <h1 style="font-size:clamp(26px,4vw,40px);">${escapeHtml(article.title)}</h1>
+    <p class="art-meta">${createdAt} · ${escapeHtml(author)}</p>
+${excerpt ? `    <p class="lead" style="margin-top:18px;">${escapeHtml(excerpt)}</p>\n` : ''}${cover ? `    <img src="${escapeHtml(cover)}" alt="${escapeHtml(article.title)}" style="width:100%;height:auto;margin-top:26px;border:1px solid var(--line);border-radius:3px;">\n` : ''}
+    <div class="art-body">${article.content || ''}</div>
+
+    <div class="art-cta" id="wechat">
+      <figure class="stamp"><img src="/assets/qr.jpg" alt="刘诠案的微信二维码"></figure>
+      <div>
+        <h3>你公司里有没有类似的情况？</h3>
+        <p>加微信说一句，免费聊三十分钟。说清楚你是哪个城市、什么行业、卡在哪一步就行。</p>
+        <a class="btn btn-dark" href="#wechat" data-book style="margin-top:14px;">预约诊断 <span class="min">30 MIN</span> <span class="arw">→</span></a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>百鲸咨询 · 杭州</span>
+    <span>AI培训 · 提效咨询 · FDE落地实施 ｜ 到场半径两小时</span>
+    <a href="https://beian.miit.gov.cn" rel="noopener">浙ICP备2023042992号</a>
+  </div>
+</footer>
+
+<script src="/booking.js" defer></script>
+</body>
+</html>`;
+}
+
+/* ------------------------------------------------------------------
+   存量功能页仍依赖 Tailwind / FontAwesome CDN → 本地化
+   （v2 页面零外部依赖，这一遍对它们是无操作）
+   ------------------------------------------------------------------ */
 function localizeExternalAssets() {
   const extractedStyles = [];
   const processDirectory = directory => {
@@ -230,29 +253,37 @@ function localizeExternalAssets() {
       }
       if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
 
-      let html = readFileSync(path, 'utf8')
+      const html = readFileSync(path, 'utf8');
+      const next = html
         .replace(/<script\s+src="https:\/\/cdn\.tailwindcss\.com"><\/script>/g, '<link rel="stylesheet" href="/tailwind.css">')
         .replace(/<link\b[^>]*href="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/6\.5\.1\/css\/all\.min\.css"[^>]*>/g, '<link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">')
         .replace(/<script>\s*tailwind\.config\s*=[\s\S]*?<\/script>/g, '');
+      if (next === html) continue;
 
-      html = html.replace(/<style\s+type="text\/tailwindcss">([\s\S]*?)<\/style>/g, (_, css) => {
+      writeFileSync(path, next.replace(/<style\s+type="text\/tailwindcss">([\s\S]*?)<\/style>/g, (_, css) => {
         extractedStyles.push(css);
         return '';
-      });
-      writeFileSync(path, html);
+      }));
     }
   };
   processDirectory(DIST);
 
+  const tailwindInput = `${readFileSync(join(ROOT, 'tailwind.css'), 'utf8')}\n${extractedStyles.join('\n')}`;
+  const hasTailwindPages = readdirSync(DIST).some(f => f.endsWith('.html')) &&
+    readdirSync(DIST).filter(f => f.endsWith('.html')).some(f => readFileSync(join(DIST, f), 'utf8').includes('/tailwind.css'));
+
   const fontAwesomeDir = join(ROOT, 'node_modules', '@fortawesome', 'fontawesome-free');
-  const fontAwesomeCssDir = join(DIST, 'assets', 'fontawesome', 'css');
-  const fontAwesomeWebfontsDir = join(DIST, 'assets', 'fontawesome', 'webfonts');
-  mkdirSync(fontAwesomeCssDir, { recursive: true });
-  copyFileSync(join(fontAwesomeDir, 'css', 'all.min.css'), join(fontAwesomeCssDir, 'all.min.css'));
-  cpSync(join(fontAwesomeDir, 'webfonts'), fontAwesomeWebfontsDir, { recursive: true });
+  if (existsSync(fontAwesomeDir)) {
+    const cssDir = join(DIST, 'assets', 'fontawesome', 'css');
+    mkdirSync(cssDir, { recursive: true });
+    copyFileSync(join(fontAwesomeDir, 'css', 'all.min.css'), join(cssDir, 'all.min.css'));
+    copyDir(join(fontAwesomeDir, 'webfonts'), join(DIST, 'assets', 'fontawesome', 'webfonts'));
+  }
+
+  if (!hasTailwindPages) return;
 
   const inputPath = join(DIST, '.tailwind-input.css');
-  writeFileSync(inputPath, `${readFileSync(join(ROOT, 'tailwind.css'), 'utf8')}\n${extractedStyles.join('\n')}`);
+  writeFileSync(inputPath, tailwindInput);
   try {
     execFileSync(process.execPath, [
       join(ROOT, 'node_modules', 'tailwindcss', 'lib', 'cli.js'),
@@ -267,15 +298,22 @@ function localizeExternalAssets() {
 }
 
 function generateSitemap(articles) {
-  const today = new Date().toISOString().slice(0, 10);
   const staticUrls = [
-    { loc: `${SITE_URL}/`, lastmod: '2026-09-03', freq: 'weekly', pri: '1.0' },
-    ...articles.map(a => ({ loc: `${SITE_URL}/article/${a.id}.html`, lastmod: today, freq: 'daily', pri: '0.9' })),
-    { loc: `${SITE_URL}/%E7%9B%AE%E6%A0%87%E6%B5%8B%E7%AE%97%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'monthly', pri: '0.8' },
-    { loc: `${SITE_URL}/%E6%88%98%E7%95%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'monthly', pri: '0.8' },
-    { loc: `${SITE_URL}/%E7%BB%84%E7%BB%87%E6%9E%B6%E6%9E%84%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'monthly', pri: '0.8' },
-    { loc: `${SITE_URL}/%E8%82%A1%E6%9D%83%E6%9E%B6%E6%9E%84%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'monthly', pri: '0.8' },
-    { loc: `${SITE_URL}/%E4%BC%81%E4%B8%9A%E8%AF%8A%E6%96%AD.html`, lastmod: '2026-09-04', freq: 'monthly', pri: '0.8' }
+    { loc: `${SITE_URL}/`, lastmod: V2_REV, freq: 'weekly', pri: '1.0' },
+    { loc: `${SITE_URL}/ai-training.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
+    { loc: `${SITE_URL}/efficiency.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
+    { loc: `${SITE_URL}/stories.html`, lastmod: V2_REV, freq: 'weekly', pri: '0.8' },
+    { loc: `${SITE_URL}/story.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.7' },
+    ...articles.map(a => ({
+      loc: `${SITE_URL}/article/${a.id}.html`,
+      lastmod: formatDate(a.updated_at || a.created_at) || V2_REV,
+      freq: 'yearly', pri: '0.6'
+    })),
+    { loc: `${SITE_URL}/%E7%9B%AE%E6%A0%87%E6%B5%8B%E7%AE%97%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'yearly', pri: '0.5' },
+    { loc: `${SITE_URL}/%E6%88%98%E7%95%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'yearly', pri: '0.5' },
+    { loc: `${SITE_URL}/%E7%BB%84%E7%BB%87%E6%9E%B6%E6%9E%84%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'yearly', pri: '0.5' },
+    { loc: `${SITE_URL}/%E8%82%A1%E6%9D%83%E6%9E%B6%E6%9E%84%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7.html`, lastmod: '2026-06-12', freq: 'yearly', pri: '0.5' },
+    { loc: `${SITE_URL}/%E4%BC%81%E4%B8%9A%E8%AF%8A%E6%96%AD.html`, lastmod: '2026-09-04', freq: 'yearly', pri: '0.5' }
   ];
   const urls = staticUrls.map(u =>
     `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <changefreq>${u.freq}</changefreq>\n    <priority>${u.pri}</priority>\n  </url>`
@@ -285,42 +323,50 @@ function generateSitemap(articles) {
 
 async function main() {
   console.log('🔄 正在从 Supabase 获取文章数据...');
-  const articles = await fetchArticles();
-  console.log(`✅ 共获取 ${articles.length} 篇文章`);
+  let articles = [];
+  try {
+    articles = await fetchArticles();
+    console.log(`✅ 共获取 ${articles.length} 篇文章`);
+  } catch (err) {
+    // 首页/服务页不依赖文章数据。Supabase 抖动不应该让整站发布失败，
+    // 只降级为「本轮不生成历史文章页」，站点其余部分照常上线。
+    console.warn('⚠️  文章数据获取失败，本轮跳过历史文章页生成：', err.message || err);
+  }
 
   if (!existsSync(DIST)) mkdirSync(DIST, { recursive: true });
 
-  // 生成首页
-  const indexHtml = generateIndexHtml(articles);
-  writeFileSync(join(DIST, 'index.html'), indexHtml);
-  console.log('✅ dist/index.html 已生成');
-
-  // 生成每篇文章的独立静态页面
-  const articleDir = join(DIST, 'article');
-  if (!existsSync(articleDir)) mkdirSync(articleDir, { recursive: true });
-
-  for (const article of articles) {
-    const html = generateArticleHtml(article);
-    writeFileSync(join(DIST, 'article', `${article.id}.html`), html);
-  }
-  console.log(`✅ ${articles.length} 个文章页面已生成到 dist/article/`);
-
-  // 复制静态资源（index.html 已由构建生成预渲染版；article-detail.html 保留原版 JS 逻辑）
+  // 1) 旧版功能页与存量资源
   copyStaticFiles();
 
-  // Bundle utility styles and icons locally so visitors do not depend on external CDNs.
+  // 2) v2 站点（复制到根，可覆盖 404.html 等同名旧文件）
+  copyV2Site();
+
+  // 3) 历史文章静态页（v2 视觉）
+  if (articles.length) {
+    const articleDir = join(DIST, 'article');
+    mkdirSync(articleDir, { recursive: true });
+    for (const article of articles) {
+      writeFileSync(join(articleDir, `${article.id}.html`), generateArticleHtml(article));
+    }
+    console.log(`✅ ${articles.length} 个文章页面已生成到 dist/article/`);
+  }
+
+  // 4) 存量页面外部依赖本地化
   localizeExternalAssets();
 
-  // 生成 sitemap（覆盖复制过来的旧版）
-  const sitemap = generateSitemap(articles);
-  writeFileSync(join(DIST, 'sitemap.xml'), sitemap);
-  console.log(`✅ sitemap.xml 已生成（${articles.length + 6} 个 URL）`);
+  // 5) sitemap
+  writeFileSync(join(DIST, 'sitemap.xml'), generateSitemap(articles));
+  console.log(`✅ sitemap.xml 已生成（${articles.length + 10} 个 URL）`);
 
-  console.log('✅ 所有静态页面已生成到 dist/');
-  console.log('🎉 构建完成！');
+  console.log('🎉 构建完成！输出目录：dist/');
 }
 
-main().catch(err => {
-  console.error('❌ 构建失败:', err);
-  process.exit(1);
-});
+// 允许被测试脚本 import 而不自动执行
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch(err => {
+    console.error('❌ 构建失败:', err);
+    process.exit(1);
+  });
+}
+
+export { generateArticleHtml, generateSitemap, copyV2Site };

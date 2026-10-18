@@ -32,8 +32,14 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': mime });
     res.end(data);
   } catch {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('404 Not Found');
+    try {
+      const data = await readFile(join(DIST, '404.html'));
+      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(data);
+    } catch {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end('404 Not Found');
+    }
   }
 });
 
