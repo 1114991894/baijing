@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>效果预览 · 首屏工位时间线</title>
+<meta name="description" content="首屏动效效果预览，未上线。">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ================= 首屏：工位时间线 ================= */
+.tl-hero {
+  position: relative; overflow: hidden;
+  padding: clamp(24px, 4.5vh, 48px) 0 clamp(28px, 4.5vh, 48px);
+}
+.tl-stack {
+  position: relative; display: grid; grid-template-columns: 1fr;
+  min-height: clamp(340px, 50vh, 440px); align-items: center;
+}
+.tl-stack > * { grid-column: 1; grid-row: 1; }
+
+/* 时间轴舞台 */
+.tl-stage { position: relative; height: clamp(300px, 44vh, 400px); overflow: hidden; align-self: center;
+  transition: opacity .7s ease, transform .7s ease; }
+.tl-track { position: absolute; top: 0; left: 0; height: 100%; will-change: transform; }
+
+.tl-axis { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line-2); }
+.tl-hr { position: absolute; top: 50%; transform: translateX(-50%); font-family: var(--mono);
+  font-size: 11.5px; color: var(--muted); letter-spacing: .06em; padding-top: 13px; white-space: nowrap;
+  transition: color .3s; }
+.tl-hr::before { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 7px;
+  background: var(--line-2); transform: translateX(-50%); }
+.tl-hr.now { color: var(--teal); font-weight: 700; }
+.tl-hr.now::before { background: var(--teal); }
+
+.tl-play { position: absolute; top: 50%; width: 1px; height: 92px; margin-top: -46px;
+  background: linear-gradient(180deg, rgba(20,96,77,0), rgba(20,96,77,.5), rgba(20,96,77,0)); }
+.tl-play::after { content: ""; position: absolute; left: 50%; top: 50%; width: 9px; height: 9px;
+  margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--teal);
+  box-shadow: 0 0 0 4px rgba(20,96,77,.12); }
+.tl-clock { position: absolute; left: 50%; top: -32px; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--teal);
+  letter-spacing: .08em; white-space: nowrap; }
+
+/* 工位动作：上下交替、居中锚在时刻点上 */
+.tl-ev { position: absolute; width: 218px; transform: translateX(-50%);
+  text-align: center; opacity: .26;
+  transition: opacity .55s ease, transform .55s ease; }
+.tl-ev.up { bottom: calc(50% + 50px); }
+.tl-ev.down { top: calc(50% + 50px); }
+.tl-ev .stem { position: absolute; left: 50%; width: 1px; background: var(--line);
+  transition: background .45s ease, height .45s ease; }
+.tl-ev.up .stem { bottom: -44px; height: 34px; }
+.tl-ev.down .stem { top: -44px; height: 34px; }
+.tl-ev .dot { position: absolute; left: 50%; width: 7px; height: 7px; border-radius: 50%;
+  border: 1px solid var(--line-2); background: var(--paper); transform: translateX(-50%);
+  transition: all .45s ease; }
+.tl-ev.up .dot { bottom: -54px; }
+.tl-ev.down .dot { top: -54px; }
+.tl-ev time { display: block; font-family: var(--mono); font-size: 12px; font-weight: 700;
+  color: var(--muted); letter-spacing: .08em; margin-bottom: 5px; transition: color .45s ease; }
+.tl-ev p { font-size: 14.5px; line-height: 1.62; color: var(--ink-2); transition: color .45s ease; }
+.tl-ev.on { opacity: 1; }
+.tl-ev.on .dot { border-color: var(--teal); background: var(--teal); box-shadow: 0 0 0 5px rgba(20,96,77,.1); }
+.tl-ev.on .stem { background: var(--teal); }
+.tl-ev.on time { color: var(--teal); }
+.tl-ev.on p { color: var(--ink); font-weight: 600; }
+
+/* 引导语 */
+.tl-lede { position: absolute; left: 0; right: 0; bottom: -2px; text-align: center;
+  transition: opacity .6s ease; }
+.tl-lede p { font-family: var(--mono); font-size: 11.5px; color: var(--muted); letter-spacing: .16em; }
+
+/* 中央那句话 */
+.tl-q { position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center; padding: 0 20px;
+  opacity: 0; pointer-events: none; z-index: 6;
+  transition: opacity .6s ease, transform .95s cubic-bezier(.4,0,.2,1); }
+.tl-q.show { opacity: 1; }
+.tl-q h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -.01em;
+  font-size: clamp(24px, 4.1vw, 44px); line-height: 1.44; color: var(--ink); text-wrap: balance; }
+.tl-q h2 em { font-style: normal; color: var(--teal); }
+.tl-q .sub { margin-top: 20px; font-family: var(--mono); font-size: 11.5px;
+  color: var(--gold); letter-spacing: .2em; }
+
+/* 最终落点 = 现行 hero 版式 */
+.tl-final { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center;
+  align-self: center; }
+.tl-final .dock { margin-bottom: 15px; padding-left: 13px; border-left: 2px solid var(--gold);
+  font-family: var(--serif); font-size: 14.5px; line-height: 1.6; color: var(--muted); max-width: 26em; }
+.tl-final h1 { font-size: clamp(30px, 5.1vw, 54px); line-height: 1.16; }
+.tl-final .hero-svc { margin-top: 15px; }
+.tl-final .hero-geo { margin-top: 6px; }
+.tl-final .stamp { transform: rotate(1.6deg); }
+.tl-final .stamp figcaption { font-size: 12.5px; }
+.tl-final .stamp figcaption small { margin-top: 4px; }
+
+/* 入场：只有 JS 在跑时才先把最终态藏起来（无 JS 直接可见） */
+html.js-intro .tl-final > * { opacity: 0; transform: translateY(10px); }
+html.js-intro .tl-final .stamp { opacity: 0; transform: translate(34px, 8px) rotate(1.6deg); }
+html.js-intro .tl-hero.at-final .tl-final > * { opacity: 1; transform: none;
+  transition: opacity .7s ease, transform .8s cubic-bezier(.2,.7,.3,1); }
+html.js-intro .tl-hero.at-final .tl-final .stamp { transform: rotate(1.6deg);
+  transition: opacity .6s ease .22s, transform .9s cubic-bezier(.2,.7,.3,1) .22s; }
+html.js-intro .tl-hero.at-final .dock { transition-delay: .5s; }
+html.js-intro .tl-hero.at-final h1 { transition-delay: .36s; }
+html.js-intro .tl-hero.at-final .hero-svc,
+html.js-intro .tl-hero.at-final .hero-geo { transition-delay: .5s; }
+html.js-intro .tl-hero.at-final .hero-actions { transition-delay: .62s; }
+
+/* 状态切换 */
+.tl-hero.at-statement .tl-stage { opacity: 0; transform: translateY(-6px); }
+.tl-hero.at-statement .tl-lede { opacity: 0; }
+.tl-hero.at-final .tl-stage { display: none; }
+.tl-hero.at-final .tl-lede { display: none; }
+.tl-hero.at-final .tl-stack { min-height: 0; }
+
+/* 跳过 / 重播 */
+.tl-ctrl { position: absolute; right: 18px; bottom: 10px; z-index: 8;
+  font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted);
+  background: none; border: 0; cursor: pointer; padding: 8px 10px; }
+.tl-ctrl:hover { color: var(--ink); }
+.tl-ctrl[hidden] { display: none; }
+
+/* 预览提示条 */
+.pv-bar { background: #161B1D; color: rgba(255,255,255,.72); font-family: var(--mono);
+  font-size: 11.5px; letter-spacing: .1em; text-align: center; padding: 7px 14px; }
+.pv-bar b { color: #C9B37E; font-weight: 600; }
+
+@media (max-width: 860px) {
+  .tl-stack { min-height: 330px; }
+  .tl-stage { height: 300px; }
+  .tl-final { grid-template-columns: 1fr; gap: 24px; }
+  .tl-final h1 { font-size: clamp(27px, 7.6vw, 34px); }
+  .tl-final .hero-stamp { margin: 0; display: flex; align-items: center; gap: 16px;
+    max-width: 330px; transform: none; }
+  html.js-intro .tl-hero.at-final .tl-final .stamp { transform: none; }
+  .tl-final .hero-stamp img { width: 124px; }
+  .tl-ev { width: 150px; }
+  .tl-ev p { font-size: 13px; line-height: 1.55; }
+  .tl-ev time { font-size: 11px; }
+  .tl-ev.up { bottom: calc(50% + 44px); }
+  .tl-ev.down { top: calc(50% + 44px); }
+  .tl-ev .stem { display: none; }
+  .tl-ev.up .dot { bottom: -48px; }
+  .tl-ev.down .dot { top: -48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tl-stage, .tl-lede, .tl-q, html.js-intro .tl-final > * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="pv-bar">效果预览 · <b>首屏工位时间线</b> · 未上线 · 右下角可「跳过 / 重播」</div>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="index.html"><img src="assets/logo.png" alt="百鲸咨询" width="85" height="30"></a>
+    <nav class="topnav" aria-label="站内页面">
+      <a href="ai-training.html">AI培训</a>
+      <a href="efficiency.html">提效咨询</a>
+      <a class="nav-hot" href="stories.html">翻车实录</a>
+    </nav>
+  </div>
+</header>
+
+<section class="tl-hero" id="tlHero">
+  <div class="wrap">
+    <div class="tl-stack">
+      <div class="tl-stage" id="tlStage">
+        <div class="tl-track" id="tlTrack">
+          <div class="tl-axis"></div>
+
+          <div class="tl-ev up" data-t="9.2"><span class="stem"></span><span class="dot"></span>
+            <time>9:12</time><p>打开 ERP，把订单号复制到 Excel</p></div>
+          <div class="tl-ev down" data-t="10.667"><span class="stem"></span><span class="dot"></span>
+            <time>10:40</time><p>从 Excel 复制到邮件，发给客户</p></div>
+          <div class="tl-ev up" data-t="11.417"><span class="stem"></span><span class="dot"></span>
+            <time>11:25</time><p>客户改单，回到 ERP 重查</p></div>
+          <div class="tl-ev down" data-t="14.05"><span class="stem"></span><span class="dot"></span>
+            <time>14:03</time><p>把三张表的数据粘进汇报模板</p></div>
+          <div class="tl-ev up" data-t="16.783"><span class="stem"></span><span class="dot"></span>
+            <time>16:47</time><p>发现数字对不上，从头核一遍</p></div>
+          <div class="tl-ev down" data-t="17.833"><span class="stem"></span><span class="dot"></span>
+            <time>17:50</time><p>加班，因为白天的时间都在搬运</p></div>
+
+          <div class="tl-play" id="tlPlay"><span class="tl-clock" id="tlClock">09:00</span></div>
+        </div>
+      </div>
+
+      <div class="tl-lede"><p>一个业务员 / 跟单员的一天</p></div>
+
+      <div class="tl-q" id="tlQ">
+        <h2>这个人的一天，<br>有多少动作其实<em>不需要人做</em>？</h2>
+        <p class="sub">百鲸咨询 · 现场诊断</p>
+      </div>
+
+      <div class="tl-final" id="tlFinal">
+        <div>
+          <p class="dock" id="tlDock">这个人的一天，有多少动作其实不需要人做？</p>
+          <p class="kicker">百鲸咨询 · AI落地</p>
+          <h1>不是教你用AI，<br>是陪你把它<span class="u">用出结果</span>。</h1>
+          <p class="hero-svc">AI培训 · 提效咨询 · FDE落地实施</p>
+          <p class="hero-geo">杭州 · 到场半径两小时（沪苏浙皖）</p>
+          <div class="hero-actions">
+            <a class="btn btn-dark" href="#wechat" data-book>预约诊断 <span class="min">30 MIN</span> <span class="arw">→</span></a>
+            <a class="btn btn-ghost" href="#wechat">或扫码加微信</a>
+          </div>
+        </div>
+        <figure class="stamp hero-stamp" id="tlStamp">
+          <img src="assets/qr.jpg" alt="刘诠案的微信二维码" width="400" height="400">
+          <figcaption>加的时候说一句<br>你公司里那个人是谁。<small>微信扫一扫</small></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <button class="tl-ctrl" id="tlSkip" type="button">跳过动画 →</button>
+  <button class="tl-ctrl" id="tlReplay" type="button" hidden>↻ 重播</button>
+</section>
+
+<section class="specband" aria-label="服务概览">
+  <div class="wrap">
+    <dl class="spec">
+      <div><dt>服务</dt><dd>AI培训 · 提效咨询 · FDE落地实施</dd></div>
+      <div><dt>覆盖</dt><dd>沪苏浙皖</dd></div>
+      <div><dt>到场</dt><dd>杭州出发 · 半径两小时</dd></div>
+      <div><dt>验收</dt><dd>看哪个动作被替换了</dd></div>
+    </dl>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span><a href="https://g.baijingzixun.top">百鲸G系统</a> · <a href="https://jingxuan-worker.pages.dev">鲸选工作台</a></span>
+    <span>AI培训 · 提效咨询 · FDE落地实施 ｜ 到场半径两小时</span>
+    <a href="https://beian.miit.gov.cn" rel="noopener">浙ICP备2023042992号</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var hero = document.getElementById('tlHero');
+  var stage = document.getElementById('tlStage');
+  var track = document.getElementById('tlTrack');
+  var play = document.getElementById('tlPlay');
+  var clock = document.getElementById('tlClock');
+  var q = document.getElementById('tlQ');
+  var dock = document.getElementById('tlDock');
+  var skip = document.getElementById('tlSkip');
+  var replay = document.getElementById('tlReplay');
+  var evs = [].slice.call(document.querySelectorAll('.tl-ev'));
+
+  var START = 9, END = 18;
+  var DUR = 5800, HOLD = 3000, TAIL = 520;
+  var raf = null, timer1 = null, timer2 = null, t0 = 0;
+
+  function place() {
+    var w = stage.clientWidth || 900;
+    var trackW = Math.max(1120, Math.round(w * 1.62));
+    var pad = Math.max(84, Math.round(w * 0.13));
+    var span = trackW - pad * 2;
+    track.style.width = trackW + 'px';
+    evs.forEach(function (el) {
+      var t = parseFloat(el.getAttribute('data-t'));
+      el.style.left = (pad + (t - START) / (END - START) * span) + 'px';
+    });
+    [].slice.call(track.querySelectorAll('.tl-hr')).forEach(function (n) { n.remove(); });
+    for (var h = START; h <= END; h++) {
+      var s = document.createElement('span');
+      s.className = 'tl-hr';
+      s.textContent = (h < 10 ? '0' : '') + h + ':00';
+      s.style.left = (pad + (h - START) / (END - START) * span) + 'px';
+      track.appendChild(s);
+    }
+    return { w: w, trackW: trackW, pad: pad, span: span };
+  }
+
+  function fmt(hours) {
+    var h = Math.floor(hours), m = Math.round((hours - h) * 60);
+    if (m === 60) { h++; m = 0; }
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+
+  function render(p, m) {
+    var hours = START + p * (END - START);
+    var x = m.pad + p * m.span;
+    play.style.left = x + 'px';
+    clock.textContent = fmt(hours);
+    track.style.transform = 'translateX(' + Math.min(0, Math.max(m.w - m.trackW, m.w / 2 - x)) + 'px)';
+    evs.forEach(function (el) {
+      el.classList.toggle('on', hours >= parseFloat(el.getAttribute('data-t')) - 0.02);
+    });
+    var cur = Math.floor(hours);
+    [].slice.call(track.querySelectorAll('.tl-hr')).forEach(function (n, i) {
+      n.classList.toggle('now', START + i === cur);
+    });
+  }
+
+  function reset() {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    clearTimeout(timer1); clearTimeout(timer2);
+    hero.classList.remove('at-statement', 'at-final');
+    q.classList.remove('show');
+    q.style.transform = ''; q.style.opacity = ''; q.style.transformOrigin = '';
+  }
+
+  function toFinal() {
+    var a = q.getBoundingClientRect();
+    var b = dock.getBoundingClientRect();
+    if (a.width && b.width) {
+      var scale = Math.max(0.08, b.width / a.width);
+      q.style.transformOrigin = 'center center';
+      q.style.transform = 'translate(' + ((b.left + b.width / 2) - (a.left + a.width / 2)) + 'px,' +
+        ((b.top + b.height / 2) - (a.top + a.height / 2)) + 'px) scale(' + scale + ')';
+      q.style.opacity = '0';
+    }
+    hero.classList.add('at-final');
+    q.classList.remove('show');
+    skip.hidden = true;
+    replay.hidden = false;
+  }
+
+  function jump() { /* 直接落到最终态（跳过 / 减弱动效 / 兜底） */
+    clearTimeout(timer1); clearTimeout(timer2);
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    hero.classList.add('at-statement');
+    q.classList.remove('show');
+    q.style.transform = ''; q.style.opacity = '';
+    setTimeout(toFinal, 80);
+  }
+
+  function run() {
+    reset();
+    skip.hidden = false; replay.hidden = true;
+    var m = place();
+    render(0, m);
+    t0 = performance.now();
+    (function step(now) {
+      var p = Math.min(1, (now - t0) / DUR);
+      render(p, m);
+      if (p < 1) { raf = requestAnimationFrame(step); return; }
+      raf = null;
+      timer1 = setTimeout(function () {
+        hero.classList.add('at-statement');
+        q.classList.add('show');
+        timer2 = setTimeout(toFinal, HOLD);
+      }, TAIL);
+    })(t0);
+  }
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced) document.documentElement.classList.add('js-intro');
+
+  skip.addEventListener('click', jump);
+  replay.addEventListener('click', run);
+  window.addEventListener('resize', function () {
+    if (!hero.classList.contains('at-final')) render(0, place());
+  });
+
+  if (reduced) { hero.classList.add('at-final'); } else { run(); }
+  setTimeout(function () { if (!hero.classList.contains('at-final')) jump(); }, 14000);
+})();
+</script>
+<script src="booking.js" defer></script>
+</body>
+</html>

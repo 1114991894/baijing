@@ -301,7 +301,7 @@ ${excerpt ? `    <p class="lead" style="margin-top:18px;">${escapeHtml(excerpt)}
 
 <footer class="foot">
   <div class="wrap foot-in">
-    <span>百鲸咨询 · 杭州</span>
+    <span><a href="https://g.baijingzixun.top">百鲸G系统</a> · <a href="https://jingxuan-worker.pages.dev">鲸选工作台</a></span>
     <span>AI培训 · 提效咨询 · FDE落地实施 ｜ 到场半径两小时</span>
     <a href="https://beian.miit.gov.cn" rel="noopener">浙ICP备2023042992号</a>
   </div>
