@@ -56,7 +56,7 @@
           <i class="fas fa-lock text-primary text-2xl"></i>
         </div>
         <h1 class="text-2xl font-bold text-secondary">管理后台</h1>
-        <p class="text-sm text-secondary/50 mt-2">请登录以管理文章与客户信息</p>
+        <p class="text-sm text-secondary/50 mt-2">请登录以管理文章与预约线索</p>
       </div>
       <form id="loginForm" class="space-y-4">
         <div>
@@ -87,7 +87,7 @@
         </div>
         <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
           <button id="navList" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-list mr-1"></i>文章列表</button>
-          <button id="navLeads" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-chart-bar mr-1"></i>信息统计</button>
+          <button id="navLeads" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-user-check mr-1"></i>预约线索<span id="leadsBadge" class="hidden ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white text-[11px] font-bold align-middle"></span></button>
           <button id="navAdd" class="btn-primary text-sm flex items-center gap-2"><i class="fas fa-plus mr-1"></i>添加文章</button>
           <a href="../index.html" target="_blank" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-home mr-1"></i>查看首页</a>
           <span id="adminEmail" class="text-sm text-secondary/60 hidden sm:inline truncate max-w-[160px]"></span>
@@ -154,8 +154,20 @@
       <section id="leads-view" class="tab-view hidden">
         <div class="bg-white rounded-2xl shadow-elevated border border-neutral/20 overflow-hidden">
           <div class="p-4 border-b border-neutral/20 flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center">
-            <p class="text-sm text-secondary/60"><i class="fas fa-info-circle text-accent mr-1.5"></i>来自首页移动端「免费企业诊断」表单的提交记录</p>
-            <button id="leadsRefreshBtn" class="text-sm text-secondary hover:text-primary px-3 py-1.5 rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap"><i class="fas fa-sync-alt mr-1"></i>刷新</button>
+            <p class="text-sm text-secondary/60"><i class="fas fa-info-circle text-accent mr-1.5"></i>来自首页「预约诊断」表单的提交记录，实时写入 Supabase</p>
+            <div class="flex items-center gap-2 flex-wrap">
+              <select id="leadsStatusFilter" class="form-input text-sm py-1.5 w-auto">
+                <option value="all">全部状态</option>
+                <option value="new">待跟进</option>
+                <option value="contacted">已联系</option>
+              </select>
+              <div class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-secondary/40 text-xs"></i>
+                <input type="text" id="leadsSearchInput" placeholder="搜索公司 / 联系人 / 手机号" class="form-input pl-9 text-sm py-1.5 w-full sm:w-52">
+              </div>
+              <button id="leadsExportBtn" class="text-sm text-secondary hover:text-primary px-3 py-1.5 rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap"><i class="fas fa-download mr-1"></i>导出 CSV</button>
+              <button id="leadsRefreshBtn" class="text-sm text-secondary hover:text-primary px-3 py-1.5 rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap"><i class="fas fa-sync-alt mr-1"></i>刷新</button>
+            </div>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full min-w-[900px]">
@@ -179,7 +191,7 @@
           </div>
           <div id="leadsEmpty" class="hidden py-16 text-center text-secondary/50">
             <i class="fas fa-inbox text-4xl mb-4 text-secondary/30"></i>
-            <p class="text-lg">暂无诊断申请</p>
+            <p class="text-lg">暂无预约申请</p>
           </div>
           <div id="leadsErrorState" class="hidden py-16 text-center text-red-500">
             <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
@@ -359,6 +371,7 @@
       document.getElementById('adminEmail').textContent = user.email || '管理员';
       if (!listenersBound) { setupAdminListeners(); listenersBound = true; }
       loadArticles();
+      loadLeads();
     }
 
     // ===================== 后台事件 =====================
@@ -371,6 +384,9 @@
       document.getElementById('navList').addEventListener('click', switchToListView);
       document.getElementById('navLeads').addEventListener('click', switchToLeadsView);
       document.getElementById('leadsRefreshBtn').addEventListener('click', loadLeads);
+      document.getElementById('leadsStatusFilter').addEventListener('change', () => renderLeads(getFilteredLeads()));
+      document.getElementById('leadsSearchInput').addEventListener('input', () => renderLeads(getFilteredLeads()));
+      document.getElementById('leadsExportBtn').addEventListener('click', exportLeadsCsv);
       document.getElementById('cancelBtn').addEventListener('click', switchToListView);
       document.getElementById('articleForm').addEventListener('submit', handleFormSubmit);
       document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
@@ -539,8 +555,8 @@
     function switchToLeadsView() {
       document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
       document.getElementById('leads-view').classList.remove('hidden');
-      document.getElementById('pageTitle').textContent = '信息统计';
-      document.getElementById('pageSubtitle').textContent = '首页移动端「免费企业诊断」表单收集的潜在客户信息';
+      document.getElementById('pageTitle').textContent = '预约线索';
+      document.getElementById('pageSubtitle').textContent = '首页「预约诊断」表单收集的潜在客户信息';
       document.getElementById('articleCount').classList.add('hidden');
       loadLeads();
     }
@@ -553,7 +569,8 @@
         const { data, error } = await supabaseClient.from('diagnosis_leads').select('*').order('created_at', { ascending: false });
         if (error) throw error;
         leads = data || [];
-        renderLeads(leads);
+        renderLeads(getFilteredLeads());
+        updateLeadsBadge();
       } catch (err) {
         console.error('加载诊断信息失败：', err);
         const isMissing = err && (err.code === 'PGRST205' || err.code === '42P01' || /does not exist|Could not find the table/i.test(err.message || ''));
@@ -561,6 +578,41 @@
         document.getElementById('leadsErrorState').classList.remove('hidden');
         body.innerHTML = '';
       }
+    }
+    function getFilteredLeads() {
+      const q = (document.getElementById('leadsSearchInput').value || '').trim().toLowerCase();
+      const st = document.getElementById('leadsStatusFilter').value;
+      return leads.filter(l => {
+        if (st !== 'all' && (l.status || 'new') !== st) return false;
+        if (!q) return true;
+        return [l.company, l.contact_name, l.phone, l.city].some(v => String(v || '').toLowerCase().indexOf(q) !== -1);
+      });
+    }
+    function updateLeadsBadge() {
+      const badge = document.getElementById('leadsBadge');
+      const n = leads.filter(l => (l.status || 'new') !== 'contacted').length;
+      if (n > 0) { badge.textContent = n > 99 ? '99+' : String(n); badge.classList.remove('hidden'); }
+      else { badge.textContent = ''; badge.classList.add('hidden'); }
+    }
+    function exportLeadsCsv() {
+      const rows = getFilteredLeads();
+      if (!rows.length) { showToast('当前筛选下没有可导出的线索', 'error'); return; }
+      const esc = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      const header = ['提交时间', '公司', '城市', '联系人', '手机号', '员工数', '需求', '状态'];
+      const lines = [header.map(esc).join(',')].concat(rows.map(l => [
+        l.created_at ? formatDateTime(l.created_at) : '',
+        l.company, l.city, l.contact_name, l.phone, l.employee_count, l.requirement,
+        (l.status || 'new') === 'contacted' ? '已联系' : '待跟进'
+      ].map(esc).join(',')));
+      const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = '预约线索_' + new Date().toISOString().slice(0, 10) + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+      showToast('已导出 ' + rows.length + ' 条线索');
     }
     function renderLeads(data) {
       const body = document.getElementById('leadsTableBody');
@@ -597,7 +649,7 @@
       if (error) { showToast('更新失败：' + error.message, 'error'); return; }
       showToast(status === 'contacted' ? '已标记为已联系' : '已标记为待跟进');
       const item = leads.find(l => l.id === id);
-      if (item) { item.status = status; renderLeads(leads); }
+      if (item) { item.status = status; renderLeads(getFilteredLeads()); updateLeadsBadge(); }
     }
     function formatDateTime(s) {
       if (!s) return '-';
