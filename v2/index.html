@@ -46,24 +46,109 @@
   </div>
 </header>
 
-<!-- 第一屏：三秒读完 -->
-<section class="hero">
-  <div class="wrap hero-in">
-    <div class="hero-main">
-      <p class="kicker">百鲸咨询 · AI落地</p>
-      <h1>不是教你用AI，<br>是陪你把它<span class="u">用出结果</span>。</h1>
-      <p class="hero-svc">AI培训 · 提效咨询 · FDE落地实施</p>
-      <p class="hero-geo">杭州 · 到场半径两小时（沪苏浙皖）</p>
-      <div class="hero-actions">
-        <a class="btn btn-dark" href="#wechat" data-book>预约诊断 <span class="min">30 MIN</span> <span class="arw">→</span></a>
-        <a class="btn btn-ghost" href="#wechat">或扫码加微信</a>
+<!-- 第一屏：四幕 —— 一天 → 一年 → 算账 → 落点 -->
+<noscript><style>
+  .st-hero .st-final { opacity: 1 !important; transform: none !important; pointer-events: auto !important; }
+  .st-hero .st-a1, .st-hero .st-a2, .st-hero .st-ctrl { display: none !important; }
+</style></noscript>
+<section class="st-hero" id="stHero" data-act="1" data-persist="1" aria-label="首屏">
+  <div class="wrap">
+    <div class="st-stack">
+
+      <!-- 幕一：一天 -->
+      <div class="st-act st-a1" id="stA1">
+        <div class="st-count" id="stC1">
+          <div class="num"><span id="n1">0</span><i>次</i></div>
+          <p class="label">今天 · 复制粘贴</p>
+          <p class="fine">按一个跟单员一天的典型动作估算</p>
+        </div>
+
+        <div class="st-tl" id="stTl">
+          <div class="st-track" id="stTrack">
+            <div class="st-axis"></div>
+            <div class="st-ev up" data-t="9.2"><span class="stem"></span><span class="dot"></span>
+              <time>9:12</time><p>打开 ERP，把订单号复制到 Excel</p></div>
+            <div class="st-ev down" data-t="11.417"><span class="stem"></span><span class="dot"></span>
+              <time>11:25</time><p>客户改单，回到 ERP 重查</p></div>
+            <div class="st-ev up" data-t="14.05"><span class="stem"></span><span class="dot"></span>
+              <time>14:03</time><p>把三张表的数据粘进汇报模板</p></div>
+            <div class="st-ev down" data-t="17.833"><span class="stem"></span><span class="dot"></span>
+              <time>17:50</time><p>加班，因为白天的时间都在搬运</p></div>
+            <div class="st-play" id="stPlay"><span class="st-clock" id="stClock">09:00</span></div>
+          </div>
+        </div>
+
+        <p class="st-say" id="stSay1">他今天做的 <b>41 次</b>复制粘贴，<br>明天还会再做 41 次。</p>
       </div>
+
+      <!-- 幕二 / 三：一年、算账 -->
+      <div class="st-act st-a2" id="stA2">
+        <div class="st-year">
+          <div class="st-side">
+            <div class="st-count">
+              <div class="num"><span id="n2">41</span><i>次</i></div>
+              <p class="label" style="color:var(--teal)">一年 · 同一个动作</p>
+              <p class="fine">41 次/天 × 250 个工作日</p>
+            </div>
+            <p class="st-say" id="stSay2">一年，一万次。这个岗位还在，这个人也还在。<br>但这一万次，没有一次产生新东西。</p>
+
+            <ul class="st-cats" id="stCats">
+              <li><span class="tag t1">信息搬运</span><em>ERP 到 Excel，Excel 到邮件 —— 机器可以做</em></li>
+              <li><span class="tag t2">规则判断</span><em>这单能不能改、改到哪一步 —— 规则写清楚，机器可以做</em></li>
+              <li><span class="tag t3">经验依赖</span><em>这个客户什么脾气、这单该不该让 —— 这个得留给人</em></li>
+            </ul>
+
+            <p class="st-punch" id="stPunch">一万次里，大多数不是这个人的价值。<br><b>是他的成本。</b></p>
+          </div>
+
+          <div class="st-gridwrap">
+            <canvas id="stGrid" role="img" aria-label="一年 250 个工作日，每个格子代表一天"></canvas>
+            <p class="st-cap">250 个工作日 · 一格一天 · 每天 41 次</p>
+            <div class="st-person" id="stPerson" aria-hidden="true">
+              <svg width="46" height="62" viewBox="0 0 46 62" fill="none">
+                <circle cx="23" cy="12" r="8" stroke="#161B1D" stroke-width="2.2"/>
+                <path d="M9 58c0-9.4 6.3-17 14-17s14 7.6 14 17" stroke="#161B1D" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <p class="st-land" id="stLand">把人从搬运里拿出来，放回判断里。
+          <span>一周之内，我们能指出你公司里该被替换的是哪个动作。</span></p>
+      </div>
+
+      <!-- 落点 -->
+      <div class="st-final" id="stFinal">
+        <div>
+          <p class="kicker">百鲸咨询 · AI落地</p>
+          <h1 id="stH1">把人从搬运里拿出来，<br>放回判断里。</h1>
+          <p class="brand-line">不是教你用AI，是陪你把它用出结果。</p>
+          <p class="hero-svc">AI培训 · 提效咨询 · FDE落地实施</p>
+          <p class="hero-geo">杭州 · 到场半径两小时（沪苏浙皖）</p>
+          <div class="hero-actions">
+            <a class="btn btn-dark" href="#wechat" data-book>预约诊断 <span class="min">30 MIN</span> <span class="arw">→</span></a>
+            <a class="btn btn-ghost" href="#wechat">或扫码加微信</a>
+          </div>
+
+          <div class="m-cta">
+            <div class="qrbox">
+              <img src="assets/qr.jpg" alt="刘诠案的微信二维码">
+              <p>长按识别二维码加微信<br><b>说一句：我们公司那个每天复制粘贴的人是谁。</b></p>
+            </div>
+          </div>
+        </div>
+
+        <figure class="stamp">
+          <img src="assets/qr.jpg" alt="刘诠案的微信二维码" width="400" height="400">
+          <figcaption>加的时候说一句<br>你公司里，那个每天<br>复制粘贴的人是谁。<small>微信扫一扫</small></figcaption>
+        </figure>
+      </div>
+
     </div>
-    <figure class="stamp hero-stamp">
-      <img src="assets/qr.jpg" alt="刘诠案的微信二维码" width="400" height="400">
-      <figcaption>加的时候说一句<br>你最头疼的环节。<small>微信扫一扫</small></figcaption>
-    </figure>
   </div>
+
+  <button class="st-ctrl" id="stSkip" type="button">跳过 →</button>
+  <button class="st-ctrl" id="stReplay" type="button" hidden>↻ 重播</button>
 </section>
 
 <!-- 服务规格带 -->
@@ -168,6 +253,280 @@
   </div>
 </footer>
 
+<script>
+/* 首屏四幕：一天 → 一年 → 算账 → 落点。只播一次，可跳过，8 秒后才给跳过按钮。 */
+(function () {
+  var hero = document.getElementById('stHero');
+  if (!hero) return;
+  var n1 = document.getElementById('n1');
+  var c1 = document.getElementById('stC1');
+  var tl = document.getElementById('stTl');
+  var track = document.getElementById('stTrack');
+  var play = document.getElementById('stPlay');
+  var clock = document.getElementById('stClock');
+  var say1 = document.getElementById('stSay1');
+  var n2 = document.getElementById('n2');
+  var say2 = document.getElementById('stSay2');
+  var cats = [].slice.call(document.querySelectorAll('#stCats li'));
+  var punch = document.getElementById('stPunch');
+  var land = document.getElementById('stLand');
+  var person = document.getElementById('stPerson');
+  var h1 = document.getElementById('stH1');
+  var skip = document.getElementById('stSkip');
+  var replay = document.getElementById('stReplay');
+  var canvas = document.getElementById('stGrid');
+  var evs = [].slice.call(document.querySelectorAll('.st-ev'));
+
+  var START = 9, END = 18;
+  var MILESTONES = [1, 7, 23, 41];
+  var EVT = [9.2, 11.417, 14.05, 17.833];
+  var DAYS = 250, PER_DAY = 41;
+
+  var isMobile = window.matchMedia('(max-width: 860px)').matches;
+  // 桌面 21.5s 完整版；移动端 13s（第三幕只留标签，砍掉说明句）
+  var T = isMobile
+    ? { tl: 2300, s1: 3200, in2: 3200, fill: 3400, fend: 5800, s2: 5900,
+        b1: 6900, b2: 7400, b3: 7900, pk: 8400, a4: 9600, dock: 11200, end: 13000, skipAt: 5000 }
+    : { tl: 5200, s1: 5200, in2: 6500, fill: 6800, fend: 11200, s2: 11500,
+        b1: 14000, b2: 14700, b3: 15400, pk: 16600, a4: 18900, dock: 19800, end: 21500, skipAt: 8000 };
+
+  var cat = new Array(DAYS).fill(3);
+  (function () {                                    // 60% 搬运 / 26% 规则 / 14% 留给人
+    var idx = [], i;
+    for (i = 0; i < DAYS; i++) idx.push(i);
+    var seed = 20261019;
+    function rnd() { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }
+    for (i = idx.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)); var t = idx[i]; idx[i] = idx[j]; idx[j] = t; }
+    idx.forEach(function (v, k) { cat[v] = k < 150 ? 1 : k < 215 ? 2 : 3; });
+  })();
+
+  var geom = null, ctx = canvas.getContext('2d');
+  var grayP = [0, 0, 0], gone = 0, litDays = 0, ended = false, raf = null, startedAt = 0;
+
+  function setupCanvas() {
+    var w = canvas.parentNode.clientWidth || 600;
+    var cols = 25, rows = Math.ceil(DAYS / cols);
+    var gap = Math.max(3, Math.min(7, Math.round(w * 0.006)));
+    var cell = (w - gap * (cols - 1)) / cols;
+    var h = rows * cell + gap * (rows - 1);
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    geom = { w: w, cols: cols, rows: rows, gap: gap, cell: cell };
+    draw();
+  }
+
+  function draw() {
+    if (!geom) return;
+    var g = geom;
+    ctx.clearRect(0, 0, g.w, canvas.height);
+    for (var i = 0; i < DAYS; i++) {
+      var r = Math.floor(i / g.cols), c = i % g.cols;
+      var x = c * (g.cell + g.gap), y = r * (g.cell + g.gap);
+      var k = cat[i];
+      if (k !== 3 && grayP[k] > 0.99) continue;
+      if (k !== 3 && grayP[k] > 0) {
+        ctx.fillStyle = 'rgba(150,142,124,' + (0.34 * grayP[k]) + ')';
+        ctx.fillRect(x, y, g.cell, g.cell);
+        continue;
+      }
+      if (i < litDays) {
+        var a = .42 + .5 * (((i * 37) % 23) / 23);
+        ctx.fillStyle = 'rgba(20,96,77,' + a.toFixed(3) + ')';
+        ctx.fillRect(x, y, g.cell, g.cell);
+      } else {
+        ctx.strokeStyle = 'rgba(27,35,32,.13)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + .5, y + .5, g.cell - 1, g.cell - 1);
+      }
+    }
+  }
+
+  /* 幕一：时间轴 */
+  function place() {
+    var w = tl.clientWidth || 900;
+    var trackW = Math.max(1120, Math.round(w * 1.55));
+    var pad = Math.max(80, Math.round(w * 0.12));
+    var span = trackW - pad * 2;
+    track.style.width = trackW + 'px';
+    evs.forEach(function (el) {
+      el.style.left = (pad + (parseFloat(el.getAttribute('data-t')) - START) / (END - START) * span) + 'px';
+    });
+    [].slice.call(track.querySelectorAll('.st-hr')).forEach(function (n) { n.remove(); });
+    for (var h = START; h <= END; h++) {
+      var s = document.createElement('span');
+      s.className = 'st-hr';
+      s.textContent = (h < 10 ? '0' : '') + h + ':00';
+      s.style.left = (pad + (h - START) / (END - START) * span) + 'px';
+      track.appendChild(s);
+    }
+    return { w: w, trackW: trackW, pad: pad, span: span };
+  }
+  function fmt(hours) {
+    var h = Math.floor(hours), m = Math.round((hours - h) * 60);
+    if (m === 60) { h++; m = 0; }
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+  function tlRender(p, m) {
+    var hours = START + p * (END - START), x = m.pad + p * m.span;
+    play.style.left = x + 'px';
+    clock.textContent = fmt(hours);
+    track.style.transform = 'translateX(' + Math.min(0, Math.max(m.w - m.trackW, m.w / 2 - x)) + 'px)';
+    evs.forEach(function (el, i) {
+      var on = hours >= EVT[i] - 0.02;
+      if (on && !el.classList.contains('on')) {
+        el.classList.add('on');
+        var v = MILESTONES[i];
+        if (n1.textContent !== String(v)) {
+          n1.textContent = v;
+          c1.classList.remove('pop'); void c1.offsetWidth; c1.classList.add('pop');
+        }
+      }
+    });
+    var cur = Math.floor(hours);
+    [].slice.call(track.querySelectorAll('.st-hr')).forEach(function (n, i) {
+      n.classList.toggle('now', START + i === cur);
+    });
+  }
+
+  /* 主时钟 */
+  var beats = [
+    { at: T.s1, fn: function () { n1.textContent = '41'; c1.classList.add('pop'); say1.classList.add('on'); } },
+    { at: T.in2, fn: function () { hero.setAttribute('data-act', '2'); say1.classList.remove('on'); } },
+    { at: T.s2, fn: function () { say2.classList.add('on'); } },
+    { at: T.b1, fn: function () { cats[0].classList.add('on'); } },
+    { at: T.b2, fn: function () { cats[1].classList.add('on'); } },
+    { at: T.b3, fn: function () { cats[2].classList.add('on'); } },
+    { at: T.pk, fn: function () { punch.classList.add('on'); } },
+    { at: T.a4, fn: function () { hero.setAttribute('data-act', '4'); punch.classList.remove('on'); person.classList.add('on'); } },
+    { at: T.a4 + 300, fn: function () { land.classList.add('on'); } },
+    { at: T.skipAt, fn: function () { skip.classList.add('show'); } },
+    { at: T.dock, fn: function () { dock(); } }
+  ];
+  var fired = [];
+
+  function dock() {
+    var a = land.getBoundingClientRect();
+    var b = h1.getBoundingClientRect();
+    if (a.width && b.width) {
+      var s = Math.max(.35, Math.min(1.2, b.width / a.width));
+      land.style.transformOrigin = 'center center';
+      land.style.transform = 'translate(' + ((b.left + b.width / 2) - (a.left + a.width / 2)) + 'px,' +
+        ((b.top + b.height / 2) - (a.top + a.height / 2)) + 'px) scale(' + s + ')';
+      land.style.opacity = '0';
+    }
+    hero.setAttribute('data-act', 'done');
+    skip.classList.remove('show');
+    replay.hidden = false; replay.classList.add('show');
+    ended = true;
+  }
+
+  var geomTl = null;
+
+  function drawGone() {
+    if (!geom) return;
+    var g = geom;
+    ctx.clearRect(0, 0, g.w, canvas.height);
+    for (var i = 0; i < DAYS; i++) {
+      var r = Math.floor(i / g.cols), c = i % g.cols;
+      var x = c * (g.cell + g.gap), y = r * (g.cell + g.gap);
+      if (cat[i] !== 3) {
+        var al = 0.34 * (1 - gone);
+        if (al > 0.01) { ctx.fillStyle = 'rgba(150,142,124,' + al + ')'; ctx.fillRect(x, y, g.cell, g.cell); }
+        continue;
+      }
+      var a = .42 + .5 * (((i * 37) % 23) / 23);
+      ctx.fillStyle = 'rgba(20,96,77,' + a.toFixed(3) + ')';
+      ctx.fillRect(x, y, g.cell, g.cell);
+    }
+  }
+
+  function frame(now) {
+    var t = now - startedAt;
+    if (t < T.tl + 40) tlRender(Math.min(1, t / T.tl), geomTl);
+    if (t > T.fill - 40 && t < T.fend + 120) {
+      var p = Math.max(0, Math.min(1, (t - T.fill) / (T.fend - T.fill)));
+      litDays = Math.round(DAYS * Math.pow(p, 1.55));
+      n2.textContent = (PER_DAY * litDays).toLocaleString('en-US');
+      draw();
+    }
+    var gs = [0, T.b1, T.b2, 0];
+    for (var k = 1; k <= 2; k++) {
+      var q = Math.max(0, Math.min(1, (t - gs[k]) / 520));
+      if (q !== grayP[k]) { grayP[k] = q; draw(); }
+    }
+    if (t >= T.a4) {
+      var g2 = Math.max(0, Math.min(1, (t - T.a4 - 200) / 500));
+      if (g2 > gone) { gone = g2; drawGone(); }
+    }
+    for (var i = 0; i < beats.length; i++) {
+      if (!fired[i] && t >= beats[i].at) { fired[i] = 1; beats[i].fn(); }
+    }
+    if (t < T.end + 400) raf = requestAnimationFrame(frame); else raf = null;
+  }
+
+  function reset() {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    fired = []; ended = false;
+    grayP = [0, 0, 0]; gone = 0; litDays = 0;
+    hero.setAttribute('data-act', '1');
+    say1.classList.remove('on'); say2.classList.remove('on');
+    cats.forEach(function (li) { li.classList.remove('on'); });
+    punch.classList.remove('on'); land.classList.remove('on');
+    land.style.transform = ''; land.style.opacity = '';
+    person.classList.remove('on');
+    skip.classList.remove('show'); replay.hidden = true; replay.classList.remove('show');
+    n1.textContent = '0'; n2.textContent = '41';
+    evs.forEach(function (el) { el.classList.remove('on'); });
+    geomTl = place();
+    tlRender(0, geomTl);
+    setupCanvas();
+  }
+
+  function start() {
+    reset();
+    startedAt = performance.now();
+    raf = requestAnimationFrame(frame);
+  }
+
+  function finish() {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    fired = beats.map(function () { return 1; });
+    litDays = DAYS; n2.textContent = (PER_DAY * DAYS).toLocaleString('en-US');
+    grayP = [0, 1, 1]; gone = 1;
+    hero.setAttribute('data-act', 'done');
+    skip.classList.remove('show');
+    replay.hidden = false; replay.classList.add('show');
+    person.classList.add('on');
+    drawGone();
+    ended = true;
+  }
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  skip.addEventListener('click', finish);
+  replay.addEventListener('click', start);
+  var rz;
+  window.addEventListener('resize', function () {
+    clearTimeout(rz);
+    rz = setTimeout(function () { geomTl = place(); if (!ended) tlRender(0, geomTl); setupCanvas(); }, 160);
+  });
+
+  var persist = hero.getAttribute('data-persist') === '1';
+  var seen = persist && (function () { try { return sessionStorage.getItem('bj_hero_v2') === '1'; } catch (e) { return false; } })();
+
+  geomTl = place();
+  tlRender(0, geomTl);
+  setupCanvas();
+
+  if (reduced || seen) { finish(); }
+  else {
+    start();
+    setTimeout(function () { if (persist) { try { sessionStorage.setItem('bj_hero_v2', '1'); } catch (e) {} } }, T.end);
+  }
+})();
+</script>
 <script src="booking.js" defer></script>
 </body>
 </html>

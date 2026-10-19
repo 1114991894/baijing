@@ -25,6 +25,7 @@ import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readd
 import { join, dirname } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { execFileSync } from 'child_process';
+import { tmpdir } from 'os';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = __dirname;
@@ -34,10 +35,10 @@ const SITE_URL = 'https://baijingzixun.top';
 
 // v2 站点的内容版本日期（内容有实质改动时手动更新，不要用构建当天日期，
 // 否则每次 CI 都会把所有页面的 lastmod 刷成当天，对搜索引擎是噪声）
-const V2_REV = '2026-10-18';
+const V2_REV = '2026-10-19';
 // 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
 // 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
-const ASSET_VER = '20261018-2';
+const ASSET_VER = '20261019-1';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -80,7 +81,9 @@ const V2_ASSETS = ['styles.css', 'booking.js', 'assets/logo.png', 'assets/qr.jpg
   'assets/favicon.png', 'assets/apple-touch-icon.png'];
 
 function copyV2Site() {
-  const pages = readdirSync(V2).filter(f => f.endsWith('.html'));
+  // 以 _ 开头的文件、以及 *-preview.html 是本地效果图/草稿，不发布
+  const pages = readdirSync(V2).filter(f =>
+    f.endsWith('.html') && !f.startsWith('_') && !f.endsWith('-preview.html'));
   for (const f of [...pages, ...V2_ASSETS]) {
     const src = join(V2, f);
     const dest = join(DIST, f);
@@ -366,19 +369,17 @@ function localizeExternalAssets() {
 
   if (!hasTailwindPages) return;
 
-  const inputPath = join(DIST, '.tailwind-input.css');
+  // 中间文件写到系统临时目录：放 dist 里还要删一次，而本机 fs 的删除会被
+  // safe-delete shim 接管（偶发 ETIMEDOUT 直接让构建失败）
+  const inputPath = join(tmpdir(), `baijing-tailwind-${process.pid}-${Date.now()}.css`);
   writeFileSync(inputPath, tailwindInput);
-  try {
-    execFileSync(process.execPath, [
-      join(ROOT, 'node_modules', 'tailwindcss', 'lib', 'cli.js'),
-      '-c', join(ROOT, 'tailwind.config.cjs'),
-      '-i', inputPath,
-      '-o', join(DIST, 'tailwind.css'),
-      '--minify'
-    ], { cwd: ROOT, stdio: 'inherit' });
-  } finally {
-    if (existsSync(inputPath)) unlinkSync(inputPath);
-  }
+  execFileSync(process.execPath, [
+    join(ROOT, 'node_modules', 'tailwindcss', 'lib', 'cli.js'),
+    '-c', join(ROOT, 'tailwind.config.cjs'),
+    '-i', inputPath,
+    '-o', join(DIST, 'tailwind.css'),
+    '--minify'
+  ], { cwd: ROOT, stdio: 'inherit' });
 }
 
 function generateSitemap(articles, stories = []) {

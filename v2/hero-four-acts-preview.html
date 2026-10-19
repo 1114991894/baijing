@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>效果预览 · 四幕：一天 → 一年 → 算账</title>
+<meta name="description" content="首屏四幕动效效果预览，未上线。">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ================= 四幕首屏 ================= */
+.st-hero { position: relative; overflow: hidden; padding: clamp(20px, 3.6vh, 38px) 0 clamp(26px, 4vh, 40px); }
+.st-stack { position: relative; display: grid; grid-template-columns: 1fr; min-height: clamp(380px, 56vh, 500px); }
+.st-stack > .st-act, .st-stack > .st-final { grid-column: 1; grid-row: 1; align-self: center;
+  transition: opacity .55s ease, transform .55s ease; }
+
+/* 幕的显隐 */
+.st-hero .st-a2, .st-hero .st-final { opacity: 0; transform: translateY(8px); pointer-events: none; }
+.st-hero[data-act="2"] .st-a1,
+.st-hero[data-act="3"] .st-a1,
+.st-hero[data-act="4"] .st-a1,
+.st-hero[data-act="done"] .st-a1 { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+.st-hero[data-act="2"] .st-a2,
+.st-hero[data-act="3"] .st-a2,
+.st-hero[data-act="4"] .st-a2 { opacity: 1; transform: none; }
+.st-hero[data-act="done"] .st-a2 { opacity: 1; transform: none; pointer-events: none; }
+.st-hero[data-act="done"] .st-side { opacity: 0; transition: opacity .9s ease; }
+.st-hero[data-act="done"] .st-gridwrap { opacity: .1; transform: scale(.985);
+  transition: opacity 1.3s ease, transform 1.3s ease; }
+.st-hero[data-act="done"] .st-cap { opacity: 0; }
+.st-hero[data-act="done"] .st-final { opacity: 1; transform: none; pointer-events: auto; }
+
+/* ---------- 幕一 ---------- */
+.st-count { position: absolute; left: 0; top: 0; z-index: 3; }
+.st-count .num { display: flex; align-items: baseline; gap: 6px; }
+.st-count .num span { font-family: var(--serif); font-size: clamp(46px, 6.4vw, 68px);
+  line-height: 1; letter-spacing: -.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.st-count .num i { font-style: normal; font-family: var(--mono); font-size: 12px;
+  color: var(--muted); letter-spacing: .12em; }
+.st-count .label { margin-top: 8px; font-family: var(--mono); font-size: 11.5px;
+  color: var(--rust); letter-spacing: .12em; }
+.st-count .fine { margin-top: 4px; font-family: var(--mono); font-size: 10.5px;
+  color: var(--muted); letter-spacing: .04em; }
+.st-count.pop .num span { animation: pop .32s ease; }
+@keyframes pop { 0% { transform: translateY(3px); opacity: .45 } 100% { transform: none; opacity: 1 } }
+
+.st-tl { position: relative; height: clamp(250px, 36vh, 340px); margin-top: 46px; overflow: hidden; }
+.st-track { position: absolute; top: 0; left: 0; height: 100%; will-change: transform; }
+.st-axis { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line-2); }
+.st-hr { position: absolute; top: 50%; transform: translateX(-50%); font-family: var(--mono);
+  font-size: 11px; color: var(--muted); letter-spacing: .05em; padding-top: 12px; white-space: nowrap;
+  transition: color .3s; }
+.st-hr::before { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 6px;
+  background: var(--line-2); transform: translateX(-50%); }
+.st-hr.now { color: var(--teal); font-weight: 700; }
+.st-hr.now::before { background: var(--teal); }
+.st-play { position: absolute; top: 50%; width: 1px; height: 84px; margin-top: -42px;
+  background: linear-gradient(180deg, rgba(20,96,77,0), rgba(20,96,77,.5), rgba(20,96,77,0)); }
+.st-play::after { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px;
+  margin: -4px 0 0 -4px; border-radius: 50%; background: var(--teal);
+  box-shadow: 0 0 0 4px rgba(20,96,77,.1); }
+.st-clock { position: absolute; left: 50%; top: -30px; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 11.5px; font-weight: 700; color: var(--teal); letter-spacing: .08em; }
+
+.st-ev { position: absolute; width: 200px; transform: translateX(-50%); text-align: center;
+  opacity: .22; transition: opacity .5s ease; }
+.st-ev.up { bottom: calc(50% + 46px); }
+.st-ev.down { top: calc(50% + 46px); }
+.st-ev .dot { position: absolute; left: 50%; width: 7px; height: 7px; border-radius: 50%;
+  border: 1px solid var(--line-2); background: var(--paper); transform: translateX(-50%);
+  transition: all .4s ease; }
+.st-ev.up .dot { bottom: -50px; }
+.st-ev.down .dot { top: -50px; }
+.st-ev .stem { position: absolute; left: 50%; width: 1px; background: var(--line); transition: background .4s; }
+.st-ev.up .stem { bottom: -43px; height: 34px; }
+.st-ev.down .stem { top: -43px; height: 34px; }
+.st-ev time { display: block; font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+  color: var(--muted); letter-spacing: .08em; margin-bottom: 4px; transition: color .4s; }
+.st-ev p { font-size: 14px; line-height: 1.6; color: var(--ink-2); transition: color .4s; }
+.st-ev.on { opacity: 1; }
+.st-ev.on .dot { border-color: var(--teal); background: var(--teal); box-shadow: 0 0 0 5px rgba(20,96,77,.1); }
+.st-ev.on .stem { background: var(--teal); }
+.st-ev.on time { color: var(--teal); }
+.st-ev.on p { color: var(--ink); font-weight: 600; }
+
+.st-say { font-family: var(--serif); font-size: clamp(19px, 2.5vw, 27px); line-height: 1.55;
+  color: var(--ink); text-align: center; opacity: 0; transform: translateY(6px);
+  transition: opacity .6s ease, transform .6s ease; text-wrap: balance; }
+.st-say.on { opacity: 1; transform: none; }
+.st-say b { color: var(--teal); font-weight: 400; }
+.st-a1 .st-say { position: absolute; left: 0; right: 0; bottom: 2px; }
+
+/* ---------- 幕二 / 三 ---------- */
+.st-year { display: grid; grid-template-columns: 300px 1fr; gap: clamp(24px, 4vw, 54px); align-items: center; }
+.st-side .st-count { position: static; }
+.st-gridwrap { position: relative; }
+#stGrid { display: block; width: 100%; height: auto; }
+.st-cap { margin-top: 10px; font-family: var(--mono); font-size: 10.5px; color: var(--muted);
+  letter-spacing: .06em; }
+
+.st-side .st-say { text-align: left; margin-top: 22px; font-size: clamp(15px, 1.7vw, 19px);
+  line-height: 1.62; }
+.st-side .st-count .num span { font-size: clamp(38px, 4.6vw, 54px); }
+
+.st-cats { list-style: none; margin-top: 18px; }
+.st-cats li { display: flex; gap: 10px; align-items: flex-start; padding: 11px 0;
+  border-top: 1px solid var(--line); opacity: 0; transform: translateY(6px);
+  transition: opacity .45s ease, transform .45s ease; }
+.st-cats li:last-child { border-bottom: 1px solid var(--line); }
+.st-cats li.on { opacity: 1; transform: none; }
+.st-cats .tag { flex: none; font-family: var(--mono); font-size: 11px; letter-spacing: .06em;
+  padding: 2px 7px; border-radius: 2px; margin-top: 2px; }
+.st-cats .t1 { background: var(--rust-soft); color: var(--rust); }
+.st-cats .t2 { background: #E7EBEE; color: #33566B; }
+.st-cats .t3 { background: var(--teal-soft); color: var(--teal-ink); }
+.st-cats em { font-style: normal; font-size: 13px; line-height: 1.65; color: var(--ink-2); }
+
+.st-punch { font-family: var(--serif); font-size: clamp(19px, 2.3vw, 26px); line-height: 1.5;
+  color: var(--ink); margin-top: 22px; opacity: 0; transform: translateY(8px);
+  transition: opacity .6s ease, transform .6s ease; }
+.st-punch.on { opacity: 1; transform: none; }
+.st-punch b { color: var(--rust); font-weight: 400; }
+
+.st-land { font-family: var(--serif); font-size: clamp(21px, 2.6vw, 30px); line-height: 1.5;
+  text-align: center; color: var(--ink); opacity: 0;
+  transition: opacity .55s ease, transform .9s cubic-bezier(.4,0,.2,1);
+  position: absolute; left: 50%; bottom: 4px; transform: translate(-50%, 8px); width: min(92%, 720px); }
+.st-land.on { opacity: 1; transform: translate(-50%, 0); }
+.st-land span { display: block; margin-top: 12px; font-family: var(--sans); font-size: 14px;
+  color: var(--muted); line-height: 1.7; }
+
+.st-person { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(.9);
+  opacity: 0; transition: opacity .6s ease, transform .8s cubic-bezier(.2,.7,.3,1);
+  background: radial-gradient(closest-side, var(--paper) 58%, rgba(246,243,236,0) 100%);
+  padding: 10px 18px; }
+.st-person.on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.st-person svg { display: block; }
+
+/* 跳过 / 重播 */
+.st-ctrl { position: absolute; right: 16px; bottom: 4px; z-index: 9;
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em; color: var(--muted);
+  background: none; border: 0; cursor: pointer; padding: 8px 10px; opacity: 0;
+  transition: opacity .4s; }
+.st-ctrl.show { opacity: 1; }
+.st-ctrl:hover { color: var(--ink); }
+.st-ctrl[hidden] { display: none; }
+
+/* ---------- 落点 ---------- */
+.st-final { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; }
+.st-final .kicker { margin-bottom: 12px; }
+.st-final h1 { font-size: clamp(28px, 4.1vw, 44px); line-height: 1.26; }
+.st-final .brand-line { margin-top: 14px; font-family: var(--serif); font-size: 17px; color: var(--ink-2); }
+.st-final .hero-svc { margin-top: 14px; }
+.st-final .hero-geo { margin-top: 6px; }
+.st-final .stamp { transform: rotate(1.6deg); }
+.st-final .stamp figcaption { font-size: 12.5px; }
+.st-final .stamp figcaption small { margin-top: 4px; }
+.st-final .m-cta { display: none; }
+
+@media (max-width: 860px) {
+  .st-stack { min-height: 0; }
+  .st-year { grid-template-columns: 1fr; gap: 18px; }
+  .st-side .st-count .num span { font-size: 44px; }
+  .st-tl { height: 230px; margin-top: 72px; }
+  .st-ev { width: 148px; }
+  .st-ev p { font-size: 12.5px; line-height: 1.5; }
+  .st-ev time { font-size: 10.5px; }
+  .st-ev .stem { display: none; }
+  .st-ev.up .dot { bottom: -46px; }
+  .st-ev.down .dot { top: -46px; }
+  .st-a1 .st-say { position: static; margin-top: 18px; font-size: 18px; }
+  .st-final { grid-template-columns: 1fr; gap: 22px; }
+  .st-final h1 { font-size: clamp(24px, 6.5vw, 29px); }
+  .st-final .stamp { display: none; }
+  .st-final .m-cta { display: block; margin-top: 18px; }
+  .st-final .m-cta .qrbox { display: flex; align-items: center; gap: 14px; }
+  .st-final .m-cta img { width: 104px; border: 1px solid var(--line-2); border-radius: 4px; flex: none; }
+  .st-final .m-cta p { font-size: 12.5px; color: var(--muted); line-height: 1.65; }
+  .st-land { position: static; width: auto; transform: translateY(8px); }
+  .st-land.on { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .st-stack > *, .st-say, .st-cats li, .st-punch, .st-land, .st-person { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="pv-bar">效果预览 · <b>四幕：一天 → 一年 → 算账 → 落点</b> · 未上线 · 右下角「跳过 / 重播」</div>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="index.html"><img src="assets/logo.png" alt="百鲸咨询" width="85" height="30"></a>
+    <nav class="topnav" aria-label="站内页面">
+      <a href="ai-training.html">AI培训</a>
+      <a href="efficiency.html">提效咨询</a>
+      <a class="nav-hot" href="stories.html">翻车实录</a>
+    </nav>
+  </div>
+</header>
+
+<section class="st-hero" id="stHero" data-act="1" data-persist="0">
+  <div class="wrap">
+    <div class="st-stack">
+
+      <!-- 幕一 -->
+      <div class="st-act st-a1" id="stA1">
+        <div class="st-count" id="stC1">
+          <div class="num"><span id="n1">0</span><i>次</i></div>
+          <p class="label">今天 · 复制粘贴</p>
+          <p class="fine">按一个跟单员一天的典型动作估算</p>
+        </div>
+
+        <div class="st-tl" id="stTl">
+          <div class="st-track" id="stTrack">
+            <div class="st-axis"></div>
+            <div class="st-ev up" data-t="9.2"><span class="stem"></span><span class="dot"></span>
+              <time>9:12</time><p>打开 ERP，把订单号复制到 Excel</p></div>
+            <div class="st-ev down" data-t="11.417"><span class="stem"></span><span class="dot"></span>
+              <time>11:25</time><p>客户改单，回到 ERP 重查</p></div>
+            <div class="st-ev up" data-t="14.05"><span class="stem"></span><span class="dot"></span>
+              <time>14:03</time><p>把三张表的数据粘进汇报模板</p></div>
+            <div class="st-ev down" data-t="17.833"><span class="stem"></span><span class="dot"></span>
+              <time>17:50</time><p>加班，因为白天的时间都在搬运</p></div>
+            <div class="st-play" id="stPlay"><span class="st-clock" id="stClock">09:00</span></div>
+          </div>
+        </div>
+
+        <p class="st-say" id="stSay1">他今天做的 <b>41 次</b>复制粘贴，<br>明天还会再做 41 次。</p>
+      </div>
+
+      <!-- 幕二 / 三 -->
+      <div class="st-act st-a2" id="stA2">
+        <div class="st-year">
+          <div class="st-side">
+            <div class="st-count">
+              <div class="num"><span id="n2">41</span><i>次</i></div>
+              <p class="label" style="color:var(--teal)">一年 · 同一个动作</p>
+              <p class="fine">41 次/天 × 250 个工作日</p>
+            </div>
+            <p class="st-say" id="stSay2">一年，一万次。这个岗位还在，这个人也还在。<br>但这一万次，没有一次产生新东西。</p>
+
+            <ul class="st-cats" id="stCats">
+              <li><span class="tag t1">信息搬运</span><em>ERP 到 Excel，Excel 到邮件 —— 机器可以做</em></li>
+              <li><span class="tag t2">规则判断</span><em>这单能不能改、改到哪一步 —— 规则写清楚，机器可以做</em></li>
+              <li><span class="tag t3">经验依赖</span><em>这个客户什么脾气、这单该不该让 —— 这个得留给人</em></li>
+            </ul>
+
+            <p class="st-punch" id="stPunch">一万次里，大多数不是这个人的价值。<br><b>是他的成本。</b></p>
+          </div>
+
+          <div class="st-gridwrap">
+            <canvas id="stGrid" role="img" aria-label="一年 250 个工作日，每个格子代表一天"></canvas>
+            <p class="st-cap">250 个工作日 · 一格一天 · 每天 41 次</p>
+            <div class="st-person" id="stPerson" aria-hidden="true">
+              <svg width="46" height="62" viewBox="0 0 46 62" fill="none">
+                <circle cx="23" cy="12" r="8" stroke="#161B1D" stroke-width="2.2"/>
+                <path d="M9 58c0-9.4 6.3-17 14-17s14 7.6 14 17" stroke="#161B1D" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <p class="st-land" id="stLand">把人从搬运里拿出来，放回判断里。
+          <span>一周之内，我们能指出你公司里该被替换的是哪个动作。</span></p>
+      </div>
+
+      <!-- 落点 -->
+      <div class="st-final" id="stFinal">
+        <div>
+          <p class="kicker">百鲸咨询 · AI落地</p>
+          <h1 id="stH1">把人从搬运里拿出来，<br>放回判断里。</h1>
+          <p class="brand-line">不是教你用AI，是陪你把它用出结果。</p>
+          <p class="hero-svc">AI培训 · 提效咨询 · FDE落地实施</p>
+          <p class="hero-geo">杭州 · 到场半径两小时（沪苏浙皖）</p>
+          <div class="hero-actions">
+            <a class="btn btn-dark" href="#wechat" data-book>预约诊断 <span class="min">30 MIN</span> <span class="arw">→</span></a>
+            <a class="btn btn-ghost" href="#wechat">或扫码加微信</a>
+          </div>
+
+          <div class="m-cta">
+            <div class="qrbox">
+              <img src="assets/qr.jpg" alt="刘诠案的微信二维码">
+              <p>长按识别二维码加微信<br><b>说一句：我们公司那个每天复制粘贴的人是谁。</b></p>
+            </div>
+          </div>
+        </div>
+
+        <figure class="stamp">
+          <img src="assets/qr.jpg" alt="刘诠案的微信二维码" width="400" height="400">
+          <figcaption>加的时候说一句<br>你公司里，那个每天<br>复制粘贴的人是谁。<small>微信扫一扫</small></figcaption>
+        </figure>
+      </div>
+
+    </div>
+  </div>
+
+  <button class="st-ctrl" id="stSkip" type="button">跳过 →</button>
+  <button class="st-ctrl" id="stReplay" type="button" hidden>↻ 重播</button>
+</section>
+
+<section class="specband" aria-label="服务概览">
+  <div class="wrap">
+    <dl class="spec">
+      <div><dt>服务</dt><dd>AI培训 · 提效咨询 · FDE落地实施</dd></div>
+      <div><dt>覆盖</dt><dd>沪苏浙皖</dd></div>
+      <div><dt>到场</dt><dd>杭州出发 · 半径两小时</dd></div>
+      <div><dt>验收</dt><dd>看哪个动作被替换了</dd></div>
+    </dl>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>百鲸咨询 · 杭州</span>
+    <span>AI培训 · 提效咨询 · FDE落地实施 ｜ 到场半径两小时</span>
+    <a href="https://beian.miit.gov.cn" rel="noopener">浙ICP备2023042992号</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var hero = document.getElementById('stHero');
+  var n1 = document.getElementById('n1');
+  var c1 = document.getElementById('stC1');
+  var tl = document.getElementById('stTl');
+  var track = document.getElementById('stTrack');
+  var play = document.getElementById('stPlay');
+  var clock = document.getElementById('stClock');
+  var say1 = document.getElementById('stSay1');
+  var n2 = document.getElementById('n2');
+  var say2 = document.getElementById('stSay2');
+  var cats = [].slice.call(document.querySelectorAll('#stCats li'));
+  var punch = document.getElementById('stPunch');
+  var land = document.getElementById('stLand');
+  var person = document.getElementById('stPerson');
+  var h1 = document.getElementById('stH1');
+  var skip = document.getElementById('stSkip');
+  var replay = document.getElementById('stReplay');
+  var canvas = document.getElementById('stGrid');
+  var evs = [].slice.call(document.querySelectorAll('.st-ev'));
+
+  var START = 9, END = 18;
+  var MILESTONES = [1, 7, 23, 41];
+  var EVT = [9.2, 11.417, 14.05, 17.833];
+  var DAYS = 250, PER_DAY = 41;
+
+  var isMobile = window.matchMedia('(max-width: 860px)').matches;
+  // 桌面 20.5s 完整版；移动端 13s（第三幕只留标签，砍掉说明句）
+  var T = isMobile
+    ? { tl: 2300, s1: 3200, in2: 3200, fill: 3400, fend: 5800, s2: 5900,
+        b1: 6900, b2: 7400, b3: 7900, pk: 8400, a4: 9600, dock: 11200, end: 13000, skipAt: 5000 }
+    : { tl: 5200, s1: 5200, in2: 6500, fill: 6800, fend: 11200, s2: 11500,
+        b1: 14000, b2: 14700, b3: 15400, pk: 16600, a4: 18900, dock: 19800, end: 21500, skipAt: 8000 };
+
+  var cat = new Array(DAYS).fill(3);
+  (function () {                                    // 60% 搬运 / 26% 规则 / 14% 留给人
+    var idx = [], i;
+    for (i = 0; i < DAYS; i++) idx.push(i);
+    var seed = 20261019;
+    function rnd() { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }
+    for (i = idx.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)); var t = idx[i]; idx[i] = idx[j]; idx[j] = t; }
+    idx.forEach(function (v, k) { cat[v] = k < 150 ? 1 : k < 215 ? 2 : 3; });
+  })();
+
+  var geom = null, ctx = canvas.getContext('2d');
+  var grayP = [0, 0, 0], gone = 0, litDays = 0, ended = false, raf = null, startedAt = 0;
+
+  function setupCanvas() {
+    var w = canvas.parentNode.clientWidth || 600;
+    var cols = 25, rows = Math.ceil(DAYS / cols);
+    var gap = Math.max(3, Math.min(7, Math.round(w * 0.006)));
+    var cell = (w - gap * (cols - 1)) / cols;
+    var h = rows * cell + gap * (rows - 1);
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    geom = { w: w, cols: cols, rows: rows, gap: gap, cell: cell };
+    draw();
+  }
+
+  function draw() {
+    if (!geom) return;
+    var g = geom;
+    ctx.clearRect(0, 0, g.w, canvas.height);
+    for (var i = 0; i < DAYS; i++) {
+      var r = Math.floor(i / g.cols), c = i % g.cols;
+      var x = c * (g.cell + g.gap), y = r * (g.cell + g.gap);
+      var k = cat[i];
+      if (k !== 3 && grayP[k] > 0.99) continue;
+      if (k !== 3 && grayP[k] > 0) {
+        ctx.fillStyle = 'rgba(150,142,124,' + (0.34 * grayP[k]) + ')';
+        ctx.fillRect(x, y, g.cell, g.cell);
+        continue;
+      }
+      if (i < litDays) {
+        var a = .42 + .5 * (((i * 37) % 23) / 23);
+        ctx.fillStyle = 'rgba(20,96,77,' + a.toFixed(3) + ')';
+        ctx.fillRect(x, y, g.cell, g.cell);
+      } else {
+        ctx.strokeStyle = 'rgba(27,35,32,.13)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + .5, y + .5, g.cell - 1, g.cell - 1);
+      }
+    }
+  }
+
+  /* 幕一：时间轴 */
+  function place() {
+    var w = tl.clientWidth || 900;
+    var trackW = Math.max(1120, Math.round(w * 1.55));
+    var pad = Math.max(80, Math.round(w * 0.12));
+    var span = trackW - pad * 2;
+    track.style.width = trackW + 'px';
+    evs.forEach(function (el) {
+      el.style.left = (pad + (parseFloat(el.getAttribute('data-t')) - START) / (END - START) * span) + 'px';
+    });
+    [].slice.call(track.querySelectorAll('.st-hr')).forEach(function (n) { n.remove(); });
+    for (var h = START; h <= END; h++) {
+      var s = document.createElement('span');
+      s.className = 'st-hr';
+      s.textContent = (h < 10 ? '0' : '') + h + ':00';
+      s.style.left = (pad + (h - START) / (END - START) * span) + 'px';
+      track.appendChild(s);
+    }
+    return { w: w, trackW: trackW, pad: pad, span: span };
+  }
+  function fmt(hours) {
+    var h = Math.floor(hours), m = Math.round((hours - h) * 60);
+    if (m === 60) { h++; m = 0; }
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+  function tlRender(p, m) {
+    var hours = START + p * (END - START), x = m.pad + p * m.span;
+    play.style.left = x + 'px';
+    clock.textContent = fmt(hours);
+    track.style.transform = 'translateX(' + Math.min(0, Math.max(m.w - m.trackW, m.w / 2 - x)) + 'px)';
+    evs.forEach(function (el, i) {
+      var on = hours >= EVT[i] - 0.02;
+      if (on && !el.classList.contains('on')) {
+        el.classList.add('on');
+        var v = MILESTONES[i];
+        if (n1.textContent !== String(v)) {
+          n1.textContent = v;
+          c1.classList.remove('pop'); void c1.offsetWidth; c1.classList.add('pop');
+        }
+      }
+    });
+    var cur = Math.floor(hours);
+    [].slice.call(track.querySelectorAll('.st-hr')).forEach(function (n, i) {
+      n.classList.toggle('now', START + i === cur);
+    });
+  }
+
+  /* 主时钟 */
+  var beats = [
+    { at: T.s1, fn: function () { n1.textContent = '41'; c1.classList.add('pop'); say1.classList.add('on'); } },
+    { at: T.in2, fn: function () { hero.setAttribute('data-act', '2'); say1.classList.remove('on'); } },
+    { at: T.s2, fn: function () { say2.classList.add('on'); } },
+    { at: T.b1, fn: function () { cats[0].classList.add('on'); } },
+    { at: T.b2, fn: function () { cats[1].classList.add('on'); } },
+    { at: T.b3, fn: function () { cats[2].classList.add('on'); } },
+    { at: T.pk, fn: function () { punch.classList.add('on'); } },
+    { at: T.a4, fn: function () { hero.setAttribute('data-act', '4'); punch.classList.remove('on'); person.classList.add('on'); } },
+    { at: T.a4 + 300, fn: function () { land.classList.add('on'); } },
+    { at: T.skipAt, fn: function () { skip.classList.add('show'); } },
+    { at: T.dock, fn: function () { dock(); } }
+  ];
+  var fired = [];
+
+  function dock() {
+    var a = land.getBoundingClientRect();
+    var b = h1.getBoundingClientRect();
+    if (a.width && b.width) {
+      var s = Math.max(.35, Math.min(1.2, b.width / a.width));
+      land.style.transformOrigin = 'center center';
+      land.style.transform = 'translate(' + ((b.left + b.width / 2) - (a.left + a.width / 2)) + 'px,' +
+        ((b.top + b.height / 2) - (a.top + a.height / 2)) + 'px) scale(' + s + ')';
+      land.style.opacity = '0';
+    }
+    hero.setAttribute('data-act', 'done');
+    skip.classList.remove('show');
+    replay.hidden = false; replay.classList.add('show');
+    ended = true;
+  }
+
+  var geomTl = null;
+
+  function drawGone() {
+    if (!geom) return;
+    var g = geom;
+    ctx.clearRect(0, 0, g.w, canvas.height);
+    for (var i = 0; i < DAYS; i++) {
+      var r = Math.floor(i / g.cols), c = i % g.cols;
+      var x = c * (g.cell + g.gap), y = r * (g.cell + g.gap);
+      if (cat[i] !== 3) {
+        var al = 0.34 * (1 - gone);
+        if (al > 0.01) { ctx.fillStyle = 'rgba(150,142,124,' + al + ')'; ctx.fillRect(x, y, g.cell, g.cell); }
+        continue;
+      }
+      var a = .42 + .5 * (((i * 37) % 23) / 23);
+      ctx.fillStyle = 'rgba(20,96,77,' + a.toFixed(3) + ')';
+      ctx.fillRect(x, y, g.cell, g.cell);
+    }
+  }
+
+  function frame(now) {
+    var t = now - startedAt;
+    if (t < T.tl + 40) tlRender(Math.min(1, t / T.tl), geomTl);
+    if (t > T.fill - 40 && t < T.fend + 120) {
+      var p = Math.max(0, Math.min(1, (t - T.fill) / (T.fend - T.fill)));
+      litDays = Math.round(DAYS * Math.pow(p, 1.55));
+      n2.textContent = (PER_DAY * litDays).toLocaleString('en-US');
+      draw();
+    }
+    var gs = [0, T.b1, T.b2, 0];
+    for (var k = 1; k <= 2; k++) {
+      var q = Math.max(0, Math.min(1, (t - gs[k]) / 520));
+      if (q !== grayP[k]) { grayP[k] = q; draw(); }
+    }
+    if (t >= T.a4) {
+      var g2 = Math.max(0, Math.min(1, (t - T.a4 - 200) / 500));
+      if (g2 > gone) { gone = g2; drawGone(); }
+    }
+    for (var i = 0; i < beats.length; i++) {
+      if (!fired[i] && t >= beats[i].at) { fired[i] = 1; beats[i].fn(); }
+    }
+    if (t < T.end + 400) raf = requestAnimationFrame(frame); else raf = null;
+  }
+
+  function reset() {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    fired = []; ended = false;
+    grayP = [0, 0, 0]; gone = 0; litDays = 0;
+    hero.setAttribute('data-act', '1');
+    say1.classList.remove('on'); say2.classList.remove('on');
+    cats.forEach(function (li) { li.classList.remove('on'); });
+    punch.classList.remove('on'); land.classList.remove('on');
+    land.style.transform = ''; land.style.opacity = '';
+    person.classList.remove('on');
+    skip.classList.remove('show'); replay.hidden = true; replay.classList.remove('show');
+    n1.textContent = '0'; n2.textContent = '41';
+    evs.forEach(function (el) { el.classList.remove('on'); });
+    geomTl = place();
+    tlRender(0, geomTl);
+    setupCanvas();
+  }
+
+  function start() {
+    reset();
+    startedAt = performance.now();
+    raf = requestAnimationFrame(frame);
+  }
+
+  function finish() {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    fired = beats.map(function () { return 1; });
+    litDays = DAYS; n2.textContent = (PER_DAY * DAYS).toLocaleString('en-US');
+    grayP = [0, 1, 1]; gone = 1;
+    hero.setAttribute('data-act', 'done');
+    skip.classList.remove('show');
+    replay.hidden = false; replay.classList.add('show');
+    person.classList.add('on');
+    drawGone();
+    ended = true;
+  }
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  skip.addEventListener('click', finish);
+  replay.addEventListener('click', start);
+  var rz;
+  window.addEventListener('resize', function () {
+    clearTimeout(rz);
+    rz = setTimeout(function () { geomTl = place(); if (!ended) tlRender(0, geomTl); setupCanvas(); }, 160);
+  });
+
+  var persist = hero.getAttribute('data-persist') === '1';
+  var seen = persist && (function () { try { return sessionStorage.getItem('bj_hero_v2') === '1'; } catch (e) { return false; } })();
+
+  geomTl = place();
+  tlRender(0, geomTl);
+  setupCanvas();
+
+  if (reduced || seen) { finish(); }
+  else {
+    start();
+    setTimeout(function () { if (persist) { try { sessionStorage.setItem('bj_hero_v2', '1'); } catch (e) {} } }, T.end);
+  }
+})();
+</script>
+<script src="booking.js" defer></script>
+</body>
+</html>

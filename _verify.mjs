@@ -41,10 +41,12 @@ async function audit(page, url, label, viewport) {
     desc: (document.querySelector('meta[name=description]') || {}).content || '',
     ld: document.querySelectorAll('script[type="application/ld+json"]').length,
     qr: (() => {
-      const img = document.querySelector('.stamp img');
-      if (!img) return null;
-      const r = img.getBoundingClientRect();
-      return { top: Math.round(r.top + scrollY), bottom: Math.round(r.bottom + scrollY), w: Math.round(r.width) };
+      const imgs = [].slice.call(document.querySelectorAll('.stamp img, .m-cta img'));
+      for (const img of imgs) {
+        const r = img.getBoundingClientRect();
+        if (r.width > 0) return { top: Math.round(r.top + scrollY), bottom: Math.round(r.bottom + scrollY), w: Math.round(r.width) };
+      }
+      return null;
     })(),
     topbarSticky: (() => {
       const t = document.querySelector('.topbar');
