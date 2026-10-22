@@ -590,15 +590,16 @@ p { color: var(--ink-2); text-wrap: pretty; }
 /* 分享图预览层 */
 .sc-overlay { position: fixed; inset: 0; z-index: 120; display: none; align-items: center; justify-content: center; background: rgba(22,27,29,.74); padding: 18px; }
 .sc-overlay.on { display: flex; }
-.sc-panel { background: var(--paper-2); border-radius: 12px; width: 100%; max-width: 420px; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; }
-.sc-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 700; color: var(--ink); }
+.sc-panel { background: var(--paper-2); border-radius: 12px; width: 100%; max-width: 720px; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; }
+.sc-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 700; color: var(--ink); flex: none; }
 .sc-bar button { border: none; background: none; font-size: 16px; color: var(--muted); cursor: pointer; padding: 4px 8px; line-height: 1; }
 .sc-bar button:hover { color: var(--ink); }
-.sc-stage { overflow: auto; padding: 14px; background: var(--paper); text-align: center; }
-.sc-stage img { display: inline-block; max-width: 100%; max-height: 64vh; width: auto; height: auto; border: 1px solid var(--line); }
-.sc-tip { font-size: 12.5px; color: var(--muted); line-height: 1.7; padding: 12px 16px 16px; }
+.sc-stage { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 14px; background: var(--paper); text-align: center; -webkit-overflow-scrolling: touch; }
+.sc-stage img { display: block; width: 100%; height: auto; margin: 0 auto; border: 1px solid var(--line); }
+.sc-tip { font-size: 12.5px; color: var(--muted); line-height: 1.7; padding: 12px 16px 16px; flex: none; }
 @media (max-width: 560px) {
-  .sc-stage img { max-height: 58vh; }
+  .sc-overlay { padding: 10px; }
+  .sc-stage { padding: 8px; }
 }
 
 /* 正文排版：历史文章页（/article/*.html）由 build.mjs 注入富文本 HTML */

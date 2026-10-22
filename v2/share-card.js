@@ -309,7 +309,9 @@
     document.getElementById('scImg').src = url;
     document.getElementById('scTip').textContent = isWx
       ? '长按图片 → 保存到手机，发朋友圈时选择这张图'
-      : '在图片上点右键 →「图片另存为」，保存到本地后发朋友圈';
+      : isTouch
+        ? '长按图片保存到手机。提示：在系统分享面板里选「朋友圈」可直达朋友圈编辑；选「微信」只会进入聊天选择，发朋友圈请选「朋友圈」'
+        : '在图片上点右键 →「图片另存为」，保存到本地后发朋友圈';
     ov.classList.add('on');
     document.body.style.overflow = 'hidden';
   }
@@ -362,9 +364,14 @@
         showPreview(URL.createObjectURL(blob), data);
       })
       .catch(function (err) {
-        if (err && err.name === 'AbortError') return;   // 用户在系统面板里主动取消
-        if (blob) showPreview(URL.createObjectURL(blob), data);
-        else alert('图片生成失败，请稍后再试一次');
+        if (err && err.name === 'AbortError') {
+          // 用户在系统分享面板点了取消 → 仍弹预览层，方便长按保存
+          if (blob) showPreview(URL.createObjectURL(blob), data);
+        } else if (blob) {
+          showPreview(URL.createObjectURL(blob), data);
+        } else {
+          alert('图片生成失败，请稍后再试一次');
+        }
       })
       .then(function () {
         busy = false;
