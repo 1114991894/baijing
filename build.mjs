@@ -78,7 +78,8 @@ async function fetchArticles() {
    不需要再回来改这里
    ------------------------------------------------------------------ */
 const V2_ASSETS = ['styles.css', 'booking.js', 'share-card.js', 'assets/logo.png', 'assets/qr.jpg',
-  'assets/favicon.png', 'assets/apple-touch-icon.png', 'assets/share-logo.png'];
+  'assets/favicon.png', 'assets/apple-touch-icon.png', 'assets/share-logo.png',
+  'assets/cropper.min.css', 'assets/cropper.min.js'];
 
 function copyV2Site() {
   // 以 _ 开头的文件、以及 *-preview.html 是本地效果图/草稿，不发布
@@ -346,6 +347,12 @@ function localizeExternalAssets() {
       const next = html
         .replace(/<script\s+src="https:\/\/cdn\.tailwindcss\.com"><\/script>/g, '<link rel="stylesheet" href="/tailwind.css">')
         .replace(/<link\b[^>]*href="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/6\.5\.1\/css\/all\.min\.css"[^>]*>/g, '<link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">')
+        // admin 后台：境外 CDN 在国内不稳（supabase-js 挂起会导致登录无响应），全部本地化
+        .replace(/<script\s+src="https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@2"><\/script>/g, '<script src="/assets/supabase.js"></script>')
+        .replace(/<script\s+src="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/cropperjs\/1\.6\.1\/cropper\.min\.js"><\/script>/g, '<script src="/assets/cropper.min.js"></script>')
+        .replace(/<link\b[^>]*href="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/cropperjs\/1\.6\.1\/cropper\.min\.css"[^>]*>/g, '<link rel="stylesheet" href="/assets/cropper.min.css">')
+        // Google Fonts 在国内常挂起且会阻塞后续脚本执行，直接移除（回退系统字体）
+        .replace(/<link\b[^>]*fonts\.googleapis\.com[^>]*>/g, '')
         .replace(/<script>\s*tailwind\.config\s*=[\s\S]*?<\/script>/g, '');
       if (next === html) continue;
 
@@ -367,6 +374,12 @@ function localizeExternalAssets() {
     mkdirSync(cssDir, { recursive: true });
     copyFileSync(join(fontAwesomeDir, 'css', 'all.min.css'), join(cssDir, 'all.min.css'));
     copyDir(join(fontAwesomeDir, 'webfonts'), join(DIST, 'assets', 'fontawesome', 'webfonts'));
+  }
+
+  // admin 后台的 supabase-js 本地化（构建依赖 node_modules，Actions 云端同样可用）
+  const supabaseUmd = join(ROOT, 'node_modules', '@supabase', 'supabase-js', 'dist', 'umd', 'supabase.js');
+  if (existsSync(supabaseUmd)) {
+    copyFileSync(supabaseUmd, join(DIST, 'assets', 'supabase.js'));
   }
 
   if (!hasTailwindPages) return;

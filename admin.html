@@ -341,8 +341,10 @@
 
     // ===================== 认证 =====================
     async function checkSession() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (session) showAdminUI(session.user); else showAuthUI();
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) showAdminUI(session.user); else showAuthUI();
+      } catch (e) { showAuthUI(); }
     }
     function setupAuthListeners() {
       document.getElementById('loginForm').addEventListener('submit', handleLogin);
@@ -357,8 +359,11 @@
       const password = document.getElementById('loginPassword').value;
       const errEl = document.getElementById('authError');
       errEl.classList.add('hidden');
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) { errEl.textContent = '登录失败：' + error.message; errEl.classList.remove('hidden'); }
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password }).catch(err => ({ error: err }));
+      if (error) {
+        errEl.textContent = '登录失败：' + (error.message || '网络异常') + '。若持续失败，请更换网络后重试';
+        errEl.classList.remove('hidden');
+      }
     }
     async function handleLogout() { await supabaseClient.auth.signOut(); showAuthUI(); }
     function showAuthUI() {
