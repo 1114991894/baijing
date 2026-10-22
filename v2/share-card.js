@@ -319,8 +319,21 @@
     var ov = document.getElementById('scOverlay');
     ov.classList.remove('on');
     document.body.style.overflow = '';
-    var img = document.getElementById('scImg');
-    if (img.src.indexOf('blob:') === 0) { URL.revokeObjectURL(img.src); img.removeAttribute('src'); }
+    document.getElementById('scImg').removeAttribute('src');
+  }
+
+  /* blob → dataURL：安卓微信/多数安卓浏览器不支持长按保存 blob: 图片，
+     data: 地址的长按保存兼容性最好 */
+  function blobToDataUrl(blob) {
+    return new Promise(function (res, rej) {
+      var r = new FileReader();
+      r.onload = function () { res(r.result); };
+      r.onerror = function () { rej(new Error('read failed')); };
+      r.readAsDataURL(blob);
+    });
+  }
+  function previewBlob(blob, data) {
+    return blobToDataUrl(blob).then(function (dataUrl) { showPreview(dataUrl, data); });
   }
 
   /* ---------- 系统分享（移动端原生面板） ---------- */
@@ -360,18 +373,13 @@
         return null;
       })
       .then(function (r) {
-        if (r === 'shared') return;
-        showPreview(URL.createObjectURL(blob), data);
+        if (r === 'shared') return null;
+        return previewBlob(blob, data);
       })
       .catch(function (err) {
-        if (err && err.name === 'AbortError') {
-          // 用户在系统分享面板点了取消 → 仍弹预览层，方便长按保存
-          if (blob) showPreview(URL.createObjectURL(blob), data);
-        } else if (blob) {
-          showPreview(URL.createObjectURL(blob), data);
-        } else {
-          alert('图片生成失败，请稍后再试一次');
-        }
+        if (!blob) { alert('图片生成失败，请稍后再试一次'); return; }
+        // 分享失败 / 用户在系统面板取消（AbortError）→ 都回落预览层，长按保存
+        previewBlob(blob, data).catch(function () { alert('图片生成失败，请稍后再试一次'); });
       })
       .then(function () {
         busy = false;

@@ -38,7 +38,7 @@ const SITE_URL = 'https://baijingzixun.top';
 const V2_REV = '2026-10-19';
 // 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
 // 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
-const ASSET_VER = '20261022-3';
+const ASSET_VER = '20261022-4';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -320,7 +320,8 @@ function addCacheBusting() {
     const html = readFileSync(p, 'utf8');
     const next = html
       .replace(/(href="\/?)styles\.css(")/g, `$1styles.css?v=${ASSET_VER}$2`)
-      .replace(/(src="\/?)booking\.js(")/g, `$1booking.js?v=${ASSET_VER}$2`);
+      .replace(/(src="\/?)booking\.js(")/g, `$1booking.js?v=${ASSET_VER}$2`)
+      .replace(/(src="\/?)share-card\.js(")/g, `$1share-card.js?v=${ASSET_VER}$2`);
     if (next !== html) writeFileSync(p, next);
   }
 }
