@@ -85,6 +85,7 @@ const html = `<!DOCTYPE html>
 })}</script>
 </head>
 <body>
+<img src="/assets/share-logo.png" alt="" width="500" height="500" aria-hidden="true" style="position:absolute;left:-9999px;top:0;">
 
 <header class="topbar">
   <div class="wrap topbar-in">

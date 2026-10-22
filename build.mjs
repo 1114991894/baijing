@@ -78,7 +78,7 @@ async function fetchArticles() {
    不需要再回来改这里
    ------------------------------------------------------------------ */
 const V2_ASSETS = ['styles.css', 'booking.js', 'share-card.js', 'assets/logo.png', 'assets/qr.jpg',
-  'assets/favicon.png', 'assets/apple-touch-icon.png'];
+  'assets/favicon.png', 'assets/apple-touch-icon.png', 'assets/share-logo.png'];
 
 function copyV2Site() {
   // 以 _ 开头的文件、以及 *-preview.html 是本地效果图/草稿，不发布
@@ -266,6 +266,7 @@ ${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
 <script type="application/ld+json">${jsonLd(ld)}</script>
 </head>
 <body>
+<img src="/assets/share-logo.png" alt="" width="500" height="500" aria-hidden="true" style="position:absolute;left:-9999px;top:0;">
 
 <header class="topbar">
   <div class="wrap topbar-in">
