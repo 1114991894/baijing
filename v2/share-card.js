@@ -1,11 +1,14 @@
 /* 翻车实录分享卡：把文章正文 + 底部预约区（含二维码）绘成一张长图
    - 零依赖，视觉对齐 v2 设计系统（纸/墨/深青/金）
-   - 微信不开放「网页一键发朋友圈」，标准形态：生成长图 → 长按/下载保存 → 手动发布
+   - 图片即内容本身：上下无装饰条，只留正文 + 预约卡
+   - 移动端：生成后直接唤起系统分享面板（可选微信/朋友圈）
+   - 桌面端：预览层展示，右键另存为
    - 只在带 .article .back 的页面（翻车实录文章页）挂载按钮 */
 (function () {
   'use strict';
 
   var isWx = /MicroMessenger/i.test(navigator.userAgent);
+  var isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
   var W = 375, PAD = 22, SCALE = 2;
   var C = {
     paper: '#F6F3EC', paper2: '#FCFAF5', ink: '#161B1D', ink2: '#3E4745',
@@ -107,29 +110,7 @@
     return lines;
   }
 
-  /* ---------- 各区块 ---------- */
-  function drawHeader(ctx, images, y, paint) {
-    var h = 56;
-    if (paint) {
-      ctx.fillStyle = C.tealInk;
-      ctx.fillRect(0, y, W, h);
-      if (images.logo) {
-        var lh = 20, lw = lh * (images.logo.width / images.logo.height);
-        ctx.drawImage(images.logo, PAD, y + (h - lh) / 2, lw, lh);
-      } else {
-        ctx.font = '800 15px ' + SANS;
-        ctx.fillStyle = '#fff';
-        ctx.fillText('百鲸咨询', PAD, y + h / 2 - 8);
-      }
-      ctx.font = '10px ' + MONO;
-      ctx.fillStyle = 'rgba(255,255,255,.55)';
-      ctx.textAlign = 'right';
-      ctx.fillText('baijingzixun.top', W - PAD, y + h / 2 - 5);
-      ctx.textAlign = 'left';
-    }
-    return y + h;
-  }
-
+  /* ---------- 预约卡（二维码 + 文案） ---------- */
   function drawCta(ctx, data, images, y, paint) {
     var x = PAD, w = W - PAD * 2, inner = 16;
     var qrS = 84, sp = 5, capH = 30;
@@ -158,16 +139,13 @@
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      // 左：二维码图章
       var stY = y + inner + (contentH - stampH) / 2;
       ctx.fillStyle = '#fff';
       roundRect(ctx, x + inner, stY, stampW, stampH, 8);
       ctx.fill();
       ctx.strokeStyle = C.line2;
       ctx.stroke();
-      if (images.qr) {
-        ctx.drawImage(images.qr, x + inner + sp, stY + sp, qrS, qrS);
-      }
+      if (images.qr) ctx.drawImage(images.qr, x + inner + sp, stY + sp, qrS, qrS);
       ctx.font = '400 10px ' + SANS;
       ctx.fillStyle = C.muted;
       ctx.textAlign = 'center';
@@ -175,7 +153,6 @@
       ctx.fillText('刘诠案 · 杭州', x + inner + stampW / 2, stY + sp * 2 + qrS + 18);
       ctx.textAlign = 'left';
 
-      // 右：文案 + 按钮
       var ry = y + inner;
       ctx.font = '700 15.5px ' + SANS;
       ctx.fillStyle = C.ink;
@@ -196,23 +173,6 @@
       ctx.textAlign = 'left';
     }
     return y + cardH;
-  }
-
-  function drawFooter(ctx, y, paint) {
-    var h = 54;
-    if (paint) {
-      ctx.fillStyle = C.tealInk;
-      ctx.fillRect(0, y, W, h);
-      ctx.textAlign = 'center';
-      ctx.font = '700 11.5px ' + SANS;
-      ctx.fillStyle = '#fff';
-      ctx.fillText('百鲸咨询 · AI 落地翻车实录', W / 2, y + 15);
-      ctx.font = '10px ' + MONO;
-      ctx.fillStyle = 'rgba(255,255,255,.55)';
-      ctx.fillText('baijingzixun.top ｜ 长按识别二维码，预约 30 分钟', W / 2, y + 33);
-      ctx.textAlign = 'left';
-    }
-    return y + h;
   }
 
   /* ---------- 收集文章数据 ---------- */
@@ -247,9 +207,8 @@
     ctx.textBaseline = 'top';
     if (paint) { ctx.fillStyle = C.paper; ctx.fillRect(0, 0, W, H); }
 
-    y = drawHeader(ctx, images, y, paint);
+    y = PAD;
 
-    y += 24;
     if (paint) {
       try { ctx.letterSpacing = '2px'; } catch (e) {}
       ctx.font = '11px ' + MONO;
@@ -312,7 +271,7 @@
 
     y += 28;
     y = drawCta(ctx, data, images, y, paint);
-    y = drawFooter(ctx, y, paint);
+    y += PAD;
     return y;
   }
 
@@ -336,25 +295,21 @@
     });
   }
 
-  /* ---------- 预览层 ---------- */
+  /* ---------- 预览层（桌面端：右键另存为） ---------- */
   var overlayHtml =
     '<div class="sc-panel">' +
     '<div class="sc-bar"><span>分享图片已生成</span>' +
     '<button type="button" id="scClose" aria-label="关闭">✕</button></div>' +
     '<div class="sc-stage"><img id="scImg" alt="百鲸咨询 · 翻车实录分享图"></div>' +
     '<p class="sc-tip" id="scTip"></p>' +
-    '<div class="sc-acts"><a id="scSave" class="sc-save" href="javascript:">下载图片</a></div>' +
     '</div>';
 
   function showPreview(url, data) {
     var ov = document.getElementById('scOverlay');
     document.getElementById('scImg').src = url;
-    var save = document.getElementById('scSave');
-    save.href = url;
-    save.setAttribute('download', (data.kicker.replace(/\s+/g, '') || '翻车实录') + '-百鲸咨询.jpg');
     document.getElementById('scTip').textContent = isWx
-      ? '长按上面的图片 → 保存到手机，发朋友圈时选择这张图'
-      : '点击「下载图片」保存到本地（手机上也可以长按图片保存），再发朋友圈';
+      ? '长按图片 → 保存到手机，发朋友圈时选择这张图'
+      : '在图片上点右键 →「图片另存为」，保存到本地后发朋友圈';
     ov.classList.add('on');
     document.body.style.overflow = 'hidden';
   }
@@ -364,6 +319,20 @@
     document.body.style.overflow = '';
     var img = document.getElementById('scImg');
     if (img.src.indexOf('blob:') === 0) { URL.revokeObjectURL(img.src); img.removeAttribute('src'); }
+  }
+
+  /* ---------- 系统分享（移动端原生面板） ---------- */
+  function tryNativeShare(blob, name, data) {
+    if (!navigator.share || !navigator.canShare || typeof File === 'undefined') {
+      return Promise.reject(new Error('no-share-api'));
+    }
+    var file = new File([blob], name, { type: 'image/jpeg' });
+    if (!navigator.canShare({ files: [file] })) return Promise.reject(new Error('no-file-share'));
+    return navigator.share({
+      files: [file],
+      title: '百鲸咨询 · AI 落地翻车实录',
+      text: data.h1
+    }).then(function () { return 'shared'; });
   }
 
   /* ---------- 分享流程 ---------- */
@@ -377,15 +346,25 @@
     btn.disabled = true;
     var orig = btn.innerHTML;
     btn.textContent = '生成中…';
-    Promise.all([loadImg(data.cta.qr), loadImg('/assets/logo.png')])
-      .then(function (imgs) {
-        return canvasToBlob(renderCard(data, { qr: imgs[0], logo: imgs[1] }));
+    var name = (data.kicker.replace(/\s+/g, '') || '翻车实录') + '-百鲸咨询.jpg';
+    var blob = null;
+
+    loadImg(data.cta.qr)
+      .then(function (qr) { return canvasToBlob(renderCard(data, { qr: qr })); })
+      .then(function (b) {
+        blob = b;
+        // 移动端优先走系统分享面板；不支持（含微信内置浏览器）时降级预览层
+        if (isTouch) return tryNativeShare(blob, name, data);
+        return null;
       })
-      .then(function (blob) {
+      .then(function (r) {
+        if (r === 'shared') return;
         showPreview(URL.createObjectURL(blob), data);
       })
-      .catch(function () {
-        alert('图片生成失败，请稍后再试一次');
+      .catch(function (err) {
+        if (err && err.name === 'AbortError') return;   // 用户在系统面板里主动取消
+        if (blob) showPreview(URL.createObjectURL(blob), data);
+        else alert('图片生成失败，请稍后再试一次');
       })
       .then(function () {
         busy = false;
