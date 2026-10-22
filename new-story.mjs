@@ -127,6 +127,7 @@ ${a.body}
 </footer>
 
 <script src="booking.js" defer></script>
+<script src="share-card.js" defer></script>
 </body>
 </html>
 `;

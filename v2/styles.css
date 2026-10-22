@@ -573,6 +573,37 @@ p { color: var(--ink-2); text-wrap: pretty; }
 .art-cta p { font-size: 14.5px; }
 .art-cta > div { flex: 1 1 220px; }
 
+/* ---------- 文章页分享（share-card.js 注入按钮与预览层） ---------- */
+.art-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 30px; }
+.art-top .back { margin-bottom: 0; }
+.share-btn {
+  display: inline-flex; align-items: center; gap: 6px; flex: none;
+  font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--teal);
+  background: #fff; border: 1px solid var(--line-2); border-radius: 999px;
+  padding: 7px 15px; cursor: pointer; line-height: 1.2;
+  transition: border-color .15s, background .15s;
+}
+.share-btn:hover { border-color: var(--teal); background: var(--teal-soft); }
+.share-btn:disabled { opacity: .6; cursor: default; }
+.share-btn:disabled:hover { border-color: var(--line-2); background: #fff; }
+
+/* 分享图预览层 */
+.sc-overlay { position: fixed; inset: 0; z-index: 120; display: none; align-items: center; justify-content: center; background: rgba(22,27,29,.74); padding: 18px; }
+.sc-overlay.on { display: flex; }
+.sc-panel { background: var(--paper-2); border-radius: 12px; width: 100%; max-width: 420px; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; }
+.sc-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 700; color: var(--ink); }
+.sc-bar button { border: none; background: none; font-size: 16px; color: var(--muted); cursor: pointer; padding: 4px 8px; line-height: 1; }
+.sc-bar button:hover { color: var(--ink); }
+.sc-stage { overflow: auto; padding: 14px; background: var(--paper); text-align: center; }
+.sc-stage img { display: inline-block; max-width: 100%; max-height: 64vh; width: auto; height: auto; border: 1px solid var(--line); }
+.sc-tip { font-size: 12.5px; color: var(--muted); line-height: 1.7; padding: 12px 16px 0; }
+.sc-acts { padding: 12px 16px 16px; }
+.sc-save { display: block; text-align: center; background: var(--ink); color: var(--paper-2); font-size: 14px; font-weight: 700; text-decoration: none; border-radius: 6px; padding: 11px; }
+.sc-save:hover { background: var(--teal-ink); }
+@media (max-width: 560px) {
+  .sc-stage img { max-height: 58vh; }
+}
+
 /* 正文排版：历史文章页（/article/*.html）由 build.mjs 注入富文本 HTML */
 .art-body { margin-top: 26px; color: var(--ink-2); }
 .art-body h3 { margin: 30px 0 12px; color: var(--ink); }
