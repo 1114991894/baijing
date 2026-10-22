@@ -161,7 +161,7 @@ function renderStoryLists(items) {
     `      <li>
         <a href="stories.html">
           <span class="no2">全部</span>
-          <span class="t">全部翻车实录 · 每三天更新一篇</span>
+          <span class="t">全部翻车实录</span>
           <span class="meta">杭州 / 长三角</span>
           <span class="go">查看索引 →</span>
         </a>
