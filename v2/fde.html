@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FDE落地实施｜钱花了，方案批了，工位上还是原样 —— 百鲸咨询（杭州）</title>
+<meta name="description" content="培训让你听懂，咨询告诉你改哪个，系统负责上线——但没有一个人的名字挂在「这个动作真的被替换掉了」上。FDE（前线部署工程师）就是这个岗位：坐在员工旁边一周，把一个动作改到能跑，写成一页纸，然后撤。杭州，到场半径两小时，覆盖沪苏浙皖。">
+<link rel="canonical" href="https://baijingzixun.top/fde.html">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<style>
+:root{
+  --paper:#F6F3EC; --paper-2:#FCFAF5; --ink:#161B1D; --ink-2:#3E4745; --muted:#717873;
+  --line:#DBD5C6; --line-2:#C9C2B0;
+  --teal:#14604D; --teal-ink:#0D4235; --teal-soft:#E8F0EB;
+  --rust:#A8431D; --rust-soft:#F4E6DD; --gold:#A5894C; --blue-soft:#E7EBEE; --blue-ink:#33566B;
+  --sans:"PingFang SC","Hiragino Sans GB","Source Han Sans SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Consolas,"Courier New",monospace;
+  --serif:Georgia,"Times New Roman","Songti SC","Source Han Serif SC",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:72px;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;}
+img{max-width:100%;display:block;}
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px;}
+.narrow{max-width:780px;}
+
+/* 顶栏 */
+.topbar{position:-webkit-sticky;position:sticky;top:0;z-index:50;border-bottom:1px solid var(--line);background:rgba(252,250,245,.95);-webkit-backdrop-filter:saturate(150%) blur(10px);backdrop-filter:saturate(150%) blur(10px);}
+.topbar-in{display:flex;align-items:center;justify-content:space-between;height:58px;gap:14px;}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.brand .mk{width:22px;height:22px;flex:none;border:1.5px solid var(--teal);border-radius:50%;position:relative;}
+.brand .mk::after{content:"";position:absolute;left:4px;top:8px;width:12px;height:1.5px;background:var(--teal);}
+.brand b{font-size:16px;letter-spacing:.02em;}
+.topnav{display:flex;gap:2px;font-size:13.5px;}
+.topnav a{text-decoration:none;color:var(--ink-2);padding:7px 10px;border-radius:6px;}
+.topnav a:hover{background:var(--teal-soft);color:var(--teal-ink);}
+.topnav a[aria-current]{color:var(--teal-ink);font-weight:700;background:var(--teal-soft);}
+.topnav .nav-hot{color:var(--rust);font-weight:600;}
+@media(max-width:680px){.topnav{font-size:12.5px;gap:0;}.topnav a{padding:7px 6px;}.brand b{display:none;}}
+
+/* 文本基元 */
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;}
+h1{font-size:clamp(30px,5.6vw,58px);line-height:1.16;letter-spacing:.005em;font-weight:800;text-wrap:balance;}
+h2{font-size:clamp(23px,3.4vw,36px);line-height:1.28;font-weight:750;letter-spacing:.01em;text-wrap:balance;}
+h3{font-size:18px;font-weight:700;line-height:1.5;}
+p{color:var(--ink-2);text-wrap:pretty;}
+.lead{font-size:17.5px;color:var(--ink-2);max-width:40em;}
+.lead b,p b{color:var(--ink);font-weight:700;}
+.src-note{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--muted);margin-top:10px;}
+
+/* 首屏 */
+.hero{padding:clamp(38px,7vh,72px) 0 clamp(24px,3.6vh,38px);}
+.hero .art-meta{font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.08em;margin:18px 0 0;}
+.hero .lead{margin-top:22px;}
+.hero-en{margin-top:20px;font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.04em;border-left:2px solid var(--line-2);padding-left:12px;}
+.hero-en b{color:var(--ink);font-weight:700;}
+.hero-line{margin-top:26px;padding:16px 20px;border-left:3px solid var(--rust);background:rgba(168,67,29,.05);font-size:16px;color:var(--ink);font-weight:600;max-width:44em;}
+
+/* 规格带 */
+.specband{border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2);background:var(--paper-2);}
+.spec{display:grid;grid-template-columns:repeat(4,1fr);}
+.spec>div{padding:15px 20px 14px;border-right:1px solid var(--line);}
+.spec>div:first-child{padding-left:0;}
+.spec>div:last-child{border-right:none;padding-right:0;}
+.spec dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--gold);margin-bottom:3px;}
+.spec dd{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.5;}
+@media(max-width:760px){
+  .spec{grid-template-columns:1fr 1fr;}
+  .spec>div{padding:13px 16px;}
+  .spec>div:first-child{padding-left:16px;}
+  .spec>div:nth-child(2){border-right:none;padding-right:0;}
+  .spec>div:nth-child(1),.spec>div:nth-child(2){border-bottom:1px solid var(--line);}
+  .spec>div:nth-child(3){padding-left:16px;}
+}
+
+/* 章节 */
+.sec{padding:clamp(46px,8vh,84px) 0;border-top:1px solid var(--line);}
+.sec-alt{background:var(--paper-2);}
+.sec-dark{background:var(--teal-ink);border-top:none;color:#fff;}
+.sec-dark h2{color:#fff;}
+.sec-dark p{color:rgba(255,255,255,.74);}
+.sec-dark .sec-head .no{color:#C9B37E;}
+.sec-head{display:flex;align-items:flex-start;gap:18px;margin-bottom:32px;}
+.sec-head .no{font-family:var(--mono);font-size:12px;color:var(--gold);letter-spacing:.14em;padding-top:10px;flex:none;}
+.sec-head h2{max-width:24em;}
+.sec-head p{margin-top:10px;}
+@media(max-width:640px){.sec-head{display:block;}.sec-head .no{padding-top:0;margin-bottom:8px;}.sec-head p{margin-top:10px;}}
+
+/* 痛账大数字 */
+.facts{display:flex;flex-wrap:wrap;border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2);background:var(--paper-2);}
+.facts>div{flex:1 1 180px;padding:22px 24px 20px;border-right:1px solid var(--line);}
+.facts>div:first-child{padding-left:0;}
+.facts>div:last-child{border-right:none;}
+.facts b{display:block;font-family:var(--serif);font-size:clamp(30px,4.2vw,46px);line-height:1.05;color:var(--rust);font-weight:700;}
+.facts b i{font-style:normal;font-family:var(--sans);font-size:14px;font-weight:700;color:var(--ink-2);margin-left:4px;}
+.facts span{display:block;margin-top:10px;font-size:13.5px;color:var(--muted);line-height:1.6;}
+@media(max-width:760px){.facts>div{flex:1 1 46%;padding:16px;}.facts>div:first-child{padding-left:16px;}.facts>div:nth-child(2n){border-right:none;}.facts>div:nth-child(1),.facts>div:nth-child(2){border-bottom:1px solid var(--line);}}
+
+/* 老板四个痛 */
+.pains{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line-2);}
+@media(max-width:820px){.pains{grid-template-columns:1fr;}}
+.pain{background:#fff;padding:22px 22px 20px;}
+.pain .n{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--rust);margin-bottom:9px;display:block;}
+.pain h3{font-size:17.5px;margin-bottom:8px;}
+.pain p{font-size:14.6px;line-height:1.72;}
+.pain .cost{display:block;margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--teal-ink);}
+
+/* 引证 */
+.evidence{margin-top:30px;border-left:3px solid var(--line-2);padding:4px 0 4px 20px;}
+.evidence q{display:block;font-family:var(--serif);font-size:clamp(18px,2.3vw,24px);line-height:1.55;color:var(--ink);quotes:none;}
+.evidence .who{display:block;margin-top:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--muted);}
+
+/* 为什么断掉 */
+.why{width:100%;border-collapse:collapse;font-size:14.6px;background:#fff;}
+.why caption{text-align:left;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--muted);padding-bottom:10px;}
+.why th,.why td{border:1px solid var(--line);padding:13px 14px;text-align:left;vertical-align:top;}
+.why thead th{background:var(--paper-2);font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--gold);font-weight:700;}
+.why tbody th{font-weight:700;color:var(--ink);width:20%;}
+.why td{color:var(--ink-2);}
+.why td.brk{color:var(--rust);font-weight:600;}
+.why tr.is-fde th,.why tr.is-fde td{background:var(--teal-soft);color:var(--teal-ink);font-weight:700;}
+.why tr.is-fde td span{display:block;font-weight:400;font-size:12.5px;color:var(--teal);margin-top:3px;font-family:var(--mono);letter-spacing:.04em;}
+.tbl-scroll{overflow-x:auto;}
+
+/* 三类动作 */
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+@media(max-width:760px){.cats{grid-template-columns:1fr;}}
+.cat{border:1px solid var(--line-2);background:#fff;padding:20px 20px 18px;}
+.cat .tag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:3px 8px;border-radius:3px;margin-bottom:13px;}
+.cat .t1{background:var(--teal-soft);color:var(--teal-ink);}
+.cat .t2{background:var(--blue-soft);color:var(--blue-ink);}
+.cat .t3{background:var(--rust-soft);color:var(--rust);}
+.cat p{font-size:14.8px;}
+.cat .who{margin-top:12px;font-weight:700;color:var(--ink);font-size:15px;}
+.cat .scope{margin-top:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:var(--muted);}
+
+/* 落地路线图 */
+.road{counter-reset:rd;list-style:none;}
+.road li{display:flex;gap:20px;padding:22px 0;border-top:1px solid var(--line);}
+.road li:last-child{border-bottom:1px solid var(--line);}
+.road li::before{counter-increment:rd;content:"0" counter(rd);font-family:var(--mono);font-size:13px;color:var(--gold);letter-spacing:.1em;flex:none;padding-top:4px;}
+.road h3{margin-bottom:6px;}
+.road h3 em{font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--teal);border:1px solid var(--teal-soft);background:var(--teal-soft);padding:2px 7px;border-radius:3px;margin-left:9px;vertical-align:2px;font-weight:400;}
+.road p{font-size:15.2px;}
+.road .out{margin-top:8px;font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:.03em;}
+.road .who-does{margin-top:8px;font-size:13.5px;color:var(--ink-2);}
+.road .who-does b{color:var(--rust);font-family:var(--mono);font-size:11px;letter-spacing:.08em;margin-right:6px;}
+
+/* 老板三件事 */
+.boss{margin-top:34px;border:1px solid var(--line-2);background:#fff;padding:24px 24px 20px;}
+.boss h3{font-size:18px;margin-bottom:4px;}
+.boss .sub{font-size:14px;color:var(--muted);margin-bottom:16px;}
+.boss ol{list-style:none;counter-reset:bs;}
+.boss li{counter-increment:bs;position:relative;padding:12px 0 12px 34px;border-top:1px solid var(--line);font-size:15px;color:var(--ink);font-weight:600;}
+.boss li::before{content:counter(bs);position:absolute;left:0;top:13px;width:20px;height:20px;border-radius:50%;background:var(--teal-ink);color:#fff;font-family:var(--mono);font-size:11px;text-align:center;line-height:20px;}
+.boss li span{display:block;font-size:13.5px;color:var(--ink-2);font-weight:400;margin-top:3px;}
+
+/* 一周表 */
+.week{width:100%;border-collapse:collapse;margin-top:6px;font-size:14.5px;background:#fff;}
+.week caption{text-align:left;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--muted);padding-bottom:10px;}
+.week th,.week td{border:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top;}
+.week th{background:var(--paper-2);font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--gold);font-weight:700;}
+.week td:first-child{font-family:var(--mono);font-size:12.5px;color:var(--teal-ink);white-space:nowrap;font-weight:700;}
+.week td:last-child{font-size:13.5px;color:var(--ink-2);}
+.week tr:last-child td{background:#FBF9F3;}
+
+/* 动作卡 */
+.cardwrap{display:grid;grid-template-columns:1fr 310px;gap:32px;align-items:start;}
+@media(max-width:860px){.cardwrap{grid-template-columns:1fr;}}
+.cardnote{font-size:15px;}
+.cardnote ul{list-style:none;margin-top:16px;}
+.cardnote li{padding:10px 0;border-top:1px solid var(--line);font-size:14.4px;}
+.cardnote li:last-child{border-bottom:1px solid var(--line);}
+.cardnote li b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--rust);margin-bottom:2px;font-weight:700;}
+.actcard{background:#fff;border:1px solid var(--line-2);box-shadow:0 20px 40px -34px rgba(22,27,29,.5);}
+.actcard .ch{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);}
+.actcard .ch b{color:var(--teal-ink);letter-spacing:.06em;}
+.actcard .cb{padding:16px;}
+.actcard h4{font-size:16.5px;line-height:1.45;font-weight:750;margin-bottom:12px;}
+.actcard dl{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;font-size:13.5px;}
+.actcard dt{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);padding-top:2px;white-space:nowrap;}
+.actcard dd{color:var(--ink);}
+.actcard .split{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:14px 0;}
+.actcard .split>div{background:#fff;padding:12px 14px;}
+.actcard .split h5{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;margin-bottom:6px;font-weight:700;}
+.actcard .split .m h5{color:var(--teal);}
+.actcard .split .h h5{color:var(--rust);}
+.actcard .split p{font-size:13px;line-height:1.65;}
+.actcard .rule{font-size:13px;line-height:1.7;color:var(--ink-2);}
+.actcard .rule b{color:var(--rust);font-family:var(--mono);font-size:11px;letter-spacing:.08em;display:block;margin-bottom:2px;}
+.actcard .rule+.rule{margin-top:10px;}
+
+/* 算账卡 */
+.calc{border:1px solid var(--line-2);background:#fff;padding:0;overflow:hidden;}
+.calc .ch{padding:12px 18px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);background:var(--paper-2);}
+.calc .row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line);font-size:14.5px;}
+.calc .row span{color:var(--ink-2);}
+.calc .row input{width:96px;font-family:var(--mono);font-size:14px;padding:7px 9px;border:1px solid var(--line-2);border-radius:3px;background:var(--paper);color:var(--ink);text-align:right;}
+.calc .row input:focus{outline:2px solid var(--teal);outline-offset:0;background:#fff;}
+.calc .total{padding:18px;background:var(--teal-ink);color:#fff;display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.calc .total .lab{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:rgba(255,255,255,.7);}
+.calc .total .val{font-family:var(--serif);font-size:clamp(26px,4vw,38px);line-height:1.1;font-weight:700;}
+.calc .total .val small{font-family:var(--sans);font-size:13px;font-weight:400;opacity:.7;margin-left:6px;}
+.calc .foot{padding:12px 18px;font-size:12.5px;color:var(--muted);line-height:1.7;}
+
+/* 验收 */
+.check{list-style:none;margin-top:6px;}
+.check li{display:flex;gap:12px;padding:14px 0;border-top:1px solid var(--line);font-size:15.4px;color:var(--ink);font-weight:600;}
+.check li:last-child{border-bottom:1px solid var(--line);}
+.check li::before{content:"✓";color:var(--teal);font-weight:800;flex:none;}
+.check .foot-note{display:block;font-size:13px;color:var(--muted);font-weight:400;margin-top:3px;}
+.checkline{margin-top:16px;font-weight:700;color:var(--ink);}
+
+/* 边界 */
+.bounds{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line-2);}
+@media(max-width:760px){.bounds{grid-template-columns:1fr;}}
+.bounds>div{background:#fff;padding:22px 20px;}
+.bounds h3{font-size:17px;margin-bottom:12px;}
+.bounds ul{list-style:none;}
+.bounds li{position:relative;padding-left:18px;font-size:14.6px;color:var(--ink-2);margin-bottom:10px;line-height:1.7;}
+.bounds li::before{content:"";position:absolute;left:0;top:10px;width:6px;height:1.5px;background:var(--muted);}
+.bounds .no-go h3{color:var(--rust);}
+.bounds .no-go li::before{background:var(--rust);}
+
+/* 事实表 */
+.facts-dl{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line-2);}
+.facts-dl>div{background:#fff;padding:16px 20px 14px;}
+.facts-dl dt{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em;margin-bottom:4px;}
+.facts-dl dd{font-weight:700;color:var(--ink);font-size:15.5px;}
+@media(max-width:640px){.facts-dl{grid-template-columns:1fr;}}
+
+/* FAQ */
+.faq{margin-top:4px;}
+.faq details{border-top:1px solid var(--line);padding:14px 4px;}
+.faq details:last-child{border-bottom:1px solid var(--line);}
+.faq summary{font-weight:700;cursor:pointer;font-size:16px;color:var(--ink);list-style:none;display:flex;justify-content:space-between;gap:16px;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{content:"+";font-family:var(--mono);color:var(--gold);font-weight:400;}
+.faq details[open] summary::after{content:"–";}
+.faq details p{margin-top:10px;font-size:15px;}
+
+/* CTA */
+.cta{border-top:1px solid var(--line);background:var(--teal-ink);color:#fff;position:relative;overflow:hidden;padding:clamp(40px,7vh,72px) 0;}
+.cta .wrap{position:relative;z-index:1;}
+.cta .kicker{color:#C9B37E;}
+.cta-in{display:flex;align-items:center;justify-content:space-between;gap:36px;flex-wrap:wrap;}
+.cta h2{color:#fff;font-size:clamp(24px,3.6vw,38px);max-width:20em;line-height:1.32;}
+.cta .cta-note{color:rgba(255,255,255,.72);margin-top:16px;max-width:34em;font-size:15.5px;}
+.btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-weight:700;font-size:15.5px;padding:13px 20px;border-radius:4px;border:1px solid transparent;transition:transform .18s,background .18s,box-shadow .18s;margin-top:24px;}
+.btn .min{font-family:var(--mono);font-size:11px;letter-spacing:.12em;font-weight:400;opacity:.55;}
+.btn .arw{font-weight:400;transition:transform .2s;}
+.btn:hover .arw{transform:translateX(4px);}
+.btn-light{background:#fff;color:var(--teal-ink);}
+.btn-light:hover{background:var(--teal-soft);}
+.stamp{transform:rotate(1.4deg);background:#fff;padding:10px;box-shadow:0 24px 50px -28px rgba(0,0,0,.8);max-width:210px;}
+.stamp img{width:100%;height:auto;border-radius:2px;}
+.stamp figcaption{color:var(--ink);font-size:12.5px;font-weight:700;padding:9px 2px 2px;text-align:center;}
+.stamp figcaption small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px;}
+
+/* 页脚 */
+.foot{background:var(--teal-ink);color:rgba(255,255,255,.5);border-top:1px solid rgba(255,255,255,.12);padding:18px 0;}
+.foot-in{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;font-size:12.5px;}
+.foot a{color:rgba(255,255,255,.6);text-decoration:none;}
+.foot a:hover{text-decoration:underline;}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important;}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="index.html"><span class="mk" aria-hidden="true"></span><b>百鲸咨询</b></a>
+    <nav class="topnav" aria-label="站内页面">
+      <a href="index.html">首页</a>
+      <a href="ai-training.html">AI培训</a>
+      <a href="efficiency.html">提效咨询</a>
+      <a href="#top" aria-current="page">FDE</a>
+      <a class="nav-hot" href="stories.html">翻车实录</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap narrow">
+    <p class="kicker">FDE 落地实施 ｜ 写给还没看到结果的人</p>
+    <h1>钱花了，方案批了，<br>工位上还是原样</h1>
+    <p class="art-meta">杭州 · 到场半径两小时（沪苏浙皖）</p>
+    <p class="lead">这不是执行不力。这是<b>没有一个名字，挂在"这个动作真的被替换掉了"上</b>。</p>
+    <p class="lead">培训负责让你听懂，咨询负责告诉你改哪个，系统负责把它上线。三段都完成了，中间那段——<b>有人坐在工位旁边，一周一周把动作磨到能跑</b>——没有人负责。</p>
+    <p class="hero-line">FDE（Forward Deployed Engineer，前线部署工程师）就是这个岗位上的人。不是驻场外包，也不是远程支持。</p>
+    <p class="hero-en"><b>FDE = Forward Deployed Engineer</b> 前线部署工程师</p>
+  </div>
+</section>
+
+<section class="specband" aria-label="FDE 交付概览">
+  <div class="wrap">
+    <dl class="spec">
+      <div><dt>起点</dt><dd>老板定靶：一个岗位、一个动作</dd></div>
+      <div><dt>方式</dt><dd>到场跟做，不远程、不开线上会</dd></div>
+      <div><dt>周期</dt><dd>一个动作一周，撤场后再观察一周</dd></div>
+      <div><dt>覆盖</dt><dd>杭州出发 · 沪苏浙皖</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- 01 放大痛苦 -->
+<section class="sec" aria-labelledby="h-cost">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="no">01</span>
+      <div>
+        <h2 id="h-cost">先把账算清楚：不做的代价长什么样</h2>
+        <p>老板的痛，从来不是"不知道 AI 有用"。是第三次听人说"这次能落地"。</p>
+      </div>
+    </div>
+
+    <div class="facts">
+      <div>
+        <b>41<i>次/天</i></b>
+        <span>一个跟单员一天做的事：打开 ERP，把订单号复制到 Excel；客户改单，回 ERP 重查；把三张表的数据粘进汇报模板。</span>
+      </div>
+      <div>
+        <b>1<i>万次/年</i></b>
+        <span>41 次 × 250 个工作日。岗位还在，人也还在，但这一万次里没有一次产生新东西。</span>
+      </div>
+      <div>
+        <b>3<i>个月</i></b>
+        <span>5 个人配了 AI 写作账号。三个月之后，4 个人只用来写周报。</span>
+      </div>
+      <div>
+        <b>2<i>小时</i></b>
+        <span>AI 已经把报价压到两小时。销售拿着报价，还是先问一句老板。</span>
+      </div>
+    </div>
+    <p class="src-note">以上均出自百鲸咨询的诊断现场记录（杭州 / 无锡 / 宁波），非行业统计口径。</p>
+
+    <div class="evidence">
+      <q>"不是 AI 不行，是没有人把 AI 和业务员每天面对的那封邮件对上。"</q>
+      <span class="who">—— 一家外贸公司 · 诊断现场记录</span>
+    </div>
+
+    <h3 style="margin-top:44px;margin-bottom:16px;font-size:20px;">老板身上，通常是这四个痛同时存在</h3>
+    <div class="pains">
+      <div class="pain">
+        <span class="n">痛 一</span>
+        <h3>钱花出去了，报表上有 AI，工位上没有</h3>
+        <p>订阅在续费、课上完了、试点也做过了。年底复盘，唯一没变的是那个人每天的动作。</p>
+        <span class="cost">代价：预算变成沉没成本，下次再提 AI，没人接话</span>
+      </div>
+      <div class="pain">
+        <span class="n">痛 二</span>
+        <h3>中层点头，回到部门照旧</h3>
+        <p>会上都说好。回到部门，经理有自己的指标要背，改动作会先慢下来——没人愿意为"慢一周"负责。</p>
+        <span class="cost">代价：项目停在"已启动"，永远没有"已改变"</span>
+      </div>
+      <div class="pain">
+        <span class="n">痛 三</span>
+        <h3>上了工具，员工绕开它用回 Excel</h3>
+        <p>不是抵触。是工具接在流程外面，要人多做一步才能用它。多做一步的事，第二周就没人做了。</p>
+        <span class="cost">代价：系统越多，动作越多，人越忙</span>
+      </div>
+      <div class="pain">
+        <span class="n">痛 四</span>
+        <h3>出了问题，变成"你们不会用"</h3>
+        <p>供应商交付完就结束，验收签的是功能清单。用不起来的时候，责任落回你这边：不是产品不行，是员工不用。</p>
+        <span class="cost">代价：钱付了、锅也背了，还不知道该找谁</span>
+      </div>
+    </div>
+    <p class="checkline" style="margin-top:24px;">这四件事看起来是四个问题，其实是一个：<b>没有任何一方，为"动作被替换"签字。</b></p>
+  </div>
+</section>
+
+<!-- 02 为什么前面的办法没解决 -->
+<section class="sec sec-alt" aria-labelledby="h-why">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="no">02</span>
+      <div>
+        <h2 id="h-why">不是前面的办法错了，是它们都在中间那一段断掉</h2>
+        <p>这张表是老板最该看清的一张：每一方交出去的东西，和他结束的时点。</p>
+      </div>
+    </div>
+    <div class="tbl-scroll">
+      <table class="why">
+        <caption>四种角色 · 各自解决什么 · 在哪里断掉</caption>
+        <thead>
+          <tr><th scope="col">找谁</th><th scope="col">他解决了什么</th><th scope="col">在哪里断掉</th><th scope="col">什么时候算结束</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">AI 培训</th>
+            <td>让员工"知道"了，当天很兴奋</td>
+            <td class="brk">第二周回到工位，没人陪着改</td>
+            <td>课上完、人听懂</td>
+          </tr>
+          <tr>
+            <th scope="row">提效咨询</th>
+            <td>拆清了"该改哪个动作"</td>
+            <td class="brk">方案是给人看的，不是给工位用的</td>
+            <td>方案通过、汇报完成</td>
+          </tr>
+          <tr>
+            <th scope="row">系统 / 集成</th>
+            <td>做出来一个入口，能点了</td>
+            <td class="brk">多一个窗口，动作一个没少</td>
+            <td>功能验收、权限开通</td>
+          </tr>
+          <tr>
+            <th scope="row">驻场外包</th>
+            <td>有人替你把活干了</td>
+            <td class="brk">方法和判断留在外面，人一走就归零</td>
+            <td>活干完、人撤走</td>
+          </tr>
+          <tr class="is-fde">
+            <th scope="row">FDE</th>
+            <td>把中间那一段补上：动作真的换了</td>
+            <td>——不在中间断，因为它本来就只在中间干活</td>
+            <td>撤场后它还在跑<span>不在场也不掉链子</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:22px;font-size:15.5px;">所以 FDE 不替代前三者，它接的是前三者交完货之后的那一段。<b>已经做过培训、做过咨询、上过系统的公司，反而最适合从 FDE 开始</b>——靶子已经找好了，只差有人把它打下来。</p>
+  </div>
+</section>
+
+<!-- 03 分工 -->
+<section class="sec" aria-labelledby="h-cats">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="no">03</span>
+      <div>
+        <h2 id="h-cats">FDE 只碰前两类半：界线画在前面</h2>
+        <p>澄清一件事：FDE 不是什么都能自动化。界线清楚，才不会又变成一次"承诺很多、交付很少"。</p>
+      </div>
+    </div>
+    <div class="cats">
+      <div class="cat">
+        <span class="tag t1">信息搬运</span>
+        <p>把 A 处的信息搬到 B 处：抄、导、贴、汇总、催和等。</p>
+        <p class="who">→ 交给机器</p>
+        <p class="scope">FDE：整段做掉，这是主力</p>
+      </div>
+      <div class="cat">
+        <span class="tag t2">规则判断</span>
+        <p>有明确口径的判断：这个折扣能不能给、这张单要不要验、这笔账对不对。</p>
+        <p class="who">→ 交给机器，越界的交给人</p>
+        <p class="scope">FDE：先把口径写出来，再交出去</p>
+      </div>
+      <div class="cat">
+        <span class="tag t3">经验依赖</span>
+        <p>没有标准答案、要看现场和看人的：这个客户为什么突然压价、这批货敢不敢发。</p>
+        <p class="who">→ 人机协作：AI 备料，人做决定</p>
+        <p class="scope">FDE：只做备料那半，不做决定</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 落地思路 -->
+<section class="sec sec-alt" aria-labelledby="h-road">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="no">04</span>
+      <div>
+        <h2 id="h-road">落地思路：五步，一周走完一个动作</h2>
+        <p>顺序不能换。老板最常跳的是第一步——不定靶，直接问"你们能做什么"。</p>
+      </div>
+    </div>
+    <ol class="road">
+      <li>
+        <div>
+          <h3>老板定靶<em>半天</em></h3>
+          <p>选一个最贵的岗位、一个最烦的动作，指定一个业务负责人（不是 IT）。靶子由掏钱的人定，不由供应商推荐。定完写一句话：这次要少掉的是哪个动作。</p>
+          <p class="out">产出：一句话靶纸 + 一个业务负责人</p>
+          <p class="who-does"><b>老板</b>到场一次，拍板；其余时间不用管</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>现场坐一天<em>1 天</em></h3>
+          <p>跟着这个人上班。看窗口、字段、等待、返工。访谈听到的和真实的动作往往不是一回事——这一天的目的就是让后面所有判断有据可依。</p>
+          <p class="out">产出：原始动作流水（几点、哪个窗口、做了什么、卡在哪）</p>
+          <p class="who-does"><b>FDE</b>坐，业务负责人不陪同（陪同会被表演）</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>定口径<em>半天</em></h3>
+          <p>把三件事写下来：什么算正常、什么必须人工、出问题怎么关掉。这一段最容易省，也最容易在第二周被员工关掉——因为没有"越界"和"回退"。</p>
+          <p class="out">产出：口径单（正常 / 越界 / 回退 / 谁签字）</p>
+          <p class="who-does"><b>业务负责人</b>签字，签不了就说明口径还没定清</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>搭最小链路<em>1–2 天</em></h3>
+          <p>能用模板的不上系统，能一条规则的不写十行。这一段刻意做小：先能跑，再谈好不好看、要不要接系统。</p>
+          <p class="out">产出：可运行的一条链路 + 回退开关</p>
+          <p class="who-does"><b>FDE</b>做，不拉你的 IT 部门开会</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>工位跑一周，然后撤<em>5 天 + 观察期</em></h3>
+          <p>同事自己操作，我们只在旁边看，卡在哪改哪，不替他点。周五用他自己的话写成一页纸，我们不动手。撤场后观察一周。</p>
+          <p class="out">产出：一页交接单 + 撤场报告（跑得住或跑不住，直说）</p>
+          <p class="who-does"><b>员工</b>跑，<b>FDE</b>撤</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="boss">
+      <h3>整个过程，老板只需要做三件事</h3>
+      <p class="sub">其余不用开会、不用跟进度、不用看周报。</p>
+      <ol>
+        <li>定一个动作，并说清"这次不算别的成绩"<span>不定靶，任何供应商都会给你一份看起来很忙的东西。</span></li>
+        <li>让业务负责人签一次口径<span>越界了怎么办、能不能关掉。这两条没人签字，第二周一定被关。</span></li>
+        <li>在周三出现一次，问一句"跑得动吗"<span>周三问，还有时间改；周五问，只能听到好消息。</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 05 一周表 -->
+<section class="sec" aria-labelledby="h-week">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="no">05</span>
+      <div>
+        <h2 id="h-week">一周的每一天，谁在场，产出什么</h2>
+        <p>这是标准节奏。卡住了会在周三就说卡住了，不拖到周五给你一份漂亮的周报。</p>
+      </div>
+    </div>
+    <div class="tbl-scroll">
+      <table class="week">
+        <caption>一个动作 · 一周 · 从坐到撤</caption>
+        <thead>
+          <tr><th scope="col">时间</th><th scope="col">我们在做什么</th><th scope="col">这天的产出</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>周一</td><td>坐一天，跟着这个人上班。不看他的岗位说明书，只看他的窗口、字段、等待和返工。</td><td>原始动作流水</td></tr>
+          <tr><td>周二</td><td>挑一个动作，和他的主管把口径定下来：什么算正常、什么必须人工。</td><td>动作卡 v1</td></tr>
+          <tr><td>周三</td><td>搭最小可用的一条：能用模板的不上系统，能一条规则的不写十行。跑不通当天说。</td><td>可运行的一条链路</td></tr>
+          <tr><td>周四</td><td>工位上跑。同事自己操作，我们只在旁边看，卡在哪改哪，不替他点。</td><td>动作卡 v2 + 异常清单</td></tr>
+          <tr><td>周五</td><td>换成他自己的话，写成一页纸，我们不动手。</td><td>交接单 + 撤场检查</td></tr>
+          <tr><td>一周后</td><td>观察期：我们不在场，看它是否照常运转。</td><td>撤场报告（跑得住或跑不住，直说）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 06 动作卡 -->
+<section class="sec sec-alt" aria-labelledby="h-card">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="no">06</span>
+      <div>
+        <h2 id="h-card">最终交到你手上的，是这样一张纸</h2>
+        <p>不是方案，不是报告，不是 PPT。上面没有"赋能""闭环"，只有这个岗位的同事照着就能做的东西。</p>
+      </div>
+    </div>
+    <div class="cardwrap">
+      <div class="cardnote">
+        <p><b>一张卡只写一个动作。</b>它是这个岗位的资产，不是我们的作品——所以写的时候用他们的词，不用我们的词。</p>
+        <ul>
+          <li><b>为什么必须有"越界"</b>机器只处理口径内的部分。出现停线、调价、追责这类字样，不自动发出，转人工。这条不写清，第二周就会被员工自己关掉。</li>
+          <li><b>为什么必须有"回退"</b>任何自动化的第一步都是先能关掉。关不掉的东西，员工不敢用；不敢用的东西，就不存在。</li>
+          <li><b>为什么要写"次数"</b>每周发生不到三次的动作，学不会也留不住，不值得改。写下来是为了防止下一次又去改一个看着重要、其实低频的动作。</li>
+        </ul>
+      </div>
+      <article class="actcard" aria-label="动作卡样例">
+        <div class="ch"><span>动作卡 · 样例</span><b>v2</b></div>
+        <div class="cb">
+          <h4>客户问交期进度 → 出一段可直接发出的回复</h4>
+          <dl>
+            <dt>岗位</dt><dd>跟单员（生产 / 交付环节）</dd>
+            <dt>每周</dt><dd>约 20 次</dd>
+            <dt>输入</dt><dd>订单号、合同交期、车间日报、三个群的进度消息</dd>
+            <dt>输出</dt><dd>一段可发出的进度回复，含"可能延"的提示</dd>
+          </dl>
+          <div class="split">
+            <div class="m">
+              <h5>机器做</h5>
+              <p>抓订单与交期，对齐车间日报和群消息，标出今天可能延的单。</p>
+            </div>
+            <div class="h">
+              <h5>人做</h5>
+              <p>判断要不要主动给缓冲，异常单改口径，决定这句什么时候发。</p>
+            </div>
+          </div>
+          <p class="rule"><b>越界</b>出现"停线 / 调价 / 追责 / 索赔"字样，不自动发，转人工。</p>
+          <p class="rule"><b>回退</b>关掉这条规则，回到手工翻群，订单数据不受影响。</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 07 算账 -->
+<section class="sec" aria-labelledby="h-calc">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="no">07</span>
+      <div>
+        <h2 id="h-calc">你自己填三个数，就知道值不值得做</h2>
+        <p>不用听我们说值多少。把你岗位上真实的三个人填进去，算出来的就是你自己的账。</p>
+      </div>
+    </div>
+    <div class="cardwrap">
+      <div class="cardnote">
+        <p><b>算法是我们的，数字必须是你的。</b>这三个数只有业务负责人填得准，供应商填的通常偏大。</p>
+        <ul>
+          <li><b>每周次数</b>低于 3 次的动作，先别改。算出来也不值得。</li>
+          <li><b>每次耗时</b>只算这个动作本身，别把等人的时间算进去——那是流程问题，不是动作问题。</li>
+          <li><b>涉岗人数</b>只算真正每天做这个动作的人，管理者不算。</li>
+        </ul>
+        <p style="margin-top:16px;font-size:13.5px;color:var(--muted);">算出来的小时数，再乘上这个岗位的综合人工成本，就是你一年在这个动作上付出去的钱。<b style="color:var(--ink);">这个数字不产生新东西。</b></p>
+      </div>
+      <div class="calc">
+        <div class="ch">动作成本 · 自填算式</div>
+        <div class="row"><span>这个动作每周发生（次）</span><input id="n1" type="number" min="0" step="1" value="20" inputmode="numeric" aria-label="每周发生次数"></div>
+        <div class="row"><span>每次大约占用（分钟）</span><input id="n2" type="number" min="0" step="1" value="8" inputmode="numeric" aria-label="每次占用分钟"></div>
+        <div class="row"><span>每天做这个动作的（人）</span><input id="n3" type="number" min="0" step="1" value="3" inputmode="numeric" aria-label="涉岗人数"></div>
+        <div class="total">
+          <span class="lab">一年 · 同一个动作</span>
+          <span class="val"><span id="out">—</span><small>小时</small></span>
+        </div>
+        <p class="foot" id="note">按 50 个有效工作周计算。示例数字仅作演示，请替换为你们岗位的真实值。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 验收 -->
+<section class="sec sec-alt" aria-labelledby="h-accept">
+  <div class="wrap narrow">
+    <div class="sec-head">
+      <span class="no">08</span>
+      <div>
+        <h2 id="h-accept">验收：撤场之后才算数</h2>
+        <p>不看改了几个动作，看这一个有没有留在工位上。</p>
+      </div>
+    </div>
+    <ul class="check">
+      <li>我们不在场，它照常运转<span class="foot-note">撤场后一周这个动作还在被用；靠人盯才跑得动的，不算。</span></li>
+      <li>这个动作每周至少发生三次<span class="foot-note">次数太少，学不会也留不住。</span></li>
+      <li>是这个岗位的同事在跑，不是 FDE 在跑<span class="foot-note">他照着一页纸能做、不用再问我们，才算交接完成。</span></li>
+      <li>省下的时间落回业务，不是变成新报表<span class="foot-note">用来多接单、少加班，而不是多填一张表。</span></li>
+    </ul>
+    <p class="checkline">四条里有一条不成立，这一轮就不算交付。跑不住我们会写"跑不住"，不写"初步见效"。</p>
+  </div>
+</section>
+
+<!-- 09 边界 -->
+<section class="sec" aria-labelledby="h-bound">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="no">09</span>
+      <div>
+        <h2 id="h-bound">我们做什么，不做什么</h2>
+        <p>把不接的活写在前面，省掉一次互相试探——也省掉你一次预算。</p>
+      </div>
+    </div>
+    <div class="bounds">
+      <div>
+        <h3>我们接</h3>
+        <ul>
+          <li>有明确岗位、明确动作的：业务员回邮件、跟单员催交期、财务对账、客服分工单。</li>
+          <li>一把手愿意到场一次的：口径要有人拍，拍不了就会停在半路。</li>
+          <li>愿意先只改一个动作的：一次改一个，改完再挑下一个。</li>
+          <li>数据在 Excel、ERP、微信群里的：不要求你先上数据中台。</li>
+        </ul>
+      </div>
+      <div class="no-go">
+        <h3>我们不接</h3>
+        <ul>
+          <li>不动工位的项目：只做方案、只做评审、只做汇报的不接。</li>
+          <li>每周发生不到三次的动作：不值得改，先放着。</li>
+          <li>"全流程 AI 化"：一次只改一个动作，改完再挑下一个。</li>
+          <li>先要一个漂亮数字的项目：三个月后回访没人用的，我们不做。</li>
+        </ul>
+      </div>
+    </div>
+    <dl class="facts-dl" style="margin-top:32px;">
+      <div><dt>起点</dt><dd>现场诊断：先看动作，再决定要不要工具</dd></div>
+      <div><dt>形式</dt><dd>到场跟做 + 工位陪跑，不远程</dd></div>
+      <div><dt>地点</dt><dd>杭州，到场半径两小时</dd></div>
+      <div><dt>覆盖</dt><dd>沪苏浙皖</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- 10 FAQ -->
+<section class="sec sec-alt" aria-labelledby="h-faq">
+  <div class="wrap narrow">
+    <div class="sec-head">
+      <span class="no">10</span>
+      <div>
+        <h2 id="h-faq">老板最常问的五个问题</h2>
+      </div>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>我工具已经买了，为什么还要请人？</summary>
+        <p>因为工具解决的是"有没有入口"，不是"动作少没少"。你们的诊断现场已经出现过这种事：5 个人配了 AI 写作账号，三个月后 4 个人只用来写周报。工具不缺，缺的是有人把它和这个人每天面对的那封邮件对上。</p>
+      </details>
+      <details>
+        <summary>这和驻场外包有什么区别？</summary>
+        <p>外包按人天派活，活干完就走，方法和判断留在外面，你下次还得再叫一次；FDE 的考核是自己变得不需要——交接标准是这个岗位的同事照着一页纸能做、不用再问我们。所以我们不替员工点鼠标，只在旁边看他卡在哪。</p>
+      </details>
+      <details>
+        <summary>员工抵触怎么办？</summary>
+        <p>多数"抵触"其实是不安全感：怕被替代、怕出错背锅。所以动作卡上必须写清"人做哪一半"，以及"什么情况必须人工"。让员工看见被机器拿走的是搬运，留下的是判断，抵触会小很多。这一点我们会在口径那半天里和员工一起定。</p>
+      </details>
+      <details>
+        <summary>多久能看到东西？失败了怎么办？</summary>
+        <p>标准节奏一周一个动作，周四就能看到它在工位上跑。周三发现跑不通，我们会当天说，不拖到周五给你一份漂亮周报。观察期结束如果跑不住，撤场报告会直接写"跑不住"，不会把"初步见效"当结论。</p>
+      </details>
+      <details>
+        <summary>怎么收费？</summary>
+        <p>取决于拆哪个岗位、改几个动作。先做现场诊断，看清动作和断点之后给方案和报价——不看现场就报价的，基本都报不准，我们也就先不报。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="wechat">
+  <div class="wrap cta-in">
+    <div>
+      <p class="kicker">想先看看那个动作卡在哪一步</p>
+      <h2>加微信，说一句那个一直没落下去的动作是什么。</h2>
+      <p class="cta-note">我先帮你判断它属于哪一类、能不能交出去，以及卡在口径、卡在数据还是卡在没人拍板。不合适我会直说。也可以直接预约一次 30 分钟的诊断。</p>
+      <a class="btn btn-light" href="#wechat">预约诊断 <span class="min">30 MIN</span> <span class="arw">→</span></a>
+    </div>
+    <figure class="stamp">
+      <img src="assets/qr.jpg" alt="刘诠案的微信二维码" width="400" height="400">
+      <figcaption>微信扫一扫<small>刘诠案 · 杭州</small></figcaption>
+    </figure>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>AI培训 · 提效咨询 · FDE落地实施 ｜ 到场半径两小时</span>
+    <span>百鲸咨询 · 杭州</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ids=['n1','n2','n3'],out=document.getElementById('out'),note=document.getElementById('note');
+  function calc(){
+    var v=ids.map(function(id){var el=document.getElementById(id);var n=parseFloat(el.value);return isFinite(n)&&n>0?n:0;});
+    var hours=v[0]*v[1]*50*v[2]/60;
+    if(hours<=0){out.textContent='—';note.textContent='填入三个数，就会算出这一年在这个动作上花掉的小时数。';return;}
+    out.textContent=hours>=1000?Math.round(hours).toLocaleString('zh-CN'):(Math.round(hours*10)/10).toLocaleString('zh-CN');
+    note.textContent='按 50 个有效工作周计算：每周次数 × 每次分钟 × 50 周 × 人数 ÷ 60。示例数字仅作演示，请替换为你们岗位的真实值。';
+  }
+  ids.forEach(function(id){var el=document.getElementById(id);el.addEventListener('input',calc);el.addEventListener('change',calc);});
+  calc();
+})();
+</script>
+
+</body>
+</html>
