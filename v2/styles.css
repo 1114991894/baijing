@@ -778,27 +778,15 @@ p { color: var(--ink-2); text-wrap: pretty; }
 }
 .clients li img {
   max-width: 100%; max-height: 100%; object-fit: contain;
-  filter: grayscale(1); opacity: .7;
-  transition: filter .25s ease, opacity .25s ease;
+  opacity: 1;
+  transition: transform .25s ease;
 }
 .clients li:hover {
   transform: translateY(-3px);
   border-color: var(--teal);
   box-shadow: 0 12px 26px -16px rgba(20, 96, 77, .55);
 }
-.clients li:hover img { filter: none; opacity: 1; }
-.clients li::after {
-  content: attr(data-name);
-  position: absolute; left: 50%; bottom: calc(100% + 9px);
-  transform: translateX(-50%) translateY(4px);
-  background: var(--ink); color: var(--paper-2);
-  font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em;
-  padding: 6px 12px; border-radius: 999px; white-space: nowrap;
-  opacity: 0; visibility: hidden; pointer-events: none;
-  transition: opacity .2s ease, transform .2s ease, visibility .2s;
-  z-index: 20;
-}
-.clients li:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+.clients li:hover img { transform: scale(1.04); }
 @media (max-width: 900px) {
   .clients { grid-template-columns: repeat(3, 1fr); }
 }
