@@ -38,7 +38,7 @@ const SITE_URL = 'https://baijingzixun.top';
 const V2_REV = '2026-10-19';
 // 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
 // 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
-const ASSET_VER = '20261022-4';
+const ASSET_VER = '20261030-1';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -202,7 +202,7 @@ function copyStaticFiles() {
   ];
   // articles/ 只是 Supabase 建表说明（.sql/.md），api/ 是 Netlify 形态的
   // serverless webhook，GitHub Pages 上都没有任何作用，不进 dist。
-  const dirs = [];
+  const dirs = ['logos']; // 旧首页合作客户墙的 logo 资源，v2 首页「合作客户」复用
 
   for (const f of staticFiles) {
     const src = join(ROOT, f);
