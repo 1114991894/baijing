@@ -795,21 +795,21 @@ p { color: var(--ink-2); text-wrap: pretty; }
 }
 
 /* 逐张光学居中：按每张 logo 的实际内容框计算放大倍数与偏移 */
-.clients li:nth-child(1) img { --q: 1.095; --tx: -0.00%; --ty: -10.27%; }
-.clients li:nth-child(2) img { --q: 0.890; --tx: -0.00%; --ty: -0.00%; }
-.clients li:nth-child(3) img { --q: 0.890; --tx: -0.00%; --ty: -0.00%; }
-.clients li:nth-child(4) img { --q: 1.020; --tx: 0.15%; --ty: -0.13%; }
-.clients li:nth-child(5) img { --q: 1.632; --tx: 2.07%; --ty: 1.91%; }
-.clients li:nth-child(6) img { --q: 0.978; --tx: -0.00%; --ty: -1.89%; }
-.clients li:nth-child(7) img { --q: 2.094; --tx: -0.10%; --ty: -0.00%; }
-.clients li:nth-child(8) img { --q: 1.315; --tx: -0.15%; --ty: 0.06%; }
-.clients li:nth-child(9) img { --q: 1.374; --tx: -0.00%; --ty: -0.00%; }
-.clients li:nth-child(10) img { --q: 1.046; --tx: -0.94%; --ty: -5.65%; }
-.clients li:nth-child(11) img { --q: 1.605; --tx: 3.16%; --ty: 4.64%; }
-.clients li:nth-child(12) img { --q: 1.417; --tx: -0.73%; --ty: 2.44%; }
-.clients li:nth-child(13) img { --q: 1.587; --tx: -0.15%; --ty: 8.31%; }
-.clients li:nth-child(14) img { --q: 1.668; --tx: -0.70%; --ty: 3.13%; }
-.clients li:nth-child(15) img { --q: 0.890; --tx: -0.00%; --ty: -0.00%; }
+.clients li:nth-child(1) img { --q: 0.788; --tx: -0.00%; --ty: -7.39%; }
+.clients li:nth-child(2) img { --q: 0.641; --tx: -0.00%; --ty: -0.00%; }
+.clients li:nth-child(3) img { --q: 0.641; --tx: -0.00%; --ty: -0.00%; }
+.clients li:nth-child(4) img { --q: 0.734; --tx: 0.11%; --ty: -0.09%; }
+.clients li:nth-child(5) img { --q: 1.175; --tx: 1.49%; --ty: 1.38%; }
+.clients li:nth-child(6) img { --q: 0.704; --tx: -0.00%; --ty: -1.36%; }
+.clients li:nth-child(7) img { --q: 1.508; --tx: -0.07%; --ty: -0.00%; }
+.clients li:nth-child(8) img { --q: 0.947; --tx: -0.11%; --ty: 0.04%; }
+.clients li:nth-child(9) img { --q: 0.989; --tx: -0.00%; --ty: -0.00%; }
+.clients li:nth-child(10) img { --q: 0.753; --tx: -0.68%; --ty: -4.07%; }
+.clients li:nth-child(11) img { --q: 1.156; --tx: 2.28%; --ty: 3.34%; }
+.clients li:nth-child(12) img { --q: 1.020; --tx: -0.53%; --ty: 1.76%; }
+.clients li:nth-child(13) img { --q: 1.143; --tx: -0.11%; --ty: 5.98%; }
+.clients li:nth-child(14) img { --q: 1.201; --tx: -0.50%; --ty: 2.25%; }
+.clients li:nth-child(15) img { --q: 0.641; --tx: -0.00%; --ty: -0.00%; }
 
 @media (max-width: 1000px) {
   .clients { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
