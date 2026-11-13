@@ -197,3 +197,32 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
   else mount();
 })();
+
+/* ============================================================
+   UI 精致化：滚动显现（.rise）
+   - html 加 .js 后 CSS 才会隐藏元素，无 JS 时一切可见
+   - 尊重系统"减少动态效果"偏好
+   ============================================================ */
+(function () {
+  'use strict';
+  document.documentElement.classList.add('js');
+  var els = [].slice.call(document.querySelectorAll('.rise'));
+  if (!els.length) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+  els.forEach(function (el, i) {
+    el.style.transitionDelay = (Math.min(i % 3, 2) * 60) + 'ms';
+    io.observe(el);
+  });
+})();

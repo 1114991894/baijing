@@ -1226,9 +1226,53 @@
       .promo-pop { animation: none; }
       .promo-pop-close { transition: none; }
     }
+
+    /* ===================== UI 优化增强 v5 (Professional · Premium) ===================== */
+    /* —— 核心优势卡片 —— */
+    .adv-card { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--hair-b); border-radius: 18px; padding: 34px 28px; transition: transform .45s cubic-bezier(.22,.61,.36,1), box-shadow .45s, border-color .45s; }
+    .adv-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--brand)); transform: scaleX(0); transform-origin: left; transition: transform .5s cubic-bezier(.22,.61,.36,1); }
+    .adv-card::after { content: ""; position: absolute; top: -40px; right: -40px; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(196,169,101,.06), transparent 70%); pointer-events: none; opacity: 0; transition: opacity .45s; }
+    .adv-card:hover { transform: translateY(-6px); border-color: rgba(196,169,101,.35); box-shadow: 0 26px 50px -20px rgba(8,62,120,.26), 0 0 0 1px rgba(196,169,101,.08); }
+    .adv-card:hover::before { transform: scaleX(1); }
+    .adv-card:hover::after { opacity: 1; }
+    .adv-icon { width: 54px; height: 54px; border-radius: 15px; margin-bottom: 22px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--ink-700); background: linear-gradient(135deg, rgba(196,169,101,.12), rgba(40,184,160,.10)); border: 1px solid rgba(196,169,101,.22); transition: color .35s, background .35s, border-color .35s, transform .35s, box-shadow .35s; }
+    .adv-card:hover .adv-icon { color: #fff; background: linear-gradient(135deg, #C4A965, #A68B4A); border-color: transparent; transform: translateY(-2px); box-shadow: 0 10px 24px -8px rgba(196,169,101,.55); }
+    .adv-card h3 { font-size: 18px; font-weight: 700; color: #0B2545; margin-bottom: 12px; letter-spacing: -.01em; }
+    .adv-card p { font-size: 14.5px; line-height: 1.85; color: rgba(11,37,69,.62); }
+    .adv-num { position: absolute; top: 16px; right: 22px; font-family: var(--font-num); font-size: 40px; font-weight: 800; color: rgba(196,169,101,.10); letter-spacing: -.03em; pointer-events: none; }
+
+    /* —— 合作客户 logo 跑马灯 —— */
+    .logo-marquee { overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+    .logo-marquee::before, .logo-marquee::after { content: ""; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none; }
+    .logo-marquee::before { left: 0; background: linear-gradient(90deg, #fff, transparent); }
+    .logo-marquee::after { right: 0; background: linear-gradient(-90deg, #fff, transparent); }
+    .logo-track { display: flex; gap: 18px; width: max-content; animation: logoScroll 42s linear infinite; }
+    .logo-track:hover { animation-play-state: paused; }
+    @keyframes logoScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .logo-track .client-logo-card { flex: 0 0 auto; width: 150px; }
+
+    /* —— 统计数字底部光带 —— */
+    .stat-num { position: relative; }
+    .stat-num::after { content: ""; position: absolute; left: 20%; right: 20%; bottom: -5px; height: 2px; background: linear-gradient(90deg, transparent, rgba(196,169,101,.35), rgba(40,184,160,.35), transparent); }
+
+    /* —— 服务卡片悬浮光晕 —— */
+    .svc-card::after { content: ""; position: absolute; top: -40px; right: -40px; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(196,169,101,.06), transparent 70%); pointer-events: none; opacity: 0; transition: opacity .45s; }
+    .svc-card:hover::after { opacity: 1; }
+
+    /* —— 深色区画布粒子层 —— */
+    #intro canvas, #process canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+    #intro .container, #process .container { position: relative; z-index: 2; }
+
+    /* —— 核心优势区背景 —— */
+    .adv-section { position: relative; overflow: hidden; background: linear-gradient(180deg, #FAFBFD 0%, #F4FAFF 100%); }
+    .adv-section::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(600px 300px at 90% 10%, rgba(196,169,101,.04), transparent 60%), radial-gradient(500px 250px at 0% 90%, rgba(40,184,160,.03), transparent 60%); }
+    .adv-section > * { position: relative; z-index: 1; }
   </style>
 </head>
 <body data-page-node-id="wpEXmDpkHr4hVOD2vu1hYF">
+  <!-- 滚动进度条 -->
+  <div id="scrollProgress" style="position:fixed;top:0;left:0;height:3px;width:0;z-index:100;background:linear-gradient(90deg,#C4A965,#28B8A0,#22C0E0);box-shadow:0 0 12px rgba(196,169,101,.6);transition:width .1s linear;pointer-events:none;"></div>
+
   <!-- 导航栏 -->
   <header id="siteHeader" class="site-header sticky top-0 z-50" data-page-node-id="lPNcBPKr0d0AXcX1kaxmRl">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between" data-page-node-id="qnu8VRoEqgayYMRM60NAot">
@@ -1286,6 +1330,7 @@
   <!-- 品牌定位与实力数据（深色 premium） -->
   <section id="intro" class="section-dark-premium py-24 md:py-32" aria-label="品牌定位与实力数据">
     <div class="ai-mesh-bg"></div>
+    <canvas id="heroCanvas"></canvas>
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
       <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
         <div class="reveal">
@@ -1557,9 +1602,48 @@
       </div>
     </section>
 
+    <!-- 核心优势 -->
+    <section id="advantages" class="adv-section py-20 md:py-28" aria-label="核心优势">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="sec-head reveal">
+          <span class="eyebrow center">Why Baijing</span>
+          <h2>为什么选择百鲸</h2>
+          <p>不交付一份报告就离场，而是把方案变成企业可运转的系统与能力</p>
+          <div class="sec-rule"></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          <div class="adv-card reveal">
+            <span class="adv-num">01</span>
+            <div class="adv-icon"><i class="fas fa-layer-group"></i></div>
+            <h3>12 年方法论沉淀</h3>
+            <p>深耕制造、科技、服务、零售等行业，服务 1000+ 企业，方法论经过千锤百炼，而非纸上谈兵。</p>
+          </div>
+          <div class="adv-card reveal">
+            <span class="adv-num">02</span>
+            <div class="adv-icon"><i class="fas fa-robot"></i></div>
+            <h3>AI 工程化交付</h3>
+            <p>自研 G 系统与 FDE 驻场工程师，把管理方案落成系统、流程与工具，跑通数字化最后一公里。</p>
+          </div>
+          <div class="adv-card reveal">
+            <span class="adv-num">03</span>
+            <div class="adv-icon"><i class="fas fa-user-check"></i></div>
+            <h3>实战派咨询师</h3>
+            <p>核心团队均具备 10 年以上企业高管实战经验，既懂理论体系，更懂一线经营的真实痛点。</p>
+          </div>
+          <div class="adv-card reveal">
+            <span class="adv-num">04</span>
+            <div class="adv-icon"><i class="fas fa-infinity"></i></div>
+            <h3>项目制长期陪跑</h3>
+            <p>诊断、方案、实施、复盘四步闭环，按月校准目标与动作，成果持续沉淀而非一交了之。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- 项目制服务流程（深色 premium） -->
     <section id="process" class="section-dark-premium py-24 md:py-32" aria-label="项目制服务流程">
       <div class="ai-mesh-bg"></div>
+      <canvas id="processCanvas"></canvas>
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="sec-head on-dark reveal">
           <span class="eyebrow center">How We Work</span>
@@ -2025,22 +2109,24 @@
           <h2>合作客户</h2>
           <p>累计服务 1000+ 企业 · 以下为部分合作客户，排名不分先后</p>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 max-w-6xl mx-auto">
-          <div class="client-logo-card" data-name="百世快递"><img src="logos/baishi.jpeg" alt="百世快递" loading="lazy"></div>
-          <div class="client-logo-card" data-name="宝盛控股集团"><img src="logos/baosheng.png" alt="宝盛控股集团" loading="lazy"></div>
-          <div class="client-logo-card" data-name="美民家具科技"><img src="logos/meimin.png" alt="美民家具科技" loading="lazy"></div>
-          <div class="client-logo-card" data-name="普陀山旅游集团"><img src="logos/putuoshan.jpg" alt="普陀山旅游集团" loading="lazy"></div>
-          <div class="client-logo-card" data-name="知到教育"><img src="logos/zhidao.jpg" alt="知到教育" loading="lazy"></div>
-          <div class="client-logo-card" data-name="知无不言"><img src="logos/zhiwuyan.jpg" alt="知无不言" loading="lazy"></div>
-          <div class="client-logo-card" data-name="中舰企服集团"><img src="logos/zhongjian.jpg" alt="中舰企服集团" loading="lazy"></div>
-          <div class="client-logo-card" data-name="中南控股集团"><img src="logos/zhongnan.jpeg" alt="中南控股集团" loading="lazy"></div>
-          <div class="client-logo-card" data-name="中天集团"><img src="logos/zhongtian.jpg" alt="中天集团" loading="lazy"></div>
-          <div class="client-logo-card" data-name="中通快递"><img src="logos/zhongtong.jpg" alt="中通快递" loading="lazy"></div>
-          <div class="client-logo-card" data-name="阿宝菜篮子"><img src="logos/abaocailanzi.jpg" alt="阿宝菜篮子" loading="lazy"></div>
-          <div class="client-logo-card" data-name="宝盛宾馆"><img src="logos/baoshengbinguan.jpg" alt="宝盛宾馆" loading="lazy"></div>
-          <div class="client-logo-card" data-name="孙泰和国医馆"><img src="logos/suntaihe.jpg" alt="孙泰和国医馆" loading="lazy"></div>
-          <div class="client-logo-card" data-name="欧伦电气"><img src="logos/oulun.jpg" alt="欧伦电气" loading="lazy"></div>
-          <div class="client-logo-card" data-name="鑫瑞健康"><img src="logos/xinrui.jpg" alt="鑫瑞健康" loading="lazy"></div>
+        <div class="logo-marquee reveal" style="margin-top:44px;">
+          <div class="logo-track" id="logoTrack">
+            <div class="client-logo-card" data-name="百世快递"><img src="logos/baishi.jpeg" alt="百世快递" loading="lazy"></div>
+            <div class="client-logo-card" data-name="宝盛控股集团"><img src="logos/baosheng.png" alt="宝盛控股集团" loading="lazy"></div>
+            <div class="client-logo-card" data-name="美民家具科技"><img src="logos/meimin.png" alt="美民家具科技" loading="lazy"></div>
+            <div class="client-logo-card" data-name="普陀山旅游集团"><img src="logos/putuoshan.jpg" alt="普陀山旅游集团" loading="lazy"></div>
+            <div class="client-logo-card" data-name="知到教育"><img src="logos/zhidao.jpg" alt="知到教育" loading="lazy"></div>
+            <div class="client-logo-card" data-name="知无不言"><img src="logos/zhiwuyan.jpg" alt="知无不言" loading="lazy"></div>
+            <div class="client-logo-card" data-name="中舰企服集团"><img src="logos/zhongjian.jpg" alt="中舰企服集团" loading="lazy"></div>
+            <div class="client-logo-card" data-name="中南控股集团"><img src="logos/zhongnan.jpeg" alt="中南控股集团" loading="lazy"></div>
+            <div class="client-logo-card" data-name="中天集团"><img src="logos/zhongtian.jpg" alt="中天集团" loading="lazy"></div>
+            <div class="client-logo-card" data-name="中通快递"><img src="logos/zhongtong.jpg" alt="中通快递" loading="lazy"></div>
+            <div class="client-logo-card" data-name="阿宝菜篮子"><img src="logos/abaocailanzi.jpg" alt="阿宝菜篮子" loading="lazy"></div>
+            <div class="client-logo-card" data-name="宝盛宾馆"><img src="logos/baoshengbinguan.jpg" alt="宝盛宾馆" loading="lazy"></div>
+            <div class="client-logo-card" data-name="孙泰和国医馆"><img src="logos/suntaihe.jpg" alt="孙泰和国医馆" loading="lazy"></div>
+            <div class="client-logo-card" data-name="欧伦电气"><img src="logos/oulun.jpg" alt="欧伦电气" loading="lazy"></div>
+            <div class="client-logo-card" data-name="鑫瑞健康"><img src="logos/xinrui.jpg" alt="鑫瑞健康" loading="lazy"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -2771,6 +2857,147 @@
       // 等首屏资源就绪后再弹，避免与 banner 抢渲染帧
       if (document.readyState === 'complete') setTimeout(open, 500);
       else window.addEventListener('load', function () { setTimeout(open, 500); });
+    })();
+  </script>
+
+  <script>
+    /* ===================== UI 优化增强 v5：粒子网络 + 计数动画 + 跑马灯 ===================== */
+    (function () {
+      'use strict';
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* —— 滚动进度条 —— */
+      var progress = document.getElementById('scrollProgress');
+      function updateProgress() {
+        if (!progress) return;
+        var st = window.scrollY || document.documentElement.scrollTop;
+        var sh = document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.width = (sh > 0 ? Math.min(st / sh * 100, 100) : 0) + '%';
+      }
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress);
+      updateProgress();
+
+      /* —— Canvas 粒子网络（Hero + 流程区）—— */
+      function initParticleCanvas(canvasId, opts) {
+        var canvas = document.getElementById(canvasId);
+        if (!canvas || reduce) return;
+        var host = canvas.parentElement;
+        var ctx = canvas.getContext('2d');
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var W = 0, H = 0, dots = [], running = false, raf = null;
+        var COUNT = opts.count, MAXD = opts.linkDist;
+        var COLORS = ['rgba(40,184,160,', 'rgba(196,169,101,', 'rgba(34,192,224,'];
+
+        function resize() {
+          W = host.offsetWidth; H = host.offsetHeight;
+          canvas.width = W * dpr; canvas.height = H * dpr;
+          canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          seed();
+        }
+        function seed() {
+          dots = [];
+          var n = Math.max(28, Math.min(COUNT, Math.round(W * H / 16000)));
+          for (var i = 0; i < n; i++) {
+            dots.push({
+              x: Math.random() * W, y: Math.random() * H,
+              vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3,
+              r: Math.random() * 1.6 + .6,
+              c: COLORS[(Math.random() * COLORS.length) | 0]
+            });
+          }
+        }
+        function frame() {
+          if (!running) return;
+          ctx.clearRect(0, 0, W, H);
+          var i, j, p, q, dx, dy, d;
+          for (i = 0; i < dots.length; i++) {
+            p = dots[i];
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < -10) p.x = W + 10; else if (p.x > W + 10) p.x = -10;
+            if (p.y < -10) p.y = H + 10; else if (p.y > H + 10) p.y = -10;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, 6.2832);
+            ctx.fillStyle = p.c + '0.55)';
+            ctx.fill();
+          }
+          for (i = 0; i < dots.length; i++) {
+            for (j = i + 1; j < dots.length; j++) {
+              p = dots[i]; q = dots[j];
+              dx = p.x - q.x; dy = p.y - q.y;
+              d = dx * dx + dy * dy;
+              if (d < MAXD * MAXD) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(q.x, q.y);
+                ctx.strokeStyle = 'rgba(150,190,180,' + ((1 - Math.sqrt(d) / MAXD) * .16).toFixed(3) + ')';
+                ctx.lineWidth = .7;
+                ctx.stroke();
+              }
+            }
+          }
+          raf = requestAnimationFrame(frame);
+        }
+        function start() { if (!running) { running = true; raf = requestAnimationFrame(frame); } }
+        function stop() { running = false; if (raf) cancelAnimationFrame(raf); }
+
+        resize();
+        window.addEventListener('resize', resize);
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { e.isIntersecting ? start() : stop(); });
+          }, { threshold: 0.02 }).observe(host);
+        } else { start(); }
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) stop(); else start();
+        });
+      }
+      initParticleCanvas('heroCanvas', { count: 90, linkDist: 130 });
+      initParticleCanvas('processCanvas', { count: 70, linkDist: 120 });
+
+      /* —— 实力数据计数动画 —— */
+      var statNums = document.querySelectorAll('.stat-num');
+      function animateStat(el) {
+        if (el.dataset.counted) return;
+        el.dataset.counted = '1';
+        var unit = el.querySelector('span');
+        var unitHTML = unit ? unit.outerHTML : '';
+        var m = (el.textContent || '').match(/(\d[\d,]*)/);
+        if (!m) return;
+        var target = parseInt(m[1].replace(/,/g, ''), 10);
+        var startTs = null;
+        function step(ts) {
+          if (!startTs) startTs = ts;
+          var prog = Math.min((ts - startTs) / 1600, 1);
+          var eased = 1 - Math.pow(1 - prog, 3);
+          el.innerHTML = Math.round(target * eased) + unitHTML;
+          if (prog < 1) requestAnimationFrame(step);
+          else el.innerHTML = target + unitHTML;
+        }
+        if (reduce) { el.innerHTML = target + unitHTML; return; }
+        requestAnimationFrame(step);
+      }
+      if (statNums.length && 'IntersectionObserver' in window && !reduce) {
+        var statIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { animateStat(e.target); statIO.unobserve(e.target); }
+          });
+        }, { threshold: 0.4 });
+        statNums.forEach(function (el) { statIO.observe(el); });
+      }
+
+      /* —— 客户 logo 跑马灯无缝复制 —— */
+      var track = document.getElementById('logoTrack');
+      if (track && !reduce) {
+        track.innerHTML += track.innerHTML; /* 复制一份实现无缝循环 */
+      }
+      if (track && reduce) {
+        track.style.animation = 'none';
+        track.style.flexWrap = 'wrap';
+        track.style.width = 'auto';
+        track.style.justifyContent = 'center';
+      }
     })();
   </script>
 </body>
