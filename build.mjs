@@ -252,7 +252,7 @@ function generateArticleHtml(article) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(article.title)} — 百鲸咨询</title>
-<meta name="description" content="${escapeHtml(excerpt || '百鲸咨询 · AI培训 / 提效咨询 / FDE落地实施')}">
+<meta name="description" content="${escapeHtml(excerpt || '百鲸咨询 · AI培训 / 提效咨询 / 鲸选智能工作台')}">
 <link rel="canonical" href="${articleUrl}">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -305,7 +305,7 @@ ${excerpt ? `    <p class="lead" style="margin-top:18px;">${escapeHtml(excerpt)}
 <footer class="foot">
   <div class="wrap foot-in">
     <span>友情链接：<a href="https://g.baijingzixun.top">百鲸G系统</a> ↗ <a href="https://worker.baijingzixun.top">鲸选工作台</a> ↗ <a href="https://consultant-club.pages.dev/">consultant-club</a> ↗</span>
-    <span>AI培训 · 提效咨询 · FDE落地实施 ｜ 到场半径两小时</span>
+    <span>AI培训 · 提效咨询 · 鲸选智能工作台 ｜ 到场半径两小时</span>
     <a href="https://beian.miit.gov.cn" rel="noopener">浙ICP备2023042992号</a>
   </div>
 </footer>
