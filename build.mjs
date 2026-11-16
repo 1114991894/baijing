@@ -132,7 +132,7 @@ const pad2 = n => String(n).padStart(2, '0');
 function storyItemHtml(s, withBreakpoint) {
   const no = pad2(s.no);
   const meta = withBreakpoint && s.breakpoint
-    ? `${escapeHtml(s.meta)} · 断点：${escapeHtml(s.breakpoint)}`
+    ? `${escapeHtml(s.meta)} · 要点：${escapeHtml(s.breakpoint)}`
     : escapeHtml(s.meta);
   if (s.pending) {
     return `      <li>
@@ -162,7 +162,7 @@ function renderStoryLists(items) {
     `      <li>
         <a href="stories.html">
           <span class="no2">全部</span>
-          <span class="t">全部翻车实录</span>
+          <span class="t">全部工作台提效实录</span>
           <span class="meta">杭州 / 长三角</span>
           <span class="go">查看索引 →</span>
         </a>
@@ -276,7 +276,8 @@ ${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
       <a href="/index.html">首页</a>
       <a href="/ai-training.html">AI培训</a>
       <a href="/efficiency.html">提效咨询</a>
-      <a class="nav-hot" href="/stories.html">翻车实录</a>
+      <a href="/jingxuan.html">鲸选智能工作台</a>
+      <a class="nav-hot" href="/stories.html">工作台提效</a>
     </nav>
   </div>
 </header>
@@ -402,6 +403,7 @@ function generateSitemap(articles, stories = []) {
     { loc: `${SITE_URL}/`, lastmod: V2_REV, freq: 'weekly', pri: '1.0' },
     { loc: `${SITE_URL}/ai-training.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
     { loc: `${SITE_URL}/efficiency.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
+    { loc: `${SITE_URL}/jingxuan.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
     { loc: `${SITE_URL}/stories.html`, lastmod: V2_REV, freq: 'weekly', pri: '0.8' },
     ...stories.filter(s => !s.pending).map(s => ({
       loc: `${SITE_URL}/${s.href}`,
