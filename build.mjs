@@ -1,18 +1,16 @@
 /**
  * 百鲸咨询 站点构建
  * ---------------------------------------------------------------
- * 线上站点 = v2/ 目录下的「现场笔记风」五页站（2026-10 改版）
- *   v2/index.html        首页
- *   v2/ai-training.html  AI培训
- *   v2/efficiency.html   提效咨询
- *   v2/stories.html      翻车实录（索引）
- *   v2/story.html        翻车实录（单篇模板）
- *   v2/styles.css / v2/booking.js / v2/assets/*
+ * 线上站点主体 = mockup-v3/（2026-11 新设计：首页 / 产品 / 资讯 / 文章）
+ *   mockup-v3/index.html / products.html / articles.html / article.html
+ *   mockup-v3/styles.css → dist/styles-v3.css（改名避免覆盖 v2 遗留页样式）
+ *   mockup-v3/booking.js → dist/booking-v3.js（同上）
+ *   mockup-v3/assets/* → dist/assets/*
  *
- * 这些文件在构建时被复制到 dist/ 根目录，因此站内相对链接（styles.css、
- * assets/logo.png）与线上 URL 完全一致。
+ * v2/ 仍完整保留在仓库（回滚用），其页面与 /article/{id}.html 的旧链接继续
+ * 可访问，样式仍用 v2 的 styles.css —— 两套样式文件名隔离，互不覆盖。
  *
- * 根目录的 index.html 是改版前的旧首页，已不再部署，仅作备份/回滚参考。
+ * 更老的 index.html 是再上一版首页，已不再部署，仅作备份/回滚参考。
  * 旧版功能页（4 个测算工具、企业诊断、admin）保留可访问，样式沿用
  * premium-enhance.css。
  *
@@ -31,14 +29,17 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = __dirname;
 const DIST = join(ROOT, 'dist');
 const V2 = join(ROOT, 'v2');
+const V3 = join(ROOT, 'mockup-v3');
 const SITE_URL = 'https://baijingzixun.top';
 
 // v2 站点的内容版本日期（内容有实质改动时手动更新，不要用构建当天日期，
 // 否则每次 CI 都会把所有页面的 lastmod 刷成当天，对搜索引擎是噪声）
 const V2_REV = '2026-10-19';
+// v3 内容版本日期（实质改动时手动更新）
+const V3_REV = '2026-11-27';
 // 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
 // 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
-const ASSET_VER = '20261113-1';
+const ASSET_VER = '20261127-1';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -97,6 +98,30 @@ function copyV2Site() {
   // 旧的「咨询师登录」页引用根级 logo.png，顺手补一个，避免那张图 404
   copyFileSync(join(V2, 'assets', 'logo.png'), join(DIST, 'logo.png'));
   console.log(`✅ v2 站点已复制到 dist 根目录（${pages.length} 页 + 样式/脚本/图标）`);
+}
+
+/* ------------------------------------------------------------------
+   v3 站点：四页 + 样式 + 脚本 + assets + 客户 logo，复制到 dist 根目录。
+   样式/脚本改名为 *-v3.*，避免覆盖 v2 遗留页（stories/article 等）的资源。
+   ------------------------------------------------------------------ */
+const V3_PAGES = ['index.html', 'products.html', 'articles.html', 'article.html'];
+function copyV3Site() {
+  for (const f of V3_PAGES) {
+    const src = join(V3, f);
+    if (!existsSync(src)) throw new Error(`v3 页面缺失：${f}（构建中止，避免线上白页）`);
+    let html = readFileSync(src, 'utf8')
+      .replace(/(href=")styles\.css(")/g, '$1styles-v3.css$2')
+      .replace(/(src=")booking\.js(")/g, '$1booking-v3.js$2');
+    writeFileSync(join(DIST, f), html);
+  }
+  copyFileSync(join(V3, 'styles.css'), join(DIST, 'styles-v3.css'));
+  copyFileSync(join(V3, 'booking.js'), join(DIST, 'booking-v3.js'));
+  const assetDir = join(V3, 'assets');
+  for (const f of readdirSync(assetDir)) {
+    if (existsSync(join(assetDir, f))) copyFileSync(join(assetDir, f), join(DIST, 'assets', f));
+  }
+  copyDir(join(V3, 'logos'), join(DIST, 'logos'));
+  console.log('✅ v3 站点已复制到 dist 根目录（4 页 + 隔离样式/脚本 + assets/logos）');
 }
 
 /** 手写递归复制：本机 Node 的 cpSync 复制某些目录会静默崩溃（exit 127），
@@ -324,7 +349,9 @@ function addCacheBusting() {
     const next = html
       .replace(/(href="\/?)styles\.css(")/g, `$1styles.css?v=${ASSET_VER}$2`)
       .replace(/(src="\/?)booking\.js(")/g, `$1booking.js?v=${ASSET_VER}$2`)
-      .replace(/(src="\/?)share-card\.js(")/g, `$1share-card.js?v=${ASSET_VER}$2`);
+      .replace(/(src="\/?)share-card\.js(")/g, `$1share-card.js?v=${ASSET_VER}$2`)
+      .replace(/(href="\/?)styles-v3\.css(")/g, `$1styles-v3.css?v=${ASSET_VER}$2`)
+      .replace(/(src="\/?)booking-v3\.js(")/g, `$1booking-v3.js?v=${ASSET_VER}$2`);
     if (next !== html) writeFileSync(p, next);
   }
 }
@@ -400,7 +427,10 @@ function localizeExternalAssets() {
 
 function generateSitemap(articles, stories = []) {
   const staticUrls = [
-    { loc: `${SITE_URL}/`, lastmod: V2_REV, freq: 'weekly', pri: '1.0' },
+    { loc: `${SITE_URL}/`, lastmod: V3_REV, freq: 'weekly', pri: '1.0' },
+    { loc: `${SITE_URL}/products.html`, lastmod: V3_REV, freq: 'monthly', pri: '0.9' },
+    { loc: `${SITE_URL}/articles.html`, lastmod: V3_REV, freq: 'weekly', pri: '0.8' },
+    { loc: `${SITE_URL}/article.html`, lastmod: V3_REV, freq: 'monthly', pri: '0.7' },
     { loc: `${SITE_URL}/ai-training.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
     { loc: `${SITE_URL}/efficiency.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
     { loc: `${SITE_URL}/jingxuan.html`, lastmod: V2_REV, freq: 'monthly', pri: '0.9' },
@@ -444,8 +474,9 @@ async function main() {
   // 1) 旧版功能页与存量资源
   copyStaticFiles();
 
-  // 2) v2 站点（复制到根，可覆盖 404.html 等同名旧文件）
+  // 2) v2 站点（遗留页兼容）→ v3 站点（新主体，覆盖同名页面）
   copyV2Site();
+  copyV3Site();
 
   // 2.5) 翻车实录索引（数据源 v2/_data/stories.json）
   const stories = loadStories().items || [];
@@ -482,4 +513,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { generateArticleHtml, generateSitemap, copyV2Site };
+export { generateArticleHtml, generateSitemap, copyV2Site, copyV3Site };

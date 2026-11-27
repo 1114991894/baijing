@@ -88,6 +88,7 @@
         <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
           <button id="navList" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-list mr-1"></i>文章列表</button>
           <button id="navLeads" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-user-check mr-1"></i>预约线索<span id="leadsBadge" class="hidden ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white text-[11px] font-bold align-middle"></span></button>
+          <button id="navCases" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-trophy mr-1"></i>案例管理</button>
           <button id="navAdd" class="btn-primary text-sm flex items-center gap-2"><i class="fas fa-plus mr-1"></i>添加文章</button>
           <a href="../index.html" target="_blank" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-home mr-1"></i>查看首页</a>
           <span id="adminEmail" class="text-sm text-secondary/60 hidden sm:inline truncate max-w-[160px]"></span>
@@ -202,6 +203,102 @@
       </section>
 
       <!-- 添加 / 编辑 -->
+      <!-- 客户提效案例列表 -->
+      <section id="cases-view" class="tab-view hidden">
+        <div class="bg-white rounded-2xl shadow-elevated border border-neutral/20 overflow-hidden">
+          <div class="p-4 border-b border-neutral/20 flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center">
+            <p class="text-sm text-secondary/60"><i class="fas fa-info-circle text-accent mr-1.5"></i>首页「客户提效案例」模块的数据源，保存后前端自动同步（加载失败时显示默认卡片）</p>
+            <div class="flex items-center gap-2">
+              <button id="addCaseBtn" class="btn-primary text-sm flex items-center gap-2 whitespace-nowrap"><i class="fas fa-plus"></i> 添加案例</button>
+              <button id="casesRefreshBtn" class="text-sm text-secondary hover:text-primary px-3 py-1.5 rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap"><i class="fas fa-sync-alt mr-1"></i>刷新</button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[760px]">
+              <thead class="bg-section">
+                <tr>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider w-16">排序</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">行业标签</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">指标（前 → 后）</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">徽章</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider">状态</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-secondary/60 uppercase tracking-wider w-32">操作</th>
+                </tr>
+              </thead>
+              <tbody id="caseTableBody" class="divide-y divide-neutral/10">
+                <tr><td colspan="6" class="px-6 py-12 text-center text-secondary/50"><i class="fas fa-spinner fa-spin text-2xl mb-3"></i><p>加载中...</p></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="casesEmpty" class="hidden py-16 text-center text-secondary/50">
+            <i class="fas fa-trophy text-4xl mb-4 text-secondary/30"></i>
+            <p class="text-lg">暂无案例</p>
+            <p class="text-sm text-secondary/50 mt-1">没有数据时首页显示默认卡片</p>
+          </div>
+          <div id="casesErrorState" class="hidden py-16 text-center text-red-500">
+            <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
+            <p class="text-lg" id="casesErrorMsg">加载失败</p>
+            <p class="text-sm text-secondary/50 mt-2">请确认已在 Supabase 执行 articles/cases.sql 建表</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 案例编辑表单 -->
+      <section id="case-form-view" class="tab-view hidden">
+        <div class="bg-white rounded-2xl shadow-elevated border border-neutral/20 p-6 max-w-3xl mx-auto">
+          <form id="caseForm">
+            <input type="hidden" id="caseId">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-secondary/80 mb-1.5">行业标签行 <span class="text-red-400">*</span></label>
+                <input type="text" id="caseIndustry" class="form-input" maxlength="60" placeholder="如：SOFTWARE · 200 人软件公司" required>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-secondary/80 mb-1.5">指标名 <span class="text-red-400">*</span></label>
+                <input type="text" id="caseTitle" class="form-input" maxlength="40" placeholder="如：新员工上手周期" required>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-secondary/80 mb-1.5">改善前（删除线小字）</label>
+                <input type="text" id="caseBefore" class="form-input" maxlength="20" placeholder="如：12 周">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-secondary/80 mb-1.5">改善后（大数字）</label>
+                <input type="text" id="caseAfter" class="form-input" maxlength="20" placeholder="如：5 周">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-secondary/80 mb-1.5">徽章文本</label>
+                <input type="text" id="caseDelta" class="form-input" maxlength="16" placeholder="如：↓ 58% 或 人员零净增">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-secondary/80 mb-1.5">改善维度</label>
+                <input type="text" id="caseNote" class="form-input" maxlength="40" placeholder="如：改善维度：岗位效率 · 一次完成率">
+              </div>
+            </div>
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-secondary/80 mb-1.5">改善路径（用 → 分隔步骤）</label>
+              <input type="text" id="casePath" class="form-input" maxlength="80" placeholder="如：岗位任务重构 → SOP 进工作台 → 8 周数据验证">
+            </div>
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-secondary/80 mb-1.5">案例描述</label>
+              <textarea id="caseSummary" class="form-input" rows="3" maxlength="200" placeholder="两三句话说清背景、动作与结果"></textarea>
+            </div>
+            <div class="flex flex-wrap items-center gap-6 mt-5">
+              <div class="flex items-center gap-2">
+                <label class="text-sm font-medium text-secondary/80">排序</label>
+                <input type="number" id="caseSort" class="form-input w-24 py-1.5" placeholder="0">
+              </div>
+              <label class="flex items-center gap-2 text-sm text-secondary/80 cursor-pointer">
+                <input type="checkbox" id="casePublished" class="w-4 h-4 accent-teal-600" checked> 发布（勾选后首页可见）
+              </label>
+            </div>
+            <div class="flex gap-3 mt-6">
+              <button type="submit" class="btn-primary text-sm px-6"><i class="fas fa-save mr-1"></i>保存</button>
+              <button type="button" id="caseCancelBtn" class="text-sm text-secondary/70 hover:text-secondary px-6 py-2 rounded-lg hover:bg-primary/5 transition-colors">取消</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
       <section id="add-article-view" class="tab-view hidden">
         <div class="w-full">
           <div class="bg-white rounded-2xl shadow-elevated border border-neutral/20 p-6 md:p-8">
@@ -377,6 +474,7 @@
       if (!listenersBound) { setupAdminListeners(); listenersBound = true; }
       loadArticles();
       loadLeads();
+      loadCases();
     }
 
     // ===================== 后台事件 =====================
@@ -388,6 +486,11 @@
       document.getElementById('navAdd').addEventListener('click', () => switchToForm('add'));
       document.getElementById('navList').addEventListener('click', switchToListView);
       document.getElementById('navLeads').addEventListener('click', switchToLeadsView);
+      document.getElementById('navCases').addEventListener('click', switchToCasesView);
+      document.getElementById('casesRefreshBtn').addEventListener('click', loadCases);
+      document.getElementById('addCaseBtn').addEventListener('click', () => switchToCaseForm(null));
+      document.getElementById('caseCancelBtn').addEventListener('click', switchToCasesView);
+      document.getElementById('caseForm').addEventListener('submit', handleCaseSubmit);
       document.getElementById('leadsRefreshBtn').addEventListener('click', loadLeads);
       document.getElementById('leadsStatusFilter').addEventListener('change', () => renderLeads(getFilteredLeads()));
       document.getElementById('leadsSearchInput').addEventListener('input', () => renderLeads(getFilteredLeads()));
@@ -554,6 +657,114 @@
       document.getElementById('articleCount').classList.remove('hidden');
       loadArticles();
     }
+
+    // ===================== 客户提效案例 =====================
+    let cases = [];
+    let currentCaseId = null;
+    function switchToCasesView() {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+      document.getElementById('cases-view').classList.remove('hidden');
+      document.getElementById('pageTitle').textContent = '客户提效案例';
+      document.getElementById('pageSubtitle').textContent = '首页案例模块数据源：写、发布、排序、管理';
+      document.getElementById('articleCount').classList.add('hidden');
+      loadCases();
+    }
+    async function loadCases() {
+      const body = document.getElementById('caseTableBody');
+      body.innerHTML = '<tr><td colspan="6" class="px-6 py-12 text-center text-secondary/50"><i class="fas fa-spinner fa-spin text-2xl mb-3"></i><p>加载中...</p></td></tr>';
+      document.getElementById('casesEmpty').classList.add('hidden');
+      document.getElementById('casesErrorState').classList.add('hidden');
+      try {
+        const { data, error } = await supabaseClient.from('cases').select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false });
+        if (error) throw error;
+        cases = data || [];
+        renderCases();
+      } catch (err) {
+        console.error('加载案例失败：', err);
+        const isMissing = err && (err.code === 'PGRST205' || err.code === '42P01' || /does not exist|Could not find the table/i.test(err.message || ''));
+        document.getElementById('casesErrorMsg').textContent = isMissing ? '数据表 cases 不存在' : ('加载失败：' + (err.message || '未知错误'));
+        document.getElementById('casesErrorState').classList.remove('hidden');
+        body.innerHTML = '';
+      }
+    }
+    function renderCases() {
+      const body = document.getElementById('caseTableBody');
+      if (!cases.length) { body.innerHTML = ''; document.getElementById('casesEmpty').classList.remove('hidden'); return; }
+      document.getElementById('casesEmpty').classList.add('hidden');
+      body.innerHTML = cases.map(c => `
+        <tr class="table-row align-top">
+          <td class="px-6 py-4 text-sm text-secondary/60">${c.sort_order ?? 0}</td>
+          <td class="px-6 py-4 text-sm text-secondary/80 max-w-[200px] truncate" title="${escAttr(c.industry_tag)}">${escHtml(c.industry_tag)}</td>
+          <td class="px-6 py-4 text-sm">
+            <div class="font-medium text-secondary">${escHtml(c.title)}</div>
+            <div class="text-secondary/50 text-xs mt-0.5">${escHtml(c.before_val || '—')} → ${escHtml(c.after_val || '—')}</div>
+          </td>
+          <td class="px-6 py-4 text-sm">${c.delta ? `<span class="inline-block px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">${escHtml(c.delta)}</span>` : '—'}</td>
+          <td class="px-6 py-4 text-sm">${c.is_published ? '<span class="text-green-600 text-xs font-semibold">已发布</span>' : '<span class="text-amber-500 text-xs font-semibold">草稿</span>'}</td>
+          <td class="px-6 py-4 text-sm whitespace-nowrap">
+            <button class="case-edit-btn text-accent hover:text-hover p-2 rounded-lg transition-colors" data-id="${c.id}" title="编辑"><i class="fas fa-edit"></i></button>
+            <button class="case-del-btn text-red-400 hover:text-red-600 p-2 rounded-lg transition-colors" data-id="${c.id}" title="删除"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+      body.querySelectorAll('.case-edit-btn').forEach(b => b.addEventListener('click', () => switchToCaseForm(cases.find(x => x.id === b.dataset.id))));
+      body.querySelectorAll('.case-del-btn').forEach(b => b.addEventListener('click', () => deleteCase(b.dataset.id)));
+    }
+    function switchToCaseForm(c) {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+      document.getElementById('case-form-view').classList.remove('hidden');
+      document.getElementById('pageTitle').textContent = c ? '编辑案例' : '添加案例';
+      document.getElementById('pageSubtitle').textContent = '保存后首页「客户提效案例」模块自动同步';
+      document.getElementById('caseForm').reset();
+      currentCaseId = c ? c.id : null;
+      document.getElementById('caseIndustry').value = c ? (c.industry_tag || '') : '';
+      document.getElementById('caseTitle').value = c ? (c.title || '') : '';
+      document.getElementById('caseBefore').value = c ? (c.before_val || '') : '';
+      document.getElementById('caseAfter').value = c ? (c.after_val || '') : '';
+      document.getElementById('caseDelta').value = c ? (c.delta || '') : '';
+      document.getElementById('casePath').value = c ? (c.path || '') : '';
+      document.getElementById('caseSummary').value = c ? (c.summary || '') : '';
+      document.getElementById('caseNote').value = c ? (c.note || '') : '';
+      document.getElementById('caseSort').value = c && c.sort_order != null ? c.sort_order : '';
+      document.getElementById('casePublished').checked = c ? !!c.is_published : true;
+    }
+    async function handleCaseSubmit(e) {
+      e.preventDefault();
+      const data = {
+        industry_tag: document.getElementById('caseIndustry').value.trim(),
+        title: document.getElementById('caseTitle').value.trim(),
+        before_val: document.getElementById('caseBefore').value.trim() || null,
+        after_val: document.getElementById('caseAfter').value.trim() || null,
+        delta: document.getElementById('caseDelta').value.trim() || null,
+        path: document.getElementById('casePath').value.trim() || null,
+        summary: document.getElementById('caseSummary').value.trim() || null,
+        note: document.getElementById('caseNote').value.trim() || null,
+        sort_order: parseInt(document.getElementById('caseSort').value, 10) || 0,
+        is_published: document.getElementById('casePublished').checked,
+        updated_at: new Date().toISOString()
+      };
+      if (!data.industry_tag || !data.title) return;
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>保存中...';
+      try {
+        const { error } = currentCaseId
+          ? await supabaseClient.from('cases').update(data).eq('id', currentCaseId)
+          : await supabaseClient.from('cases').insert([data]);
+        if (error) throw error;
+        switchToCasesView();
+      } catch (err) {
+        alert('保存失败：' + (err.message || '未知错误'));
+      } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-save mr-1"></i>保存';
+      }
+    }
+    async function deleteCase(id) {
+      if (!confirm('确定删除这条案例吗？删除后首页不再显示（可用"添加案例"重建）。')) return;
+      const { error } = await supabaseClient.from('cases').delete().eq('id', id);
+      if (error) { alert('删除失败：' + (error.message || '未知错误')); return; }
+      loadCases();
+    }
+    function escHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function escAttr(s) { return escHtml(s); }
 
     // ===================== 信息统计（企业诊断线索） =====================
     let leads = [];

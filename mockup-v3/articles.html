@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>资讯 | 百鲸咨询 · 组织人效观点与实践</title>
+<meta name="description" content="百鲸咨询观点文章：AI 提效、组织人效、岗位效能、绩效激励的实战方法与案例复盘。">
+<link rel="icon" href="assets/favicon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="index.html"><img src="assets/logo-white.png" alt="百鲸咨询"></a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="products.html">产品</a>
+      <a href="articles.html" class="active">资讯</a>
+      <a href="index.html#contact" class="nav-cta" data-book>预约诊断</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">INSIGHTS · 资讯</div>
+    <h1>观点与实践</h1>
+    <p>关于 AI 提效、组织人效、岗位效能与激励机制的原创观点。每篇都来自真实项目的现场，不搬运概念。</p>
+  </div>
+</section>
+
+<section class="sec-tight">
+  <div class="wrap">
+    <div class="posts">
+      <a class="post" href="article.html">
+        <div class="cover"><img src="assets/op2-ai.png" alt="你公司不是缺AI，是缺会使用AI的人"></div>
+        <div class="body">
+          <div class="cat">AI 与人效 · 2026-11-27</div>
+          <h3>你公司不是缺 AI，是缺会使用 AI 的人</h3>
+          <p>78% 的企业试过 AI，规模化用起来的不足 15%。差距不在工具，在人：选任务、建方法、养习惯。</p>
+          <span class="more">阅读全文 →</span>
+        </div>
+      </a>
+      <a class="post soon" href="javascript:void(0)">
+        <div class="cover"><img src="assets/op1-jingxuan.png" alt="提效不等于裁员"></div>
+        <div class="body">
+          <div class="cat">组织人效 · 即将发布<span class="badge">DRAFT</span></div>
+          <h3>提效 ≠ 裁员：让每个人手里的低价值工作变少</h3>
+          <p>编制失控往往只是症状，根因在职责、流程与授权。人效改善的正确打开方式。</p>
+          <span class="more">即将发布</span>
+        </div>
+      </a>
+      <a class="post soon" href="javascript:void(0)">
+        <div class="cover"><img src="assets/hero.png" alt="人效公式"></div>
+        <div class="body">
+          <div class="cat">方法论 · 即将发布<span class="badge">DRAFT</span></div>
+          <h3>人效 ＝ 有效经营产出 ÷ 综合人员投入</h3>
+          <p>为什么人均营收不是人效的全部？产出、投入与质量约束三个变量怎么测。</p>
+          <span class="more">即将发布</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="contact sec-tight" id="contact">
+  <div class="wrap contact-in">
+    <div>
+      <div class="eyebrow">NEXT STEP · 下一步</div>
+      <h2>读完了观点，<br>看看你的公司从哪里切入</h2>
+      <p class="lead on-dark" style="margin-top:14px">20 分钟适配沟通，判断你的人效问题值不值得立项。合适再推进，不合适直说。</p>
+    </div>
+    <div class="qr-card">
+      <img src="assets/qr.jpg" alt="百鲸咨询微信二维码">
+      <b>扫码添加微信</b>
+      <span>刘老师 · 百鲸咨询</span>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap foot-row">
+    <span class="fl">友情链接：</span>
+    <a href="https://g.baijingzixun.top" target="_blank" rel="noopener">百鲸G系统 ↗</a>
+    <a href="https://worker.baijingzixun.top" target="_blank" rel="noopener">鲸选工作台 ↗</a>
+    <a href="https://consultant-club.pages.dev/" target="_blank" rel="noopener">consultant-club ↗</a>
+    <span class="sep">｜</span>
+    <a class="icp" href="https://beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备2023042992号</a>
+  </div>
+</footer>
+
+<script src="booking.js"></script>
+<script>
+/* 资讯列表：优先读 Supabase articles（后台发文自动同步），失败降级保留静态卡片 */
+(function () {
+  'use strict';
+  var URL = 'https://mxtxwjprmfstbheiempi.supabase.co';
+  var KEY = 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+    });
+  }
+  function fmt(s) {
+    if (!s) return '';
+    var d = new Date(s);
+    if (isNaN(d.getTime())) return '';
+    var p = function (n) { return n < 10 ? '0' + n : '' + n; };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  fetch(URL + '/rest/v1/articles?select=id,title,excerpt,cover_url,created_at,updated_at,sort_order&order=sort_order.desc&order=created_at.desc&limit=30', {
+    headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
+  }).then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function (rows) {
+    if (!Array.isArray(rows) || !rows.length) return;
+    var wrap = document.querySelector('.posts');
+    if (!wrap) return;
+    wrap.innerHTML = rows.map(function (a) {
+      var cover = a.cover_url ? esc(a.cover_url) : 'assets/hero.png';
+      var cat = '观点 · ' + (fmt(a.updated_at || a.created_at) || '百鲸咨询');
+      return '<a class="post" href="article/' + encodeURIComponent(a.id) + '.html">'
+        + '<div class="cover"><img src="' + cover + '" alt="' + esc(a.title) + '"></div>'
+        + '<div class="body"><div class="cat">' + cat + '</div>'
+        + '<h3>' + esc(a.title) + '</h3>'
+        + (a.excerpt ? '<p>' + esc(a.excerpt) + '</p>' : '')
+        + '<span class="more">阅读全文 →</span></div></a>';
+    }).join('');
+  }).catch(function () { /* 静态卡片即降级内容 */ });
+})();
+</script>
+</body>
+</html>
