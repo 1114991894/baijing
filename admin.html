@@ -43,6 +43,9 @@
     /* 弹窗：纯 CSS 控制显隐，避免 Tailwind display 切换不稳定 */
     .modal-overlay { display: none; position: fixed; inset: 0; z-index: 50; align-items: center; justify-content: center; background: rgba(0,0,0,.5); padding: 1rem; }
     .modal-overlay.open { display: flex; }
+  /* 案例描述框：右边缘与「改善维度」输入框对齐，跨两列宽度 */
+  #caseSummary { display:block; width:582px; max-width:100%; min-height:130px; padding:10px 12px; border:1px solid #D3D1C7; border-radius:7px; font-family:inherit; font-size:15px; line-height:1.6; resize:vertical; background:#fff; color:#333; }
+  @media (max-width: 767px) { #caseSummary { width:100%; } }
   </style>
   <link rel="stylesheet" href="premium-enhance.css">
 </head>
@@ -280,7 +283,7 @@
             </div>
             <div class="mt-4">
               <label class="block text-sm font-medium text-secondary/80 mb-1.5">案例描述</label>
-              <textarea id="caseSummary" class="form-input" rows="3" maxlength="200" placeholder="两三句话说清背景、动作与结果"></textarea>
+              <textarea id="caseSummary" class="form-input" rows="5" maxlength="240" placeholder="两三句话说清背景、动作与结果"></textarea>
             </div>
             <div class="flex flex-wrap items-center gap-6 mt-5">
               <div class="flex items-center gap-2">
