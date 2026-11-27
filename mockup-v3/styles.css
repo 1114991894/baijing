@@ -217,7 +217,21 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .article-hero .cat{font-family:var(--mono);font-size:12px;letter-spacing:.28em;color:var(--gold-soft);margin-bottom:12px}
 .article-hero h1{font-size:clamp(26px,3.2vw,38px);max-width:840px;margin-bottom:14px;color:#fff}
 .article-hero .meta{font-size:13.5px;color:rgba(243,239,230,.6);display:flex;gap:22px}
-.article-body{max-width:760px;margin:0 auto;padding:72px 28px 40px}
+.article-body{max-width:1180px;margin:0 auto;padding:72px 28px 40px}
+/* 文字窄栏居中（阅读宽度不变），图片/数据卡等模块通栏，与首页 wrap 几何一致：
+   左缘对齐导航 logo，右缘对齐「预约诊断」药丸 */
+.article-body>p,.article-body>h2,.article-body>h3,.article-body>h4{max-width:760px;margin-left:auto;margin-right:auto}
+.article-body>p{margin-top:0}
+.article-body>h2{margin-top:52px;margin-bottom:20px}
+.article-body>h3{margin-top:34px;margin-bottom:14px}
+.article-body>blockquote{max-width:760px;margin:28px auto}
+.article-body>ul,.article-body>ol{max-width:760px;margin-left:auto;margin-right:auto}
+.article-body>ul.op-list{max-width:760px;margin:26px auto 0}
+.article-body>.toc{max-width:760px;margin-left:auto;margin-right:auto}
+.article-body>.faq-item{max-width:760px;margin-left:auto;margin-right:auto}
+.article-body>.art-lead,.article-body>.art-quote,.article-body>.art-note,.article-body>.art-steps,
+.article-body>.art-intro,.article-body>.art-dialog,.article-body>.art-faq{max-width:760px;margin-left:auto;margin-right:auto}
+.article-body>.op-img,.article-body>.pull-stats,.article-body>.art-case,.article-body>img{max-width:none}
 .article-body p{margin-bottom:22px;color:var(--ink-2);font-size:16.5px}
 .article-body h2{font-size:26px;margin:52px 0 20px;padding-top:8px}
 .article-body h3{font-size:19px;margin:34px 0 14px;color:var(--ink)}
@@ -269,7 +283,7 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .faq-item{border-bottom:1px solid var(--line);padding:22px 0}
 .faq-item h3{font-size:17px;margin-bottom:10px}
 .faq-item p{font-size:15px;margin:0}
-.article-cta{max-width:760px;margin:30px auto 0;padding:0 28px 90px}
+.article-cta{max-width:1180px;margin:30px auto 0;padding:0 28px 90px}
 .article-cta .box{background:var(--teal-deep);color:#F3EFE6;border-radius:var(--radius);padding:44px;display:flex;justify-content:space-between;align-items:center;gap:34px}
 .article-cta h3{font-size:22px;color:#F3EFE6;margin-bottom:8px}
 .article-cta p{color:rgba(243,239,230,.72);font-size:14.5px}
@@ -503,7 +517,7 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .bk-done p{margin:10px 0}
 
 /* 文章上一篇 / 下一篇导航：标签与标题同行，标题缩小 */
-.art-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:56px 0 0;padding-top:30px;border-top:1px solid var(--line)}
+.art-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:1180px;margin:56px auto 0;padding:30px 28px 0;border-top:1px solid var(--line)}
 .art-nav a{display:flex;align-items:baseline;gap:10px;padding:18px 22px;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);transition:.2s}
 .art-nav a:hover{border-color:var(--teal);background:#fff;transform:translateY(-2px)}
 .art-nav a.next{justify-content:flex-end}
