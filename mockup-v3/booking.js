@@ -270,11 +270,62 @@
   });
 })();
 
-/* 导航栏智能显隐：鼠标下滑页面时隐藏顶部导航栏，上滑时再显示（仅桌面端生效） */
+/* ============================================================
+   手机版导航：右上角汉堡按钮 → 下拉抽屉菜单（booking.js 注入）
+   - 桌面端按钮与抽屉均不显示（CSS 控制）
+   - 抽屉链接克隆自当前页 .nav-links，自动带 active 状态与预约药丸
+   ============================================================ */
 (function () {
+  'use strict';
+  var nav = document.querySelector('.nav');
+  var navIn = nav && nav.querySelector('.nav-in');
+  var links = nav && nav.querySelector('.nav-links');
+  if (!nav || !navIn || !links) return;
+
+  var burger = document.createElement('button');
+  burger.className = 'burger';
+  burger.type = 'button';
+  burger.setAttribute('aria-label', '打开菜单');
+  burger.setAttribute('aria-expanded', 'false');
+  burger.innerHTML = '<span></span><span></span><span></span>';
+  navIn.appendChild(burger);
+
+  var drawer = document.createElement('div');
+  drawer.className = 'nav-drawer';
+  var clone = links.cloneNode(true);
+  clone.removeAttribute('class');
+  clone.className = 'nav-drawer-links';
+  drawer.appendChild(clone);
+  nav.appendChild(drawer);
+
+  function setOpen(open) {
+    drawer.classList.toggle('open', open);
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  burger.addEventListener('click', function (e) {
+    e.stopPropagation();
+    setOpen(!drawer.classList.contains('open'));
+  });
+  drawer.addEventListener('click', function (e) {
+    if (e.target.closest('a')) setOpen(false);
+  });
+  document.addEventListener('click', function (e) {
+    if (drawer.classList.contains('open') && !nav.contains(e.target)) setOpen(false);
+  });
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 600 && drawer.classList.contains('open')) setOpen(false);
+  });
+})();
+
+/* ============================================================
+   导航栏智能显隐：下滑隐藏、上滑显示（桌面端 + 手机端统一）
+   ============================================================ */
+(function () {
+  'use strict';
   var nav = document.querySelector('.nav');
   if (!nav) return;
-  var mq = window.matchMedia('(min-width: 601px)');
   var lastY = window.scrollY || 0;
   var ticking = false;
   var THRESHOLD = 140;   // 离顶部超过这个距离才开始隐藏
@@ -286,9 +337,9 @@
     requestAnimationFrame(function () {
       var y = window.scrollY || window.pageYOffset || 0;
       var dy = y - lastY;
-      if (mq.matches && y > THRESHOLD && dy > DELTA) {
+      if (y > THRESHOLD && dy > DELTA) {
         nav.classList.add('nav-hidden');
-      } else if (dy < -DELTA || y <= THRESHOLD || !mq.matches) {
+      } else if (dy < -DELTA || y <= THRESHOLD) {
         nav.classList.remove('nav-hidden');
       }
       lastY = y;

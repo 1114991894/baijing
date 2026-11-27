@@ -44,8 +44,8 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 
 /* ---------- 导航 ---------- */
 .nav{position:sticky;top:0;z-index:50;background:rgba(10,46,38,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(243,239,230,.08);transition:transform .28s ease}
-/* 导航栏滚动智能显隐：下滑隐藏、上滑显示（仅桌面端，移动端导航已精简不隐藏） */
-@media(min-width:601px){.nav.nav-hidden{transform:translateY(-101%)}}
+/* 导航栏滚动智能显隐：下滑隐藏、上滑显示（桌面端 + 手机端统一行为） */
+.nav.nav-hidden{transform:translateY(-101%)}
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:92px}
 .nav .logo img{height:72px}
 .nav-links{display:flex;gap:36px;align-items:center}
@@ -55,6 +55,14 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .nav-links a.active::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--gold)}
 .nav-links a.nav-cta{background:var(--gold);color:#14201F;font-weight:600;font-size:15px;padding:3px 28px;border-radius:999px;letter-spacing:.06em;transition:.2s}
 .nav-links a.nav-cta:hover{background:#C9B788}
+
+/* 手机版汉堡按钮 + 下拉抽屉（由 booking.js 注入，仅移动端显示） */
+.nav .burger{display:none;background:none;border:0;padding:8px;cursor:pointer;flex-direction:column;gap:5px}
+.nav .burger span{display:block;width:22px;height:2px;background:#F3EFE6;border-radius:2px;transition:.25s}
+.nav .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav .burger.open span:nth-child(2){opacity:0}
+.nav .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-drawer{display:none}
 
 /* ---------- Hero ---------- */
 .hero{position:relative;background:var(--teal-dark);color:#F3EFE6;overflow:hidden}
@@ -330,10 +338,32 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 }
 @media(max-width:600px){
   .four-ef,.accept,.pull-stats{grid-template-columns:1fr}
-  .nav-links a:not(.nav-cta){display:none}
-  .hero-in{padding:96px 0 80px}
+  /* 手机版：导航链接收进右上角汉堡抽屉 */
+  .nav-links{display:none}
+  .nav-in{height:64px}
+  .nav .logo img{height:44px}
+  .nav .burger{display:flex}
+  .nav-drawer.open{display:block;position:absolute;left:0;right:0;top:100%;background:#0A2E26;border-bottom:1px solid rgba(243,239,230,.12);box-shadow:0 18px 40px rgba(0,0,0,.4);padding:8px 26px 18px;animation:navDrop .22s ease}
+  .nav-drawer-links{display:flex;flex-direction:column;align-items:stretch}
+  .nav-drawer-links a{color:rgba(243,239,230,.85);font-size:15px;letter-spacing:.06em;padding:13px 4px;border-bottom:1px solid rgba(243,239,230,.08)}
+  .nav-drawer-links a.active{color:var(--gold-soft)}
+  .nav-drawer-links a.active::after{display:none}
+  .nav-drawer-links a.nav-cta{margin-top:12px;text-align:center;border-bottom:none;background:var(--gold);color:#14201F;font-weight:600;border-radius:999px;padding:11px;font-size:14px}
+  /* 首页 banner：字体缩小、排版收紧 */
+  .hero-in{padding:78px 0 64px}
+  .hero-tag{font-size:10.5px;letter-spacing:.16em;padding:6px 13px;margin-bottom:18px}
+  .hero h1{font-size:25px;line-height:1.38;margin-bottom:12px}
+  .hero p{font-size:14px;line-height:1.7;margin-bottom:24px}
+  .hero-btns .btn{padding:10px 20px;font-size:12px}
+  .hero-btns{gap:10px}
+  /* 资讯子页面头部卡片：整体缩小、所有文章尺寸一致 */
+  .article-cover-wrap .article-hero-flat{padding:24px 20px;min-height:148px;display:flex;flex-direction:column;justify-content:center}
+  .article-hero .cat{font-size:10px;letter-spacing:.18em;margin-bottom:7px}
+  .article-hero h1{font-size:20px;line-height:1.42;margin-bottom:9px}
+  .article-hero .meta{font-size:11.5px;gap:14px;flex-wrap:wrap}
   .op{gap:36px}
 }
+@keyframes navDrop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 
 /* ============================================================
    预约诊断抽屉（沿用 v2 booking.js，变量别名适配 v3 设计系统）
