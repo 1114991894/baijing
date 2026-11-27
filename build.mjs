@@ -39,7 +39,7 @@ const V2_REV = '2026-10-19';
 const V3_REV = '2026-11-27';
 // 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
 // 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
-const ASSET_VER = '20261127-13';
+const ASSET_VER = '20261127-14';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -348,6 +348,7 @@ ${cover ? `    <figure class="op-img"><img src="${escapeHtml(cover)}" alt="${esc
       <div class="cat">观点 · ${escapeHtml(category)}</div>
       <h1>${escapeHtml(article.title)}</h1>
       <div class="meta"><span>${escapeHtml(author)}</span><span>${createdAt}</span><span>百鲸咨询</span></div>
+      <button class="art-share" type="button" aria-label="分享本文"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.7 10.7l6.6-4.1M8.7 13.3l6.6 4.1"/></svg><span>分享</span></button>
     </header>
   </div>
 </div>

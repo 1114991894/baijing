@@ -347,3 +347,179 @@
     });
   }, { passive: true });
 })();
+
+/* ============================================================
+   文章页分享按钮：生成分享图 → 系统分享（可发朋友圈）/ 保存 / 复制链接
+   - 分享图用 Canvas 现场绘制（封面 + 分类 + 标题 + 日期 + 二维码）
+   - 支持 navigator.share 文件分享的设备直接调起系统分享面板
+   - 其余设备走下载保存；微信内长按图片也可保存
+   ============================================================ */
+(function () {
+  'use strict';
+  var btn = document.querySelector('.art-share');
+  if (!btn) return;
+
+  var hero = document.querySelector('.article-hero');
+  var h1 = document.querySelector('.article-hero h1');
+  var cat = document.querySelector('.article-hero .cat');
+  var metaEl = document.querySelector('.article-hero .meta');
+  var coverImg = document.querySelector('.article-cover-wrap .op-img img');
+  var TITLE = h1 ? h1.textContent.trim() : document.title;
+  var CAT = cat ? cat.textContent.trim() : '百鲸咨询';
+  var DATE = metaEl
+    ? Array.prototype.slice.call(metaEl.querySelectorAll('span')).map(function (s) { return s.textContent.trim(); })
+        .filter(function (t, i, arr) { return t && arr.indexOf(t) === i; }).join(' · ')
+    : '';
+  var URL_NOW = location.origin + location.pathname;
+
+  function loadImage(src) {
+    return new Promise(function (resolve) {
+      var im = new Image();
+      im.onload = function () { resolve(im); };
+      im.onerror = function () { resolve(null); };
+      im.src = src;
+    });
+  }
+
+  function wrap(ctx, text, maxW) {
+    var lines = [];
+    var line = '';
+    for (var i = 0; i < text.length; i++) {
+      var test = line + text[i];
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = text[i]; }
+      else line = test;
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  function buildCard() {
+    var W = 900, H = 1200;
+    var cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    var ctx = cv.getContext('2d');
+    var COVER_H = 430;
+
+    // 背景
+    ctx.fillStyle = '#0A2E26';
+    ctx.fillRect(0, 0, W, H);
+
+    // 封面（等比裁剪填充顶部）
+    function drawCover(im) {
+      if (!im) return;
+      var s = Math.max(W / im.width, COVER_H / im.height);
+      var sw = W / s, sh = COVER_H / s;
+      var sx = (im.width - sw) / 2, sy = (im.height - sh) / 2;
+      ctx.drawImage(im, sx, sy, sw, sh, 0, 0, W, COVER_H);
+      // 封面底部渐隐衔接深色
+      var grad = ctx.createLinearGradient(0, COVER_H - 120, 0, COVER_H);
+      grad.addColorStop(0, 'rgba(10,46,38,0)');
+      grad.addColorStop(1, 'rgba(10,46,38,1)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, COVER_H - 120, W, 120);
+    }
+    var coverReady = (coverImg && coverImg.complete && coverImg.naturalWidth)
+      ? Promise.resolve(drawCover(coverImg))
+      : loadImage(coverImg ? coverImg.currentSrc || coverImg.src : '').then(drawCover);
+
+    return coverReady.then(function () {
+      var pad = 70, maxW = W - pad * 2;
+
+      // 金色分类
+      ctx.fillStyle = '#C9B788';
+      ctx.font = '26px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(CAT, pad, COVER_H + 92);
+
+      // 标题（最多 4 行）
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '700 46px "PingFang SC","Microsoft YaHei",sans-serif';
+      var lines = wrap(ctx, TITLE, maxW).slice(0, 4);
+      var ty = COVER_H + 150;
+      lines.forEach(function (ln) { ctx.fillText(ln, pad, ty); ty += 62; });
+
+      // 日期行
+      ctx.fillStyle = 'rgba(243,239,230,.55)';
+      ctx.font = '26px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(DATE + '  ·  百鲸咨询', pad, ty + 18);
+
+      // 金色分隔线
+      ctx.fillStyle = 'rgba(201,183,136,.45)';
+      ctx.fillRect(pad, ty + 70, maxW, 2);
+
+      // 二维码（白色圆角卡 + 码图 + 说明）
+      var qr = loadImage('/assets/qr.jpg');
+      return qr.then(function (im) {
+        var qs = 190, qx = pad, qy = H - qs - 96;
+        ctx.fillStyle = '#FFFFFF';
+        if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(qx, qy, qs, qs, 14); ctx.fill(); }
+        else ctx.fillRect(qx, qy, qs, qs);
+        if (im) ctx.drawImage(im, qx + 10, qy + 10, qs - 20, qs - 20);
+        ctx.fillStyle = 'rgba(243,239,230,.85)';
+        ctx.font = '600 28px "PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText('扫码加微信，预约诊断', qx + qs + 34, qy + 62);
+        ctx.fillStyle = 'rgba(243,239,230,.5)';
+        ctx.font = '24px "PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText('组织人效诊断 · AI 机会地图', qx + qs + 34, qy + 106);
+        ctx.fillText('baijingzixun.top', qx + qs + 34, qy + 150);
+
+        return new Promise(function (resolve) { cv.toBlob(resolve, 'image/png'); });
+      });
+    });
+  }
+
+  function ensureModal() {
+    var mask = document.querySelector('.share-mask');
+    if (mask) return mask;
+    mask = document.createElement('div');
+    mask.className = 'share-mask';
+    mask.innerHTML =
+      '<div class="share-card" role="dialog" aria-label="分享本文">' +
+      '  <h3>分享这篇文章<button type="button" class="share-x" aria-label="关闭">×</button></h3>' +
+      '  <img class="share-preview" alt="文章分享图">' +
+      '  <p class="share-tip">点「保存 / 分享」可直接调起系统分享（可发给朋友或朋友圈）；也可以长按上方图片保存到相册，发朋友圈时选择它。</p>' +
+      '  <div class="share-btns">' +
+      '    <button type="button" class="share-copy">复制链接</button>' +
+      '    <button type="button" class="share-save primary">保存 / 分享</button>' +
+      '  </div>' +
+      '</div>';
+    document.body.appendChild(mask);
+    mask.addEventListener('click', function (e) {
+      if (e.target === mask || e.target.classList.contains('share-x')) mask.classList.remove('open');
+    });
+    return mask;
+  }
+
+  var cardBlob = null;
+  btn.addEventListener('click', function () {
+    var mask = ensureModal();
+    mask.classList.add('open');
+    var preview = mask.querySelector('.share-preview');
+    if (cardBlob) { preview.src = URL.createObjectURL(cardBlob); return; }
+    buildCard().then(function (blob) {
+      if (!blob) return;
+      cardBlob = blob;
+      preview.src = URL.createObjectURL(blob);
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    var mask = document.querySelector('.share-mask');
+    if (!mask || !mask.classList.contains('open')) return;
+    if (e.target.classList.contains('share-copy')) {
+      var done = function () { e.target.textContent = '已复制'; setTimeout(function () { e.target.textContent = '复制链接'; }, 1600); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(TITLE + ' ' + URL_NOW).then(done, done);
+      else done();
+    } else if (e.target.classList.contains('share-save')) {
+      if (!cardBlob) return;
+      var file = new File([cardBlob], 'baijing-article.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: TITLE }).catch(function () {});
+      } else {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(cardBlob);
+        a.download = 'baijing-article.png';
+        a.click();
+      }
+    }
+  });
+})();
