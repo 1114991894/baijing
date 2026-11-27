@@ -56,7 +56,7 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 
 /* ---------- Hero ---------- */
 .hero{position:relative;background:var(--teal-dark);color:#F3EFE6;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:url("assets/hero.png") center right/cover no-repeat}
+.hero-bg{position:absolute;inset:0;background:url("assets/hero.webp") center right/cover no-repeat}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,46,38,.88) 0%,rgba(10,46,38,.55) 42%,rgba(10,46,38,.12) 78%)}
 .hero-in{position:relative;z-index:2;padding:150px 0 130px;max-width:660px}
 .hero-tag{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.28em;color:var(--gold-soft);border:1px solid rgba(201,183,136,.4);padding:8px 16px;border-radius:999px;margin-bottom:30px}

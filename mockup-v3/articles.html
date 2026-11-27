@@ -12,7 +12,7 @@
 
 <nav class="nav">
   <div class="wrap nav-in">
-    <a class="logo" href="index.html"><img src="assets/logo-white.png" alt="百鲸咨询"></a>
+    <a class="logo" href="index.html"><picture><source srcset="assets/logo-white.webp" type="image/webp"><img src="assets/logo-white.png" alt="百鲸咨询"></picture></a>
     <div class="nav-links">
       <a href="index.html">首页</a>
       <a href="products.html">产品</a>
@@ -34,7 +34,7 @@
   <div class="wrap">
     <div class="posts">
       <a class="post" href="article.html">
-        <div class="cover"><img src="assets/op2-ai.png" alt="你公司不是缺AI，是缺会使用AI的人"></div>
+        <div class="cover"><picture><source srcset="assets/op2-ai.webp" type="image/webp"><img src="assets/op2-ai.png" alt="你公司不是缺AI，是缺会使用AI的人"></picture></div>
         <div class="body">
           <div class="cat">AI 与人效 · 2026-11-27</div>
           <h3>你公司不是缺 AI，是缺会使用 AI 的人</h3>
@@ -43,7 +43,7 @@
         </div>
       </a>
       <a class="post soon" href="javascript:void(0)">
-        <div class="cover"><img src="assets/op1-jingxuan.png" alt="提效不等于裁员"></div>
+        <div class="cover"><picture><source srcset="assets/op1-jingxuan.webp" type="image/webp"><img src="assets/op1-jingxuan.png" alt="提效不等于裁员"></picture></div>
         <div class="body">
           <div class="cat">组织人效 · 即将发布<span class="badge">DRAFT</span></div>
           <h3>提效 ≠ 裁员：让每个人手里的低价值工作变少</h3>
@@ -52,7 +52,7 @@
         </div>
       </a>
       <a class="post soon" href="javascript:void(0)">
-        <div class="cover"><img src="assets/hero.png" alt="人效公式"></div>
+        <div class="cover"><picture><source srcset="assets/hero.webp" type="image/webp"><img src="assets/hero.png" alt="人效公式"></picture></div>
         <div class="body">
           <div class="cat">方法论 · 即将发布<span class="badge">DRAFT</span></div>
           <h3>人效 ＝ 有效经营产出 ÷ 综合人员投入</h3>
@@ -119,7 +119,7 @@
     var wrap = document.querySelector('.posts');
     if (!wrap) return;
     wrap.innerHTML = rows.map(function (a) {
-      var cover = a.cover_url ? esc(a.cover_url) : 'assets/hero.png';
+      var cover = a.cover_url ? esc(a.cover_url) : 'assets/hero.webp';
       var cat = '观点 · ' + (fmt(a.updated_at || a.created_at) || '百鲸咨询');
       return '<a class="post" href="article/' + encodeURIComponent(a.id) + '.html">'
         + '<div class="cover"><img src="' + cover + '" alt="' + esc(a.title) + '"></div>'
