@@ -43,7 +43,9 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .on-dark .lead{color:rgba(243,239,230,.72)}
 
 /* ---------- 导航 ---------- */
-.nav{position:sticky;top:0;z-index:50;background:rgba(10,46,38,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(243,239,230,.08)}
+.nav{position:sticky;top:0;z-index:50;background:rgba(10,46,38,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(243,239,230,.08);transition:transform .28s ease}
+/* 导航栏滚动智能显隐：下滑隐藏、上滑显示（仅桌面端，移动端导航已精简不隐藏） */
+@media(min-width:601px){.nav.nav-hidden{transform:translateY(-101%)}}
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:92px}
 .nav .logo img{height:72px}
 .nav-links{display:flex;gap:36px;align-items:center}

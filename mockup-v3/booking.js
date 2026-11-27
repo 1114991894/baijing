@@ -269,3 +269,30 @@
     io.observe(el);
   });
 })();
+
+/* 导航栏智能显隐：鼠标下滑页面时隐藏顶部导航栏，上滑时再显示（仅桌面端生效） */
+(function () {
+  var nav = document.querySelector('.nav');
+  if (!nav) return;
+  var mq = window.matchMedia('(min-width: 601px)');
+  var lastY = window.scrollY || 0;
+  var ticking = false;
+  var THRESHOLD = 140;   // 离顶部超过这个距离才开始隐藏
+  var DELTA = 2;         // 滚动幅度小于此值视为抖动，不触发
+
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var y = window.scrollY || window.pageYOffset || 0;
+      var dy = y - lastY;
+      if (mq.matches && y > THRESHOLD && dy > DELTA) {
+        nav.classList.add('nav-hidden');
+      } else if (dy < -DELTA || y <= THRESHOLD || !mq.matches) {
+        nav.classList.remove('nav-hidden');
+      }
+      lastY = y;
+      ticking = false;
+    });
+  }, { passive: true });
+})();
