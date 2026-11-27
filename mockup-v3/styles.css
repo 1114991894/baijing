@@ -218,20 +218,6 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .article-hero h1{font-size:clamp(26px,3.2vw,38px);max-width:840px;margin-bottom:14px;color:#fff}
 .article-hero .meta{font-size:13.5px;color:rgba(243,239,230,.6);display:flex;gap:22px}
 .article-body{max-width:1180px;margin:0 auto;padding:72px 28px 40px}
-/* 文字窄栏居中（阅读宽度不变），图片/数据卡等模块通栏，与首页 wrap 几何一致：
-   左缘对齐导航 logo，右缘对齐「预约诊断」药丸 */
-.article-body>p,.article-body>h2,.article-body>h3,.article-body>h4{max-width:760px;margin-left:auto;margin-right:auto}
-.article-body>p{margin-top:0}
-.article-body>h2{margin-top:52px;margin-bottom:20px}
-.article-body>h3{margin-top:34px;margin-bottom:14px}
-.article-body>blockquote{max-width:760px;margin:28px auto}
-.article-body>ul,.article-body>ol{max-width:760px;margin-left:auto;margin-right:auto}
-.article-body>ul.op-list{max-width:760px;margin:26px auto 0}
-.article-body>.toc{max-width:760px;margin-left:auto;margin-right:auto}
-.article-body>.faq-item{max-width:760px;margin-left:auto;margin-right:auto}
-.article-body>.art-lead,.article-body>.art-quote,.article-body>.art-note,.article-body>.art-steps,
-.article-body>.art-intro,.article-body>.art-dialog,.article-body>.art-faq{max-width:760px;margin-left:auto;margin-right:auto}
-.article-body>.op-img,.article-body>.pull-stats,.article-body>.art-case,.article-body>img{max-width:none}
 .article-body p{margin-bottom:22px;color:var(--ink-2);font-size:16.5px}
 .article-body h2{font-size:26px;margin:52px 0 20px;padding-top:8px}
 .article-body h3{font-size:19px;margin:34px 0 14px;color:var(--ink)}
@@ -270,6 +256,20 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .article-body .art-dialog .ask b{color:var(--teal)}
 .article-body .art-dialog .ans{margin:0;font-size:15px;line-height:1.85;color:var(--ink-2)}
 .article-body .art-dialog .ans b{color:var(--ink-3);font-weight:600}
+/* 对齐规则必须放在上面全部基础样式之后：文字窄栏居中（阅读宽度不变），
+   图片/数据卡等模块通栏与首页 wrap 几何一致（左对齐 logo、右对齐「预约诊断」药丸） */
+.article-body>p,.article-body>h2,.article-body>h3,.article-body>h4{max-width:760px;margin-left:auto;margin-right:auto}
+.article-body>p{margin-top:0}
+.article-body>h2{margin:52px auto 20px;padding-top:8px}
+.article-body>h3{margin:34px auto 14px}
+.article-body>blockquote{max-width:760px;margin:28px auto}
+.article-body>ul,.article-body>ol{max-width:760px;margin:16px auto 22px}
+.article-body>ul.op-list{max-width:760px !important;margin:26px auto 0 !important}
+.article-body>.toc,.article-body>.faq-item{max-width:760px;margin-left:auto;margin-right:auto}
+.article-body>.art-lead,.article-body>.art-quote,.article-body>.art-note,.article-body>.art-steps,
+.article-body>.art-intro,.article-body>.art-dialog,.article-body>.art-faq{max-width:760px;margin-left:auto;margin-right:auto}
+.article-body>.op-img,.article-body>.pull-stats,.article-body>.art-case{max-width:none}
+.article-body>.art-case{margin:26px auto}
 .pull-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:32px 0}
 .pull-stats .ps{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px}
 .pull-stats .ps b{font-family:var(--serif);font-size:32px;color:var(--teal);display:block}
