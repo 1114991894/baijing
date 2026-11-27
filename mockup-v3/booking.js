@@ -368,7 +368,7 @@
   var CAT = cat ? cat.textContent.trim() : '百鲸咨询';
   var DATE = metaEl
     ? Array.prototype.slice.call(metaEl.querySelectorAll('span')).map(function (s) { return s.textContent.trim(); })
-        .filter(function (t, i, arr) { return t && arr.indexOf(t) === i; }).join(' · ')
+        .filter(function (t, i, arr) { return t && t !== '百鲸咨询' && arr.indexOf(t) === i; }).join(' · ')
     : '';
   var URL_NOW = location.origin + location.pathname;
 
@@ -410,7 +410,7 @@
         if (dispH > 560) { dispH = 560; dispW = Math.round(560 * ar); }
       }
       var cb = Math.max(dispH, 90);      // 内容区起点（无封面时留出顶部空间）
-      var H = cb + 740;                   // 内容区固定高度（分类+标题+日期+分隔线+二维码+留白）
+      var H = cb + 680;                   // 内容区固定高度（分类+标题+日期+分隔线+二维码+留白）
       cv.width = W; cv.height = H;
 
       // 背景
@@ -429,26 +429,26 @@
 
       var pad = 70, maxW = W - pad * 2;
 
-      // 金色分类
+      // 金色分类（小号字 + 与标题拉开间距）
       ctx.fillStyle = '#C9B788';
-      ctx.font = '26px "PingFang SC","Microsoft YaHei",sans-serif';
-      ctx.fillText(CAT, pad, cb + 92);
+      ctx.font = '22px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(CAT, pad, cb + 84);
 
-      // 标题（最多 4 行）
+      // 标题（缩小到 36px，最多 4 行，行距收紧）
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '700 46px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.font = '700 36px "PingFang SC","Microsoft YaHei",sans-serif';
       var lines = wrap(ctx, TITLE, maxW).slice(0, 4);
-      var ty = cb + 150;
-      lines.forEach(function (ln) { ctx.fillText(ln, pad, ty); ty += 62; });
+      var ty = cb + 140;
+      lines.forEach(function (ln) { ctx.fillText(ln, pad, ty); ty += 54; });
 
-      // 日期行
+      // 日期行（日期只出现一次，品牌只出现一次）
       ctx.fillStyle = 'rgba(243,239,230,.55)';
-      ctx.font = '26px "PingFang SC","Microsoft YaHei",sans-serif';
-      ctx.fillText(DATE + '  ·  百鲸咨询', pad, ty + 18);
+      ctx.font = '24px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(DATE ? DATE + ' · 百鲸咨询' : '百鲸咨询', pad, ty + 16);
 
       // 金色分隔线
       ctx.fillStyle = 'rgba(201,183,136,.45)';
-      ctx.fillRect(pad, ty + 70, maxW, 2);
+      ctx.fillRect(pad, ty + 64, maxW, 2);
 
       // 二维码（白色圆角卡 + 码图 + 说明）
       var qs = 190, qx = pad, qy = H - qs - 60;
@@ -459,12 +459,12 @@
       return qr.then(function (qim) {
         if (qim) ctx.drawImage(qim, qx + 10, qy + 10, qs - 20, qs - 20);
         ctx.fillStyle = 'rgba(243,239,230,.85)';
-        ctx.font = '600 28px "PingFang SC","Microsoft YaHei",sans-serif';
-        ctx.fillText('扫码加微信，预约诊断', qx + qs + 34, qy + 62);
+        ctx.font = '600 26px "PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText('扫码加微信，预约诊断', qx + qs + 34, qy + 58);
         ctx.fillStyle = 'rgba(243,239,230,.5)';
-        ctx.font = '24px "PingFang SC","Microsoft YaHei",sans-serif';
-        ctx.fillText('组织人效诊断 · AI 机会地图', qx + qs + 34, qy + 106);
-        ctx.fillText('baijingzixun.top', qx + qs + 34, qy + 150);
+        ctx.font = '22px "PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText('组织人效诊断 · AI 机会地图', qx + qs + 34, qy + 98);
+        ctx.fillText('baijingzixun.top', qx + qs + 34, qy + 138);
 
         return new Promise(function (resolve) { cv.toBlob(resolve, 'image/png'); });
       });
