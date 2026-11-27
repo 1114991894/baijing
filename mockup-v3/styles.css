@@ -502,12 +502,12 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .bk-done h3{margin-bottom:14px}
 .bk-done p{margin:10px 0}
 
-/* 文章上一篇 / 下一篇导航 */
+/* 文章上一篇 / 下一篇导航：标签与标题同行，标题缩小 */
 .art-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:56px 0 0;padding-top:30px;border-top:1px solid var(--line)}
-.art-nav a{display:block;padding:20px 24px;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);transition:.2s}
+.art-nav a{display:flex;align-items:baseline;gap:10px;padding:18px 22px;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);transition:.2s}
 .art-nav a:hover{border-color:var(--teal);background:#fff;transform:translateY(-2px)}
-.art-nav a.next{text-align:right}
-.art-nav .n{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--gold);margin-bottom:8px}
-.art-nav .t{display:block;font-family:var(--serif);font-size:16px;line-height:1.5;color:var(--ink)}
+.art-nav a.next{justify-content:flex-end}
+.art-nav .n{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--gold);white-space:nowrap;flex:none}
+.art-nav .t{font-family:var(--serif);font-size:13.5px;line-height:1.55;color:var(--ink);min-width:0}
 .art-nav .empty{display:block}
-@media(max-width:640px){.art-nav{grid-template-columns:1fr;gap:10px}.art-nav a.next{text-align:left}}
+@media(max-width:640px){.art-nav{grid-template-columns:1fr;gap:10px}.art-nav a.next{justify-content:flex-start}}

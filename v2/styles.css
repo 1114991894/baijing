@@ -662,16 +662,16 @@ p { color: var(--ink-2); text-wrap: pretty; }
   .art-case, .editor .art-case { flex-direction:column; }
 }
 
-/* 上一篇 / 下一篇导航 */
+/* 上一篇 / 下一篇导航：标签与标题同行 */
 .art-nav { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:42px 0 0; padding-top:26px; border-top:1px solid var(--line); }
-.art-nav a { display:block; padding:18px 20px; border:1px solid var(--line); border-radius:4px; background:var(--paper-2); text-decoration:none; transition:.2s; }
+.art-nav a { display:flex; align-items:baseline; gap:10px; padding:16px 18px; border:1px solid var(--line); border-radius:4px; background:var(--paper-2); text-decoration:none; transition:.2s; }
 .art-nav a:hover { border-color:var(--teal); background:var(--teal-soft); }
-.art-nav a.next { text-align:right; }
-.art-nav .n { display:block; font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; color:var(--gold); margin-bottom:8px; }
-.art-nav .t { display:block; font-family:var(--serif); font-size:16px; line-height:1.5; color:var(--ink); }
+.art-nav a.next { justify-content:flex-end; }
+.art-nav .n { font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; color:var(--gold); white-space:nowrap; flex:none; }
+.art-nav .t { font-family:var(--serif); font-size:13.5px; line-height:1.55; color:var(--ink); min-width:0; }
 @media (max-width: 640px) {
   .art-nav { grid-template-columns:1fr; }
-  .art-nav a.next { text-align:left; }
+  .art-nav a.next { justify-content:flex-start; }
 }
 
 /* FAQ */
