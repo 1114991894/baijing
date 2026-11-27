@@ -39,7 +39,7 @@ const V2_REV = '2026-10-19';
 const V3_REV = '2026-11-27';
 // 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
 // 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
-const ASSET_VER = '20261127-9';
+const ASSET_VER = '20261127-10';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -342,16 +342,18 @@ ${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
   </div>
 </nav>
 
-<header class="article-hero">
-  <div class="wrap">
-    <div class="cat">观点 · ${escapeHtml(category)}</div>
-    <h1>${escapeHtml(article.title)}</h1>
-    <div class="meta"><span>${escapeHtml(author)}</span><span>${createdAt}</span><span>百鲸咨询</span></div>
+<div class="article-cover-outer">
+  <div class="article-cover-wrap">
+${cover ? `    <figure class="op-img"><img src="${escapeHtml(cover)}" alt="${escapeHtml(article.title)}"></figure>\n` : ''}    <header class="article-hero article-hero-flat">
+      <div class="cat">观点 · ${escapeHtml(category)}</div>
+      <h1>${escapeHtml(article.title)}</h1>
+      <div class="meta"><span>${escapeHtml(author)}</span><span>${createdAt}</span><span>百鲸咨询</span></div>
+    </header>
   </div>
-</header>
+</div>
 
 <main class="article-body">
-${cover ? `  <figure class="op-img" style="margin-bottom:40px">\n    <img src="${escapeHtml(cover)}" alt="${escapeHtml(article.title)}">\n    <figcaption>${escapeHtml(article.title)}（配图）</figcaption>\n  </figure>\n` : ''}${article.content || ''}
+${article.content || ''}
 </main>
 
 ${artNav ? artNav + '\n\n' : ''}<div class="article-cta">
