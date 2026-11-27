@@ -394,47 +394,51 @@
   }
 
   function buildCard() {
-    var W = 900, H = 1200;
+    var W = 900;
     var cv = document.createElement('canvas');
-    cv.width = W; cv.height = H;
     var ctx = cv.getContext('2d');
-    var COVER_H = 430;
 
-    // 背景
-    ctx.fillStyle = '#0A2E26';
-    ctx.fillRect(0, 0, W, H);
+    // 封面完整显示（等比缩放不裁剪）：宽度撑满，过高则限高 560 水平居中；画布高度随封面比例自适应
+    var coverSrc = (coverImg && coverImg.complete && coverImg.naturalWidth) ? coverImg : null;
+    var loadP = coverSrc ? Promise.resolve(coverSrc) : loadImage(coverImg ? coverImg.currentSrc || coverImg.src : '');
 
-    // 封面（等比裁剪填充顶部）
-    function drawCover(im) {
-      if (!im) return;
-      var s = Math.max(W / im.width, COVER_H / im.height);
-      var sw = W / s, sh = COVER_H / s;
-      var sx = (im.width - sw) / 2, sy = (im.height - sh) / 2;
-      ctx.drawImage(im, sx, sy, sw, sh, 0, 0, W, COVER_H);
-      // 封面底部渐隐衔接深色
-      var grad = ctx.createLinearGradient(0, COVER_H - 120, 0, COVER_H);
-      grad.addColorStop(0, 'rgba(10,46,38,0)');
-      grad.addColorStop(1, 'rgba(10,46,38,1)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, COVER_H - 120, W, 120);
-    }
-    var coverReady = (coverImg && coverImg.complete && coverImg.naturalWidth)
-      ? Promise.resolve(drawCover(coverImg))
-      : loadImage(coverImg ? coverImg.currentSrc || coverImg.src : '').then(drawCover);
+    return loadP.then(function (im) {
+      var dispW = W, dispH = 0;
+      if (im && im.naturalWidth) {
+        var ar = im.naturalWidth / im.naturalHeight;
+        dispH = Math.round(W / ar);
+        if (dispH > 560) { dispH = 560; dispW = Math.round(560 * ar); }
+      }
+      var cb = Math.max(dispH, 90);      // 内容区起点（无封面时留出顶部空间）
+      var H = cb + 740;                   // 内容区固定高度（分类+标题+日期+分隔线+二维码+留白）
+      cv.width = W; cv.height = H;
 
-    return coverReady.then(function () {
+      // 背景
+      ctx.fillStyle = '#0A2E26';
+      ctx.fillRect(0, 0, W, H);
+
+      // 封面：完整绘制，水平居中，底部渐隐衔接深色
+      if (dispH) {
+        ctx.drawImage(im, (W - dispW) / 2, 0, dispW, dispH);
+        var grad = ctx.createLinearGradient(0, dispH - 90, 0, dispH);
+        grad.addColorStop(0, 'rgba(10,46,38,0)');
+        grad.addColorStop(1, 'rgba(10,46,38,1)');
+        ctx.fillStyle = grad;
+        ctx.fillRect((W - dispW) / 2, dispH - 90, dispW, 90);
+      }
+
       var pad = 70, maxW = W - pad * 2;
 
       // 金色分类
       ctx.fillStyle = '#C9B788';
       ctx.font = '26px "PingFang SC","Microsoft YaHei",sans-serif';
-      ctx.fillText(CAT, pad, COVER_H + 92);
+      ctx.fillText(CAT, pad, cb + 92);
 
       // 标题（最多 4 行）
       ctx.fillStyle = '#FFFFFF';
       ctx.font = '700 46px "PingFang SC","Microsoft YaHei",sans-serif';
       var lines = wrap(ctx, TITLE, maxW).slice(0, 4);
-      var ty = COVER_H + 150;
+      var ty = cb + 150;
       lines.forEach(function (ln) { ctx.fillText(ln, pad, ty); ty += 62; });
 
       // 日期行
@@ -447,13 +451,13 @@
       ctx.fillRect(pad, ty + 70, maxW, 2);
 
       // 二维码（白色圆角卡 + 码图 + 说明）
+      var qs = 190, qx = pad, qy = H - qs - 60;
+      ctx.fillStyle = '#FFFFFF';
+      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(qx, qy, qs, qs, 14); ctx.fill(); }
+      else ctx.fillRect(qx, qy, qs, qs);
       var qr = loadImage('/assets/qr.jpg');
-      return qr.then(function (im) {
-        var qs = 190, qx = pad, qy = H - qs - 96;
-        ctx.fillStyle = '#FFFFFF';
-        if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(qx, qy, qs, qs, 14); ctx.fill(); }
-        else ctx.fillRect(qx, qy, qs, qs);
-        if (im) ctx.drawImage(im, qx + 10, qy + 10, qs - 20, qs - 20);
+      return qr.then(function (qim) {
+        if (qim) ctx.drawImage(qim, qx + 10, qy + 10, qs - 20, qs - 20);
         ctx.fillStyle = 'rgba(243,239,230,.85)';
         ctx.font = '600 28px "PingFang SC","Microsoft YaHei",sans-serif';
         ctx.fillText('扫码加微信，预约诊断', qx + qs + 34, qy + 62);
@@ -476,7 +480,6 @@
       '<div class="share-card" role="dialog" aria-label="分享本文">' +
       '  <h3>分享这篇文章<button type="button" class="share-x" aria-label="关闭">×</button></h3>' +
       '  <img class="share-preview" alt="文章分享图">' +
-      '  <p class="share-tip">点「保存 / 分享」可直接调起系统分享（可发给朋友或朋友圈）；也可以长按上方图片保存到相册，发朋友圈时选择它。</p>' +
       '  <div class="share-btns">' +
       '    <button type="button" class="share-copy">复制链接</button>' +
       '    <button type="button" class="share-save primary">保存 / 分享</button>' +

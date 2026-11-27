@@ -245,8 +245,7 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .share-card h3{font-family:var(--serif);font-size:16.5px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .share-card h3 button{background:none;border:0;color:#5C6663;font-size:20px;line-height:1;cursor:pointer;padding:2px 4px}
 .share-card .share-preview{width:100%;border-radius:10px;border:1px solid rgba(20,32,31,.15);display:block;background:#0A2E26}
-.share-card .share-tip{font-size:11.5px;color:#5C6663;margin:10px 2px 12px;line-height:1.65}
-.share-card .share-btns{display:flex;gap:10px}
+.share-card .share-btns{display:flex;gap:10px;margin-top:12px}
 .share-card .share-btns button{flex:1;padding:10px 0;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid rgba(20,32,31,.24);background:#fff;color:#161B1D;transition:.2s}
 .share-card .share-btns button.primary{background:var(--teal);border-color:var(--teal);color:#fff}
 .share-card .share-btns button:hover{opacity:.88}
