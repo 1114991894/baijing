@@ -351,7 +351,7 @@ ${coverMobile ? `<link rel="preload" as="image" href="${coverMobile}" media="(ma
 ${cover ? `    <figure class="op-img"><picture>${coverMobile ? `<source media="(max-width:600px)" srcset="${coverMobile}">` : ''}<img src="${escapeHtml(cover)}" alt="${escapeHtml(article.title)}" fetchpriority="high"></picture></figure>\n` : ''}    <header class="article-hero article-hero-flat">
       <div class="cat">观点 · ${escapeHtml(category)}</div>
       <h1>${escapeHtml(article.title)}</h1>
-      <div class="meta"><span>${escapeHtml(author)}</span><span>${createdAt}</span><span>百鲸咨询</span></div>
+      <div class="meta"><span>${escapeHtml(author)}</span><span>${createdAt}</span>${author === '百鲸咨询' ? '' : '<span>百鲸咨询</span>'}</div>
     </header>
     <button class="art-share" type="button" aria-label="分享本文"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.7 10.7l6.6-4.1M8.7 13.3l6.6 4.1"/></svg><span>分享</span></button>
   </div>
