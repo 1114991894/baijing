@@ -39,7 +39,7 @@ const V2_REV = '2026-10-19';
 const V3_REV = '2026-11-27';
 // 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
 // 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
-const ASSET_VER = '20261127-21';
+const ASSET_VER = '20261127-22';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';

@@ -479,7 +479,7 @@
         if (qim) ctx.drawImage(qim, qx + 10, qy + 10, qs - 20, qs - 20);
         ctx.fillStyle = 'rgba(243,239,230,.85)';
         ctx.font = '600 26px "PingFang SC","Microsoft YaHei",sans-serif';
-        ctx.fillText('扫码加微信，预约诊断', qx + qs + 34, qy + 58);
+        ctx.fillText('扫码预约，免费诊断', qx + qs + 34, qy + 58);
         ctx.fillStyle = 'rgba(243,239,230,.5)';
         ctx.font = '22px "PingFang SC","Microsoft YaHei",sans-serif';
         ctx.fillText('组织人效诊断 · AI 机会地图', qx + qs + 34, qy + 98);
