@@ -93,7 +93,7 @@
               '<p class="bk-err" id="bkErr"></p>' +
               '<p class="bk-note"><span>·</span><span>信息只用于约这次时间，不进群发名单，不转给第三方。急着聊也可以直接扫码。</span></p>' +
               '<div class="bk-alt">' +
-                '<img src="assets/qr.jpg" alt="刘诠案的微信二维码" width="78" height="78">' +
+                '<img src="/assets/qr.jpg" alt="刘诠案的微信二维码" width="78" height="78">' +
                 '<span>不想留电话？扫码加微信，说一句你最头疼的环节。</span>' +
               '</div>' +
             '</form>' +
@@ -105,7 +105,7 @@
           '<p><b>1 个工作日内</b>我会通过这个手机号联系你，约一个双方都方便的时间。</p>' +
           '<p style="color:#717873;font-size:13.5px;">如果着急，也可以直接扫码加微信。</p>' +
           '<div class="bk-alt">' +
-            '<img src="assets/qr.jpg" alt="刘诠案的微信二维码" width="78" height="78">' +
+            '<img src="/assets/qr.jpg" alt="刘诠案的微信二维码" width="78" height="78">' +
             '<span>微信扫一扫，说一句你最头疼的环节。</span>' +
           '</div>' +
           '<button type="button" class="btn btn-ghost" id="bkDoneBtn" style="margin-top:20px;">关闭</button>' +

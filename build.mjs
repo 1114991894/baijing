@@ -39,7 +39,7 @@ const V2_REV = '2026-10-19';
 const V3_REV = '2026-11-27';
 // 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
 // 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
-const ASSET_VER = '20261127-18';
+const ASSET_VER = '20261127-19';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -291,6 +291,9 @@ function articleNavHtml(current, articles) {
 function generateArticleHtml(article, articles) {
   const artNav = articleNavHtml(article, articles);
   const cover = article.cover_url && !article.cover_url.startsWith('data:') ? article.cover_url : '';
+  // 手机端专用小图：/assets/xxx.webp → /assets/xxx-800.webp（约 30KB，其余封面类型不套 picture）
+  const coverM = cover ? cover.match(/^\/assets\/(.+)\.webp$/) : null;
+  const coverMobile = coverM ? `/assets/${coverM[1]}-800.webp` : '';
   const excerpt = article.excerpt || '';
   const createdAt = formatDate(article.created_at);
   const author = article.author || '百鲸咨询';
@@ -325,6 +328,7 @@ function generateArticleHtml(article, articles) {
 <meta property="og:url" content="${articleUrl}">
 <meta property="og:site_name" content="百鲸咨询">
 ${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
+${coverMobile ? `<link rel="preload" as="image" href="${coverMobile}" media="(max-width:600px)">\n<link rel="preload" as="image" href="${escapeHtml(cover)}" media="(min-width:601px)">` : (cover ? `<link rel="preload" as="image" href="${escapeHtml(cover)}">` : '')}
 <link rel="stylesheet" href="/styles-v3.css">
 <script type="application/ld+json">${jsonLd(ld)}</script>
 </head>
@@ -344,7 +348,7 @@ ${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
 
 <div class="article-cover-outer">
   <div class="article-cover-wrap">
-${cover ? `    <figure class="op-img"><img src="${escapeHtml(cover)}" alt="${escapeHtml(article.title)}"></figure>\n` : ''}    <header class="article-hero article-hero-flat">
+${cover ? `    <figure class="op-img"><picture>${coverMobile ? `<source media="(max-width:600px)" srcset="${coverMobile}">` : ''}<img src="${escapeHtml(cover)}" alt="${escapeHtml(article.title)}" fetchpriority="high"></picture></figure>\n` : ''}    <header class="article-hero article-hero-flat">
       <div class="cat">观点 · ${escapeHtml(category)}</div>
       <h1>${escapeHtml(article.title)}</h1>
       <div class="meta"><span>${escapeHtml(author)}</span><span>${createdAt}</span><span>百鲸咨询</span></div>
