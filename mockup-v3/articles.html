@@ -92,7 +92,8 @@
 
 <script src="booking.js"></script>
 <script>
-/* 资讯列表：优先读 Supabase articles（后台发文自动同步），失败降级保留静态卡片 */
+/* 资讯列表：优先读 Supabase articles（后台发文自动同步），失败降级为下方未部署前的三张静态卡片。
+   排序与后台一致：sort_order 越大越靠前；只取前 3 篇，featured=false 显示为 DRAFT。 */
 (function () {
   'use strict';
   var URL = 'https://mxtxwjprmfstbheiempi.supabase.co';
@@ -109,7 +110,7 @@
     var p = function (n) { return n < 10 ? '0' + n : '' + n; };
     return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
   }
-  fetch(URL + '/rest/v1/articles?select=id,title,excerpt,cover_url,created_at,updated_at,sort_order&order=sort_order.desc&order=created_at.desc&limit=30', {
+  fetch(URL + '/rest/v1/articles?select=id,title,excerpt,cover_url,created_at,updated_at,sort_order,featured&order=sort_order.desc&order=created_at.desc&limit=3', {
     headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
   }).then(function (r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -119,14 +120,21 @@
     var wrap = document.querySelector('.posts');
     if (!wrap) return;
     wrap.innerHTML = rows.map(function (a) {
+      var draft = a.featured === false;
       var cover = a.cover_url ? esc(a.cover_url) : 'assets/hero.webp';
-      var cat = '观点 · ' + (fmt(a.updated_at || a.created_at) || '百鲸咨询');
-      return '<a class="post" href="article/' + encodeURIComponent(a.id) + '.html">'
-        + '<div class="cover"><img src="' + cover + '" alt="' + esc(a.title) + '"></div>'
+      /* 主文章沿用已做好的 v3 详情版式，其余正式文章走后台生成的文章页 */
+      var isAi = a.title && a.title.indexOf('你公司不是缺 AI') === 0;
+      var href = draft ? 'javascript:void(0)'
+        : (isAi ? 'article.html' : '/article/' + encodeURIComponent(a.id) + '.html');
+      var cat = draft
+        ? '观点 · 即将发布<span class="badge">DRAFT</span>'
+        : '观点 · ' + (fmt(a.updated_at || a.created_at) || '百鲸咨询');
+      return '<a class="post' + (draft ? ' soon' : '') + '" href="' + href + '">'
+        + '<div class="cover"><img src="' + cover + '" alt="' + esc(a.title) + '" loading="lazy"></div>'
         + '<div class="body"><div class="cat">' + cat + '</div>'
         + '<h3>' + esc(a.title) + '</h3>'
         + (a.excerpt ? '<p>' + esc(a.excerpt) + '</p>' : '')
-        + '<span class="more">阅读全文 →</span></div></a>';
+        + '<span class="more">' + (draft ? '即将发布' : '阅读全文 →') + '</span></div></a>';
     }).join('');
   }).catch(function () { /* 静态卡片即降级内容 */ });
 })();

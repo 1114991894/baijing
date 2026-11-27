@@ -883,9 +883,10 @@
         const { data, error } = await supabaseClient.from('articles').select('*').order('created_at', { ascending: false });
         if (error) throw error;
         articles = data || [];
+        // 与前台资讯页、构建脚本保持一致：sort_order 越大越靠前
         articles.sort((a, b) => {
-          const sa = a.sort_order ?? 99999, sb = b.sort_order ?? 99999;
-          if (sa !== sb) return sa - sb;
+          const sa = a.sort_order ?? -1, sb = b.sort_order ?? -1;
+          if (sa !== sb) return sb - sa;
           return new Date(b.created_at) - new Date(a.created_at);
         });
         renderArticleTable(articles);

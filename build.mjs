@@ -67,6 +67,8 @@ async function fetchArticles() {
   const { data, error } = await supabase
     .from('articles')
     .select('*')
+    // 与资讯页一致：featured=false 是 DRAFT「即将发布」，不生成公开文章页、不进 sitemap
+    .eq('featured', true)
     .order('sort_order', { ascending: false })
     .order('created_at', { ascending: false });
   if (error) throw error;
