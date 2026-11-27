@@ -245,6 +245,34 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
     });
   }
+  /* 案例描述富文本：只重建白名单标签与属性，防脚本注入；兼容旧纯文本 */
+  var RICH_TAGS = ['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'U', 'H3', 'H4', 'UL', 'OL', 'LI', 'DIV', 'SPAN', 'IMG'];
+  function rich(s) {
+    if (!s) return '';
+    if (s.charAt(0) !== '<') return '<p>' + esc(s) + '</p>';
+    var d = document.createElement('div');
+    d.innerHTML = s;
+    function clean(node) {
+      for (var i = node.childNodes.length - 1; i >= 0; i--) {
+        var el = node.childNodes[i];
+        if (el.nodeType === 3) continue; // 文本节点保留
+        if (el.nodeType !== 1) { node.removeChild(el); continue; }
+        var tag = el.tagName.toUpperCase();
+        if (RICH_TAGS.indexOf(tag) === -1) { node.removeChild(el); continue; } // 未知标签直接丢弃
+        var src = tag === 'IMG' ? (el.getAttribute('src') || '') : '';
+        var alt = tag === 'IMG' ? (el.getAttribute('alt') || '') : '';
+        while (el.attributes.length) el.removeAttribute(el.attributes[0].name);
+        if (tag === 'IMG') {
+          if (!/^(https?:\/\/|\/|data:image\/)/i.test(src)) { node.removeChild(el); continue; }
+          el.setAttribute('src', src);
+          if (alt) el.setAttribute('alt', alt);
+        }
+        clean(el);
+      }
+    }
+    clean(d);
+    return d.innerHTML;
+  }
   fetch(URL + '/rest/v1/cases?is_published=eq.true&order=sort_order.asc&limit=9', {
     headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
   }).then(function (r) {
@@ -264,7 +292,7 @@
         + (c.delta ? '<span class="delta">' + esc(c.delta) + '</span>' : '')
         + '</div>'
         + (c.path ? '<div class="path">' + esc(c.path) + '</div>' : '')
-        + (c.summary ? '<p>' + esc(c.summary) + '</p>' : '')
+        + (c.summary ? '<div class="case-rich">' + rich(c.summary) + '</div>' : '')
         + (c.note ? '<div class="note">' + esc(c.note) + '</div>' : '')
         + '</div>';
     }).join('');

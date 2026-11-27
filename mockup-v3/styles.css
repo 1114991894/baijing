@@ -140,6 +140,17 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .case .delta{display:inline-block;background:var(--teal);color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:5px 12px;border-radius:999px;transform:translateY(-6px)}
 .case .path{font-size:12.5px;color:var(--ink-2);background:var(--paper-2);border-radius:8px;padding:8px 12px;margin:6px 0 10px;font-family:var(--mono);letter-spacing:.02em}
 .case .path b{color:var(--gold)}
+/* 案例描述富文本（后台插图/排版） */
+.case-rich{font-size:14px;color:var(--ink-2);line-height:1.85}
+.case-rich p{margin:0 0 8px}
+.case-rich p:last-child{margin-bottom:0}
+.case-rich h3{font-size:15px;color:var(--ink);margin:10px 0 5px}
+.case-rich ul,.case-rich ol{padding-left:18px;margin:8px 0}
+.case-rich ul{list-style:disc}
+.case-rich ol{list-style:decimal}
+.case-rich li{margin:3px 0}
+.case-rich img{width:100%;height:auto;border-radius:8px;margin:10px 0;border:1px solid var(--line)}
+.case-rich strong,.case-rich b{color:var(--ink)}
 
 /* ---------- 联系 ---------- */
 .contact{background:var(--teal-deep);color:#F3EFE6}
