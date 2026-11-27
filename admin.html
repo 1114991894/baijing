@@ -71,6 +71,14 @@
   .editor .art-faq:last-child { border-bottom:1px solid #E2DDD0; }
   .editor .art-faq h3 { margin:0 0 6px; font-size:16px; color:#14201F; font-weight:700; }
   .editor .art-faq p { margin:0; }
+  .editor .art-intro { margin:0 0 20px; padding:11px 15px; background:#E8F0EB; border-radius:4px; font-size:13.5px; color:#3E4745; }
+  .editor .art-intro b { color:#14604D; margin-right:4px; }
+  .editor .art-intro .sep { color:#9AA6A0; margin:0 10px; }
+  .editor .art-dialog { margin:0 0 16px; padding-left:16px; border-left:2px solid #E2DDD0; }
+  .editor .art-dialog .ask { margin:0 0 7px; font-size:15px; color:#14201F; font-weight:700; }
+  .editor .art-dialog .ask b { color:#14604D; }
+  .editor .art-dialog .ans { margin:0; font-size:15px; line-height:1.85; color:#3E4745; }
+  .editor .art-dialog .ans b { color:#7C8683; font-weight:600; }
   </style>
   <link rel="stylesheet" href="premium-enhance.css">
 </head>
@@ -382,6 +390,7 @@
                   <button type="button" class="tpl-btn" data-tpl="case">案例复盘</button>
                   <button type="button" class="tpl-btn" data-tpl="faq">问答 FAQ</button>
                   <button type="button" class="tpl-btn" data-tpl="brief">图文随笔</button>
+                  <button type="button" class="tpl-btn" data-tpl="interview">访谈对话</button>
                 </div>
                 <div class="border border-neutral/40 rounded-lg overflow-hidden">
                   <div class="editor-toolbar flex flex-wrap items-center gap-1 px-3 py-2 bg-section border-b border-neutral/20">
@@ -518,7 +527,20 @@
         + '<p>【正文】</p>'
         + '<div class="art-quote">【一句金句】</div>'
         + '<h3>【小标题二】</h3>'
-        + '<p>【正文，可再插一张图】</p>'
+        + '<p>【正文，可再插一张图】</p>',
+      interview: '<p class="art-lead">【导语：一段话交代访谈背景——受访者是谁、在什么场景下聊的、为什么值得读】</p>'
+        + '<div class="art-intro"><b>受访人</b>【姓名 · 职务】<span class="sep">｜</span><b>企业</b>【行业 · 规模】<span class="sep">｜</span><b>主题</b>【本次聊什么】</div>'
+        + '<p>【配图：点上方「图片」按钮插入受访者或现场照片；图片会自动压缩。】</p>'
+        + '<h3>一、【第一个话题：一个具体场景】</h3>'
+        + '<div class="art-dialog"><p class="ask"><b>问：</b>【从一个具体问题切入，例如"当时到底卡在哪一步"】</p><p class="ans"><b>答：</b>【受访者原话或接近原话的回答，保留细节和数字。】</p></div>'
+        + '<div class="art-dialog"><p class="ask"><b>问：</b>【追问：为什么这么做 / 后来怎么发现不对】</p><p class="ans"><b>答：</b>【回答。】</p></div>'
+        + '<h3>二、【第二个话题：转折或关键动作】</h3>'
+        + '<div class="art-dialog"><p class="ask"><b>问：</b>【关键问题】</p><p class="ans"><b>答：</b>【回答。】</p></div>'
+        + '<div class="art-dialog"><p class="ask"><b>问：</b>【追问】</p><p class="ans"><b>答：</b>【回答。】</p></div>'
+        + '<div class="art-quote">【金句：从受访者原话里挑一句最有力的，单独成块。】</div>'
+        + '<h3>三、【收尾话题：给同行的建议】</h3>'
+        + '<div class="art-dialog"><p class="ask"><b>问：</b>【如果重来一次会怎么做 / 给同行的建议】</p><p class="ans"><b>答：</b>【回答。】</p></div>'
+        + '<div class="art-note">【写在最后：一句话点出这段访谈对读者的意义，引导扫码或预约诊断。】</div>'
     };
     function applyArticleTemplate(key) {
       const html = ARTICLE_TPLS[key];

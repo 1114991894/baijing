@@ -649,6 +649,15 @@ p { color: var(--ink-2); text-wrap: pretty; }
 .art-faq:last-child, .editor .art-faq:last-child { border-bottom:1px solid #E2DDD0; }
 .art-faq h3, .editor .art-faq h3 { margin:0 0 8px; font-size:16.5px; color:#14201F; }
 .art-faq p, .editor .art-faq p { margin:0; }
+/* 访谈对话模板 */
+.art-intro, .editor .art-intro { margin:0 0 22px; padding:12px 16px; background:#E8F0EB; border-radius:4px; font-size:13.5px; color:#3E4745; }
+.art-intro b, .editor .art-intro b { color:#14604D; margin-right:4px; }
+.art-intro .sep, .editor .art-intro .sep { color:#9AA6A0; margin:0 10px; }
+.art-dialog, .editor .art-dialog { margin:0 0 18px; padding-left:18px; border-left:2px solid #E2DDD0; }
+.art-dialog .ask, .editor .art-dialog .ask { margin:0 0 8px; font-size:15px; color:#14201F; font-weight:700; }
+.art-dialog .ask b, .editor .art-dialog .ask b { color:#14604D; }
+.art-dialog .ans, .editor .art-dialog .ans { margin:0; font-size:15px; line-height:1.85; color:#3E4745; }
+.art-dialog .ans b, .editor .art-dialog .ans b { color:#7C8683; font-weight:600; }
 @media (max-width: 560px) {
   .art-case, .editor .art-case { flex-direction:column; }
 }
