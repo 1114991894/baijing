@@ -90,6 +90,7 @@
   </div>
 </footer>
 
+<!--SLUG_MAP-->
 <script src="booking.js"></script>
 <script>
 /* 资讯列表：优先读 Supabase articles（后台发文自动同步），失败降级为下方未部署前的三张静态卡片。
@@ -124,8 +125,9 @@
       var cover = a.cover_url ? esc(a.cover_url) : 'assets/hero.webp';
       /* 主文章沿用已做好的 v3 详情版式，其余正式文章走后台生成的文章页 */
       var isAi = a.title && a.title.indexOf('你公司不是缺 AI') === 0;
+      var slug = (window.__ARTICLE_SLUGS__ || {})[a.id];
       var href = draft ? 'javascript:void(0)'
-        : (isAi ? 'article.html' : '/article/' + encodeURIComponent(a.id) + '.html');
+        : (isAi ? 'article.html' : '/article/' + (slug || encodeURIComponent(a.id)) + '.html');
       var cat = draft
         ? '观点 · 即将发布<span class="badge">DRAFT</span>'
         : '观点 · ' + (fmt(a.updated_at || a.created_at) || '百鲸咨询');

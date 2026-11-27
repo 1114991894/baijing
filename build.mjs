@@ -114,6 +114,12 @@ function copyV3Site(articles = []) {
     let html = readFileSync(src, 'utf8')
       .replace(/(href=")styles\.css(")/g, '$1styles-v3.css$2')
       .replace(/(src=")booking\.js(")/g, '$1booking-v3.js$2');
+    if (f === 'articles.html') {
+      // 构建时注入 id→短链映射，前端列表直接查表（与生成页 slug 完全一致，含冲突顺延）
+      const map = {};
+      articles.forEach(a => { map[a.id] = articleSlug(a); });
+      html = html.replace('<!--SLUG_MAP-->', '<script>window.__ARTICLE_SLUGS__=' + JSON.stringify(map) + ';</script>');
+    }
     if (f === 'article.html') {
       // v3 精修文章页对应的是首篇（"你公司不是缺 AI"），按 sort_order 注入上下篇导航
       const cur = articles.find(a => articleHref(a) === '/article.html') || articles[0];
@@ -255,13 +261,30 @@ function copyStaticFiles() {
 }
 
 /* ------------------------------------------------------------------
+   文章短链接：由 UUID 哈希生成稳定 6 位数字 ID（形如 /article/384726.html），
+   对外分享更自然；旧 /article/{uuid}.html 仍保留为别名页，已分享链接不失效。
+   ------------------------------------------------------------------ */
+const SLUG_CACHE = new Map();
+function articleSlug(a) {
+  const key = String(a.id || a.title || '');
+  if (SLUG_CACHE.has(key)) return SLUG_CACHE.get(key);
+  let h = 2166136261;
+  for (let i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = Math.imul(h, 16777619); }
+  let n = (h >>> 0) % 900000 + 100000;
+  while ([...SLUG_CACHE.values()].includes(String(n))) n = n % 900000 + 100001; // 冲突时顺延
+  const slug = String(n);
+  SLUG_CACHE.set(key, slug);
+  return slug;
+}
+
+/* ------------------------------------------------------------------
    文章导航：上一篇 / 下一篇。排序与资讯页一致（sort_order 越大越靠前）。
-   首篇仍用 v3 精修静态版 article.html，其余走构建生成的 /article/{id}.html
+   首篇仍用 v3 精修静态版 article.html，其余走构建生成的 /article/{slug}.html
    ------------------------------------------------------------------ */
 function articleHref(a) {
   return (a.title && a.title.indexOf('你公司不是缺 AI') === 0)
     ? '/article.html'
-    : '/article/' + encodeURIComponent(a.id) + '.html';
+    : '/article/' + articleSlug(a) + '.html';
 }
 
 function articleNavHtml(current, articles) {
@@ -298,7 +321,7 @@ function generateArticleHtml(article, articles) {
   const createdAt = formatDate(article.created_at);
   const author = article.author || '百鲸咨询';
   const category = article.category || '百鲸观察';
-  const articleUrl = `${SITE_URL}/article/${article.id}.html`;
+  const articleUrl = `${SITE_URL}/article/${articleSlug(article)}.html`;
 
   const ld = {
     '@context': 'https://schema.org',
@@ -488,7 +511,7 @@ function generateSitemap(articles, stories = []) {
       freq: 'monthly', pri: '0.7'
     })),
     ...articles.map(a => ({
-      loc: `${SITE_URL}/article/${a.id}.html`,
+      loc: `${SITE_URL}/article/${articleSlug(a)}.html`,
       lastmod: formatDate(a.updated_at || a.created_at) || V2_REV,
       freq: 'yearly', pri: '0.6'
     })),
@@ -535,9 +558,14 @@ async function main() {
     const articleDir = join(DIST, 'article');
     mkdirSync(articleDir, { recursive: true });
     for (const article of articles) {
-      writeFileSync(join(articleDir, `${article.id}.html`), generateArticleHtml(article, articles));
+      const html = generateArticleHtml(article, articles);
+      writeFileSync(join(articleDir, `${articleSlug(article)}.html`), html);
+      // 旧 UUID 链接保留为别名页（已分享出去的链接不失效，canonical 指向新短链）
+      if (articleSlug(article) !== String(article.id)) {
+        writeFileSync(join(articleDir, `${article.id}.html`), html);
+      }
     }
-    console.log(`✅ ${articles.length} 个文章页面已生成到 dist/article/`);
+    console.log(`✅ ${articles.length} 个文章页面已生成到 dist/article/（短链接 + 旧链接别名）`);
   }
 
   // 4) 资源版本号破缓存 + 存量页面外部依赖本地化
