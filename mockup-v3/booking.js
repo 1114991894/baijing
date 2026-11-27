@@ -366,10 +366,16 @@
   var coverImg = document.querySelector('.article-cover-wrap .op-img img');
   var TITLE = h1 ? h1.textContent.trim() : document.title;
   var CAT = cat ? cat.textContent.trim() : '百鲸咨询';
-  var DATE = metaEl
-    ? Array.prototype.slice.call(metaEl.querySelectorAll('span')).map(function (s) { return s.textContent.trim(); })
-        .filter(function (t, i, arr) { return t && t !== '百鲸咨询' && arr.indexOf(t) === i; }).join(' · ')
-    : '';
+  // 摘要：优先页面 meta description（后台填的文章摘要），退回正文首段
+  var EXCERPT = (function () {
+    var m = document.querySelector('meta[name="description"]');
+    var t = m ? m.content.trim() : '';
+    if (!t) {
+      var p = document.querySelector('.article-body p');
+      t = p ? p.textContent.trim() : '';
+    }
+    return t.slice(0, 120);
+  })();
   var URL_NOW = location.origin + location.pathname;
 
   function loadImage(src) {
@@ -410,7 +416,20 @@
         if (dispH > 560) { dispH = 560; dispW = Math.round(560 * ar); }
       }
       var cb = Math.max(dispH, 90);      // 内容区起点（无封面时留出顶部空间）
-      var H = cb + 680;                   // 内容区固定高度（分类+标题+日期+分隔线+二维码+留白）
+      var pad = 70, maxW = W - pad * 2;
+
+      // 先测量行数，再按内容计算画布高度
+      cv.width = W; cv.height = 1400;    // 临时尺寸供 measureText
+      ctx.font = '700 36px "PingFang SC","Microsoft YaHei",sans-serif';
+      var titleLines = wrap(ctx, TITLE, maxW).slice(0, 4);
+      ctx.font = '24px "PingFang SC","Microsoft YaHei",sans-serif';
+      var exLines = EXCERPT ? wrap(ctx, EXCERPT, maxW).slice(0, 3) : [];
+
+      var titleEnd = cb + 140 + (titleLines.length - 1) * 54;   // 标题最后一行基线
+      var exEnd = exLines.length ? titleEnd + 26 + (exLines.length - 1) * 36 : titleEnd;
+      var dividerY = exEnd + (exLines.length ? 50 : 40);        // 金色分隔线（在摘要下方）
+      var qy = dividerY + 90;                                    // 二维码顶部（分隔线下方 90px ≈ 5 倍行距）
+      var H = qy + 190 + 60;
       cv.width = W; cv.height = H;
 
       // 背景
@@ -427,31 +446,31 @@
         ctx.fillRect((W - dispW) / 2, dispH - 90, dispW, 90);
       }
 
-      var pad = 70, maxW = W - pad * 2;
-
-      // 金色分类（小号字 + 与标题拉开间距）
+      // 金色分类
       ctx.fillStyle = '#C9B788';
       ctx.font = '22px "PingFang SC","Microsoft YaHei",sans-serif';
       ctx.fillText(CAT, pad, cb + 84);
 
-      // 标题（缩小到 36px，最多 4 行，行距收紧）
+      // 标题
       ctx.fillStyle = '#FFFFFF';
       ctx.font = '700 36px "PingFang SC","Microsoft YaHei",sans-serif';
-      var lines = wrap(ctx, TITLE, maxW).slice(0, 4);
       var ty = cb + 140;
-      lines.forEach(function (ln) { ctx.fillText(ln, pad, ty); ty += 54; });
+      titleLines.forEach(function (ln) { ctx.fillText(ln, pad, ty); ty += 54; });
 
-      // 日期行（日期只出现一次，品牌只出现一次）
-      ctx.fillStyle = 'rgba(243,239,230,.55)';
-      ctx.font = '24px "PingFang SC","Microsoft YaHei",sans-serif';
-      ctx.fillText(DATE ? DATE + ' · 百鲸咨询' : '百鲸咨询', pad, ty + 16);
+      // 摘要（替代原日期行）
+      if (exLines.length) {
+        ctx.fillStyle = 'rgba(243,239,230,.6)';
+        ctx.font = '24px "PingFang SC","Microsoft YaHei",sans-serif';
+        var ey = titleEnd + 26;
+        exLines.forEach(function (ln) { ctx.fillText(ln, pad, ey); ey += 36; });
+      }
 
-      // 金色分隔线
+      // 金色分隔线（摘要下方，二维码上方 90px）
       ctx.fillStyle = 'rgba(201,183,136,.45)';
-      ctx.fillRect(pad, ty + 64, maxW, 2);
+      ctx.fillRect(pad, dividerY, maxW, 2);
 
       // 二维码（白色圆角卡 + 码图 + 说明）
-      var qs = 190, qx = pad, qy = H - qs - 60;
+      var qs = 190, qx = pad;
       ctx.fillStyle = '#FFFFFF';
       if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(qx, qy, qs, qs, 14); ctx.fill(); }
       else ctx.fillRect(qx, qy, qs, qs);
