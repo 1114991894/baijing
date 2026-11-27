@@ -101,9 +101,7 @@
   <section id="authView" class="min-h-screen flex items-center justify-center p-4 tech-section-bg">
     <div class="bg-white rounded-2xl shadow-elevated border border-neutral/20 p-8 w-full max-w-md reveal card-gold-hover">
       <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
-          <i class="fas fa-lock text-primary text-2xl"></i>
-        </div>
+        <img src="/assets/logo-color.png" alt="百鲸咨询" class="mx-auto mb-4" style="height:64px;width:auto;object-fit:contain">
         <h1 class="text-2xl font-bold text-secondary">管理后台</h1>
         <p class="text-sm text-secondary/50 mt-2">请登录以管理文章与预约线索</p>
       </div>
@@ -131,15 +129,14 @@
     <header class="sticky top-0 z-40 bg-white border-b border-neutral/20 shadow-sm">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4 flex-wrap">
         <div class="flex items-center gap-3">
-          <i class="fas fa-blog text-primary text-2xl"></i>
-          <h1 class="text-lg font-bold text-secondary">管理后台</h1>
+          <picture><source srcset="/assets/logo-white.webp" type="image/webp"><img src="/assets/logo-white.png" alt="百鲸咨询" class="shrink-0" style="height:40px;width:auto;object-fit:contain"></picture>
+          <h1 class="text-lg font-bold" style="color:#fff">管理后台</h1>
         </div>
         <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <a href="/index.html" target="_blank" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-home mr-1"></i>查看首页</a>
           <button id="navList" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-list mr-1"></i>文章列表</button>
-          <button id="navLeads" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-user-check mr-1"></i>预约线索<span id="leadsBadge" class="hidden ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white text-[11px] font-bold align-middle"></span></button>
           <button id="navCases" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-trophy mr-1"></i>案例管理</button>
-          <button id="navAdd" class="btn-primary text-sm flex items-center gap-2"><i class="fas fa-plus mr-1"></i>添加文章</button>
-          <a href="../index.html" target="_blank" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-home mr-1"></i>查看首页</a>
+          <button id="navLeads" class="text-secondary/80 hover:text-primary px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors text-sm"><i class="fas fa-user-check mr-1"></i>预约线索<span id="leadsBadge" class="hidden ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white text-[11px] font-bold align-middle"></span></button>
           <span id="adminEmail" class="text-sm text-secondary/60 hidden sm:inline truncate max-w-[160px]"></span>
           <button id="logoutBtn" class="text-sm text-secondary/60 hover:text-red-500 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors"><i class="fas fa-sign-out-alt mr-1"></i>退出</button>
         </div>
@@ -633,7 +630,6 @@
       document.getElementById('searchInput').addEventListener('input', filterArticles);
       document.getElementById('addArticleBtn').addEventListener('click', () => switchToForm('add'));
       document.getElementById('emptyAddBtn').addEventListener('click', () => switchToForm('add'));
-      document.getElementById('navAdd').addEventListener('click', () => switchToForm('add'));
       document.getElementById('navList').addEventListener('click', switchToListView);
       document.getElementById('navLeads').addEventListener('click', switchToLeadsView);
       document.getElementById('navCases').addEventListener('click', switchToCasesView);
