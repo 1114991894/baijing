@@ -223,6 +223,39 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .article-body h3{font-size:19px;margin:34px 0 14px;color:var(--ink)}
 .article-body strong{color:var(--ink)}
 .article-body blockquote{border-left:3px solid var(--gold);background:#fff;padding:20px 26px;border-radius:0 10px 10px 0;margin:28px 0;font-family:var(--serif);font-size:17px;color:var(--ink)}
+/* 后台排版模板在发布页的样式（与 v2 文章页一致） */
+.article-body ul,.article-body ol{padding-left:22px;margin:16px 0 22px}
+.article-body ul{list-style:disc}
+.article-body ol{list-style:decimal}
+.article-body li{margin:6px 0;line-height:1.85}
+.article-body img{max-width:100%;height:auto;border-radius:10px;margin:24px 0;border:1px solid var(--line)}
+.article-body .art-lead{font-family:var(--serif);font-size:18px;line-height:1.85;color:var(--ink);padding-left:18px;border-left:3px solid var(--gold);margin:0 0 26px}
+.article-body .art-quote{margin:30px 0;padding:20px 26px;background:var(--paper-2);border-left:3px solid var(--teal);font-family:var(--serif);font-size:18px;line-height:1.7;color:var(--ink)}
+.article-body .art-note{margin:24px 0;padding:14px 18px;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;font-size:14.5px;color:var(--ink-2)}
+.article-body .art-steps{margin:24px 0}
+.article-body .art-steps .step{display:flex;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.article-body .art-steps .step:last-child{border-bottom:1px solid var(--line)}
+.article-body .art-steps .step>b{flex:none;font-family:var(--mono);font-size:22px;color:var(--gold);line-height:1.2}
+.article-body .art-steps .step h3{margin:0 0 6px;font-size:17px}
+.article-body .art-steps .step p{margin:0}
+.article-body .art-case{display:flex;flex-wrap:wrap;gap:14px;margin:26px 0}
+.article-body .art-case>div{flex:1 1 220px;padding:16px 18px;border-radius:8px}
+.article-body .art-case .before{background:rgba(168,67,29,.08)}
+.article-body .art-case .after{background:rgba(20,96,77,.09)}
+.article-body .art-case span{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--ink-3);margin-bottom:6px}
+.article-body .art-case b{font-family:var(--serif);font-size:20px;color:var(--ink)}
+.article-body .art-faq{padding:18px 0;border-top:1px solid var(--line)}
+.article-body .art-faq:last-child{border-bottom:1px solid var(--line)}
+.article-body .art-faq h3{margin:0 0 8px;font-size:16.5px}
+.article-body .art-faq p{margin:0}
+.article-body .art-intro{margin:0 0 22px;padding:12px 16px;background:#E8F0EB;border-radius:8px;font-size:13.5px;color:var(--ink-2)}
+.article-body .art-intro b{color:var(--teal);margin-right:4px}
+.article-body .art-intro .sep{color:var(--ink-3);margin:0 10px}
+.article-body .art-dialog{margin:0 0 18px;padding-left:18px;border-left:2px solid var(--line)}
+.article-body .art-dialog .ask{margin:0 0 8px;font-size:15px;color:var(--ink);font-weight:700}
+.article-body .art-dialog .ask b{color:var(--teal)}
+.article-body .art-dialog .ans{margin:0;font-size:15px;line-height:1.85;color:var(--ink-2)}
+.article-body .art-dialog .ans b{color:var(--ink-3);font-weight:600}
 .pull-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:32px 0}
 .pull-stats .ps{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px}
 .pull-stats .ps b{font-family:var(--serif);font-size:32px;color:var(--teal);display:block}

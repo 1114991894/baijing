@@ -39,7 +39,7 @@ const V2_REV = '2026-10-19';
 const V3_REV = '2026-11-27';
 // 静态资源版本号：styles.css / booking.js 内容有变化时 +1（或改日期），
 // 构建时自动给所有页面的引用加 ?v=，强制访客浏览器丢弃旧缓存
-const ASSET_VER = '20261127-4';
+const ASSET_VER = '20261127-5';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mxtxwjprmfstbheiempi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_2VAasjGlB4ioG-hhCMSnAA_4AdPGD-R';
@@ -285,7 +285,8 @@ function articleNavHtml(current, articles) {
 }
 
 /* ------------------------------------------------------------------
-   文章静态页：布局换成 v2 视觉（原模板还是 Tailwind 深蓝，与新版割裂）
+   文章静态页：与 v3 精修版 article.html 同版式（顶栏 / 正文 / 底栏一致）
+   注意页面在 /article/ 深路径，所有资源必须用根绝对路径
    ------------------------------------------------------------------ */
 function generateArticleHtml(article, articles) {
   const artNav = articleNavHtml(article, articles);
@@ -314,66 +315,67 @@ function generateArticleHtml(article, articles) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escapeHtml(article.title)} — 百鲸咨询</title>
-<meta name="description" content="${escapeHtml(excerpt || '百鲸咨询 · AI培训 / 提效咨询 / 鲸选智能工作台')}">
+<title>${escapeHtml(article.title)} | 百鲸咨询</title>
+<meta name="description" content="${escapeHtml(excerpt || '百鲸咨询 · 组织人效观点与实践')}">
 <link rel="canonical" href="${articleUrl}">
-<link rel="icon" type="image/png" href="/assets/favicon.png">
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<meta property="og:title" content="${escapeHtml(article.title)} — 百鲸咨询">
-<meta property="og:description" content="${escapeHtml(excerpt)}">
+<link rel="icon" href="/assets/favicon.png">
 <meta property="og:type" content="article">
+<meta property="og:title" content="${escapeHtml(article.title)}">
+<meta property="og:description" content="${escapeHtml(excerpt)}">
 <meta property="og:url" content="${articleUrl}">
 <meta property="og:site_name" content="百鲸咨询">
 ${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
-<meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles-v3.css">
 <script type="application/ld+json">${jsonLd(ld)}</script>
 </head>
 <body>
-<img src="/assets/share-logo.png" alt="" width="500" height="500" aria-hidden="true" style="position:absolute;left:-9999px;top:0;">
 
-<header class="topbar">
-  <div class="wrap topbar-in">
-    <a class="brand" href="/index.html"><img src="/assets/logo.png" alt="百鲸咨询" width="78" height="44"></a>
-    <nav class="topnav" aria-label="站内页面">
+<nav class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="/index.html"><picture><source srcset="/assets/logo-white.webp" type="image/webp"><img src="/assets/logo-white.png" alt="百鲸咨询"></picture></a>
+    <div class="nav-links">
       <a href="/index.html">首页</a>
-      <a href="/ai-training.html">AI培训</a>
-      <a href="/efficiency.html">提效咨询</a>
-      <a href="https://worker.baijingzixun.top" target="_blank" rel="noopener">鲸选智能工作台</a>
-      <a class="nav-hot" href="/stories.html">工作台提效</a>
-    </nav>
+      <a href="/products.html">产品</a>
+      <a href="/articles.html" class="active">资讯</a>
+      <a href="/index.html#contact" class="nav-cta" data-book>预约诊断</a>
+    </div>
+  </div>
+</nav>
+
+<header class="article-hero">
+  <div class="wrap">
+    <div class="cat">观点 · ${escapeHtml(category)}</div>
+    <h1>${escapeHtml(article.title)}</h1>
+    <div class="meta"><span>${escapeHtml(author)}</span><span>${createdAt}</span><span>百鲸咨询</span></div>
   </div>
 </header>
 
-<article class="article">
-  <div class="wrap narrow">
-    <a class="back" href="/index.html">← 返回首页</a>
-    <p class="kicker">${escapeHtml(category)}</p>
-    <h1 style="font-size:clamp(26px,4vw,40px);">${escapeHtml(article.title)}</h1>
-    <p class="art-meta">${createdAt} · ${escapeHtml(author)}</p>
-${excerpt ? `    <p class="lead" style="margin-top:18px;">${escapeHtml(excerpt)}</p>\n` : ''}${cover ? `    <img src="${escapeHtml(cover)}" alt="${escapeHtml(article.title)}" style="width:100%;height:auto;margin-top:26px;border:1px solid var(--line);border-radius:3px;">\n` : ''}
-    <div class="art-body">${article.content || ''}</div>
-${artNav ? `    ${artNav}\n` : ''}
-    <div class="art-cta" id="wechat">
-      <figure class="stamp"><img src="/assets/qr.jpg" alt="刘诠案的微信二维码"></figure>
-      <div>
-        <h3>你公司里有没有类似的情况？</h3>
-        <p>加微信说一句，免费聊三十分钟。说清楚你是哪个城市、什么行业、卡在哪一步就行。</p>
-        <a class="btn btn-dark" href="#wechat" data-book style="margin-top:14px;">预约诊断 <span class="min">30 MIN</span> <span class="arw">→</span></a>
-      </div>
-    </div>
-  </div>
-</article>
+<main class="article-body">
+${cover ? `  <figure class="op-img" style="margin-bottom:40px">\n    <img src="${escapeHtml(cover)}" alt="${escapeHtml(article.title)}">\n    <figcaption>${escapeHtml(article.title)}（配图）</figcaption>\n  </figure>\n` : ''}${article.content || ''}
+</main>
 
-<footer class="foot">
-  <div class="wrap foot-in">
-    <span>友情链接：<a href="https://g.baijingzixun.top">百鲸G系统</a> ↗ <a href="https://worker.baijingzixun.top">鲸选工作台</a> ↗ <a href="https://consultant-club.pages.dev/">consultant-club</a> ↗</span>
-    <span>AI培训 · 提效咨询 · 鲸选智能工作台 ｜ 到场半径两小时</span>
-    <a href="https://beian.miit.gov.cn" rel="noopener">浙ICP备2023042992号</a>
+${artNav ? artNav + '\n\n' : ''}<div class="article-cta">
+  <div class="box">
+    <div>
+      <h3>想判断你公司该从哪些任务切入？</h3>
+      <p>组织人效诊断标配 AI 机会地图：2–3 周，找出最适合先落地的 3–5 个岗位任务。</p>
+    </div>
+    <img src="/assets/qr.jpg" alt="百鲸咨询微信二维码" style="width:120px;height:120px;border-radius:10px;flex:none;background:#fff;padding:6px;">
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap foot-row">
+    <span class="fl">友情链接：</span>
+    <a href="https://g.baijingzixun.top" target="_blank" rel="noopener">百鲸G系统 ↗</a>
+    <a href="https://worker.baijingzixun.top" target="_blank" rel="noopener">鲸选工作台 ↗</a>
+    <a href="https://consultant-club.pages.dev/" target="_blank" rel="noopener">consultant-club ↗</a>
+    <span class="sep">｜</span>
+    <a class="icp" href="https://beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备2023042992号</a>
   </div>
 </footer>
 
-<script src="/booking.js" defer></script>
+<script src="/booking-v3.js"></script>
 </body>
 </html>`;
 }
