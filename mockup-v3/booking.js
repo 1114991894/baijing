@@ -466,7 +466,7 @@
         ctx.fillText('组织人效诊断 · AI 机会地图', qx + qs + 34, qy + 98);
         ctx.fillText('baijingzixun.top', qx + qs + 34, qy + 138);
 
-        return new Promise(function (resolve) { cv.toBlob(resolve, 'image/png'); });
+        return Promise.resolve(cv.toDataURL('image/png'));
       });
     });
   }
@@ -492,16 +492,28 @@
     return mask;
   }
 
-  var cardBlob = null;
+  // 分享图用 dataURL（base64）：微信浏览器长按可"识别图中二维码"，其他浏览器长按可保存到相册
+  // （blob: URL 在微信 webview 里长按菜单经常无法识别/保存，故不用）
+  function dataURLtoBlob(d) {
+    var parts = d.split(',');
+    var mime = parts[0].match(/:(.*?);/)[1];
+    var b = atob(parts[1]);
+    var n = b.length;
+    var u8 = new Uint8Array(n);
+    while (n--) u8[n] = b.charCodeAt(n);
+    return new Blob([u8], { type: mime });
+  }
+
+  var cardData = null;   // 分享图 dataURL 缓存
   btn.addEventListener('click', function () {
     var mask = ensureModal();
     mask.classList.add('open');
     var preview = mask.querySelector('.share-preview');
-    if (cardBlob) { preview.src = URL.createObjectURL(cardBlob); return; }
-    buildCard().then(function (blob) {
-      if (!blob) return;
-      cardBlob = blob;
-      preview.src = URL.createObjectURL(blob);
+    if (cardData) { preview.src = cardData; return; }
+    buildCard().then(function (data) {
+      if (!data) return;
+      cardData = data;
+      preview.src = cardData;
     });
   });
 
@@ -513,13 +525,13 @@
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(TITLE + ' ' + URL_NOW).then(done, done);
       else done();
     } else if (e.target.classList.contains('share-save')) {
-      if (!cardBlob) return;
-      var file = new File([cardBlob], 'baijing-article.png', { type: 'image/png' });
+      if (!cardData) return;
+      var file = new File([dataURLtoBlob(cardData)], 'baijing-article.png', { type: 'image/png' });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         navigator.share({ files: [file], title: TITLE }).catch(function () {});
       } else {
         var a = document.createElement('a');
-        a.href = URL.createObjectURL(cardBlob);
+        a.href = cardData;
         a.download = 'baijing-article.png';
         a.click();
       }
