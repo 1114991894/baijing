@@ -46,6 +46,31 @@
   /* 案例描述框：右边缘与「改善维度」输入框对齐，跨两列宽度 */
   #caseSummary { display:block; width:582px; max-width:100%; min-height:130px; padding:10px 12px; border:1px solid #D3D1C7; border-radius:7px; font-family:inherit; font-size:15px; line-height:1.6; resize:vertical; background:#fff; color:#333; }
   @media (max-width: 767px) { #caseSummary { width:100%; } }
+  /* 文章排版模板选择器 */
+  .tpl-bar { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:9px; }
+  .tpl-btn { padding:6px 13px; border:1px solid #CFCFC7; border-radius:999px; background:#fff; color:#14604D; font-size:13px; cursor:pointer; transition:all .15s; }
+  .tpl-btn:hover { background:#14604D; color:#fff; border-color:#14604D; }
+  .tpl-btn.active { background:#14604D; color:#fff; border-color:#14604D; }
+  /* 模板在编辑器内的预览样式（与发布页 .art-body 共用类名） */
+  .editor .art-lead { font-family:"Songti SC",serif; font-size:17px; line-height:1.85; color:#14201F; padding-left:16px; border-left:3px solid #A5894C; margin:0 0 22px; }
+  .editor .art-quote { margin:22px 0; padding:16px 20px; background:#F7F4ED; border-left:3px solid #14604D; font-family:"Songti SC",serif; font-size:17px; line-height:1.7; color:#14201F; }
+  .editor .art-note { margin:20px 0; padding:12px 16px; background:#F7F4ED; border:1px solid #E2DDD0; border-radius:4px; font-size:14px; color:#3E4745; }
+  .editor .art-steps { margin:20px 0; }
+  .editor .art-steps .step { display:flex; gap:14px; padding:14px 0; border-top:1px solid #E2DDD0; }
+  .editor .art-steps .step:last-child { border-bottom:1px solid #E2DDD0; }
+  .editor .art-steps .step > b { flex:none; font-family:var(--mono,monospace); font-size:20px; color:#A5894C; line-height:1.2; }
+  .editor .art-steps .step h3 { margin:0 0 5px; font-size:16px; color:#14201F; font-weight:700; }
+  .editor .art-steps .step p { margin:0; }
+  .editor .art-case { display:flex; flex-wrap:wrap; gap:12px; margin:20px 0; }
+  .editor .art-case > div { flex:1 1 200px; padding:14px 16px; border-radius:4px; }
+  .editor .art-case .before { background:rgba(168,67,29,.08); }
+  .editor .art-case .after { background:rgba(20,96,77,.09); }
+  .editor .art-case span { display:block; font-family:var(--mono,monospace); font-size:11px; color:#7C8683; margin-bottom:5px; }
+  .editor .art-case b { font-family:"Songti SC",serif; font-size:18px; color:#14201F; }
+  .editor .art-faq { padding:14px 0; border-top:1px solid #E2DDD0; }
+  .editor .art-faq:last-child { border-bottom:1px solid #E2DDD0; }
+  .editor .art-faq h3 { margin:0 0 6px; font-size:16px; color:#14201F; font-weight:700; }
+  .editor .art-faq p { margin:0; }
   </style>
   <link rel="stylesheet" href="premium-enhance.css">
 </head>
@@ -347,7 +372,17 @@
                 <textarea id="articleExcerpt" rows="2" class="form-input w-full" placeholder="简要描述文章内容"></textarea>
               </div>
               <div>
-                <label class="block text-sm font-semibold text-secondary mb-1.5">文章内容 <span class="text-red-500">*</span></label>
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                  <label class="block text-sm font-semibold text-secondary">文章内容 <span class="text-red-500">*</span></label>
+                  <span class="text-xs text-secondary/50">选一个排版模板 → 替换【】里的文字 → 点工具栏「图片」插图</span>
+                </div>
+                <div class="tpl-bar" id="tplBar">
+                  <button type="button" class="tpl-btn" data-tpl="view">观点长文</button>
+                  <button type="button" class="tpl-btn" data-tpl="steps">步骤清单</button>
+                  <button type="button" class="tpl-btn" data-tpl="case">案例复盘</button>
+                  <button type="button" class="tpl-btn" data-tpl="faq">问答 FAQ</button>
+                  <button type="button" class="tpl-btn" data-tpl="brief">图文随笔</button>
+                </div>
                 <div class="border border-neutral/40 rounded-lg overflow-hidden">
                   <div class="editor-toolbar flex flex-wrap items-center gap-1 px-3 py-2 bg-section border-b border-neutral/20">
                     <select id="fontSize" class="text-sm bg-white border border-neutral/30 rounded px-2 py-1" title="字体大小">
@@ -437,6 +472,66 @@
     let cropper = null;
     let listenersBound = false;
 
+    // ===================== 文章排版模板 =====================
+    // 选一个模板插入编辑器，替换【】占位文字即可；样式在后台与发布页共用类名
+    const ARTICLE_TPLS = {
+      view: '<p class="art-lead">【导语：用两句话讲清这篇文章要解决什么问题，为什么值得读下去】</p>'
+        + '<h3>一、【小标题：一个反复出现的场景】</h3>'
+        + '<p>【写具体场景：谁、在什么情况下、遇到了什么卡点。越具体越有代入感。】</p>'
+        + '<p>【接着写后果：这个卡点造成了什么损失或浪费。】</p>'
+        + '<div class="art-quote">【金句：一句能被单独截图转发的话，比如"工具解决能不能，组织解决愿不愿"。】</div>'
+        + '<h3>二、【小标题：为什么会这样】</h3>'
+        + '<p>【拆解原因，1—2 段。】</p>'
+        + '<ul><li><strong>原因一：</strong>【说明】</li><li><strong>原因二：</strong>【说明】</li><li><strong>原因三：</strong>【说明】</li></ul>'
+        + '<h3>三、【小标题：怎么改】</h3>'
+        + '<p>【给出可执行的动作，说清先做什么、再做什么。】</p>'
+        + '<div class="art-note">【收尾判断标准：读者怎么知道自己做对了。】</div>',
+      steps: '<p class="art-lead">【一句话说明这套方法解决什么问题、适合谁用】</p>'
+        + '<div class="art-steps">'
+        + '<div class="step"><b>01</b><div><h3>【第一步标题】</h3><p>【做什么、谁来做、产出什么。】</p></div></div>'
+        + '<div class="step"><b>02</b><div><h3>【第二步标题】</h3><p>【做什么、注意什么。】</p></div></div>'
+        + '<div class="step"><b>03</b><div><h3>【第三步标题】</h3><p>【做什么、怎么验收。】</p></div></div>'
+        + '</div>'
+        + '<div class="art-quote">【一句话总结这套方法的要点】</div>'
+        + '<div class="art-note">【常见误区：读者最容易跳过的那一步。】</div>',
+      case: '<p class="art-lead">【一句话交代背景：什么行业、什么规模、当时卡在哪】</p>'
+        + '<h3>现场：问题长什么样</h3>'
+        + '<p>【描述一个具体画面，让读者看见现场。】</p>'
+        + '<div class="art-case">'
+        + '<div class="before"><span>改前</span><b>【现状 / 旧指标】</b></div>'
+        + '<div class="after"><span>改后</span><b>【结果 / 新指标】</b></div>'
+        + '</div>'
+        + '<h3>三个断点</h3>'
+        + '<ol><li>【断点一：卡在哪】</li><li>【断点二：为什么没解决】</li><li>【断点三：真正的根因】</li></ol>'
+        + '<h3>后来怎么改的</h3>'
+        + '<p>【只写一个关键动作，说清怎么落地。】</p>'
+        + '<div class="art-quote">【真正成本在哪：一句金句收尾】</div>',
+      faq: '<p class="art-lead">【导语：说明这篇问答解决什么疑问】</p>'
+        + '<div class="art-faq"><h3>Q：【读者最常问的问题一】</h3><p>A：【直接给结论，再解释一句。】</p></div>'
+        + '<div class="art-faq"><h3>Q：【问题二】</h3><p>A：【回答。】</p></div>'
+        + '<div class="art-faq"><h3>Q：【问题三】</h3><p>A：【回答。】</p></div>'
+        + '<div class="art-faq"><h3>Q：【问题四】</h3><p>A：【回答。】</p></div>'
+        + '<div class="art-note">【还有问题？引导读者扫码或预约诊断。】</div>',
+      brief: '<p class="art-lead">【导语：一段话讲清主题】</p>'
+        + '<p>【正文第一段。可点上方「图片」按钮在此处插入配图，图片会自动压缩。】</p>'
+        + '<h3>【小标题一】</h3>'
+        + '<p>【正文】</p>'
+        + '<div class="art-quote">【一句金句】</div>'
+        + '<h3>【小标题二】</h3>'
+        + '<p>【正文，可再插一张图】</p>'
+    };
+    function applyArticleTemplate(key) {
+      const html = ARTICLE_TPLS[key];
+      if (!html) return;
+      const el = document.getElementById('articleContent');
+      const existing = el.innerHTML.trim();
+      if (existing && !confirm('当前正文已有内容，套用模板会替换全部内容。确定继续吗？')) return;
+      el.innerHTML = html;
+      el.focus();
+      document.querySelectorAll('#tplBar .tpl-btn').forEach(b => b.classList.toggle('active', b.dataset.tpl === key));
+      showToast('已套用模板，替换【】里的文字即可', 'success');
+    }
+
     document.addEventListener('DOMContentLoaded', () => { setupAuthListeners(); checkSession(); });
 
     // ===================== 认证 =====================
@@ -500,6 +595,9 @@
       document.getElementById('leadsExportBtn').addEventListener('click', exportLeadsCsv);
       document.getElementById('cancelBtn').addEventListener('click', switchToListView);
       document.getElementById('articleForm').addEventListener('submit', handleFormSubmit);
+      document.querySelectorAll('#tplBar .tpl-btn').forEach(btn => {
+        btn.addEventListener('click', () => applyArticleTemplate(btn.dataset.tpl));
+      });
       document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
       document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
       document.getElementById('deleteModal').addEventListener('click', (e) => { if (e.target === document.getElementById('deleteModal')) closeDeleteModal(); });

@@ -457,3 +457,13 @@ h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px}
 .bk-done .btn-ghost:hover{background:var(--teal-deep)}
 .bk-done h3{margin-bottom:14px}
 .bk-done p{margin:10px 0}
+
+/* 文章上一篇 / 下一篇导航 */
+.art-nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:56px 0 0;padding-top:30px;border-top:1px solid var(--line)}
+.art-nav a{display:block;padding:20px 24px;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);transition:.2s}
+.art-nav a:hover{border-color:var(--teal);background:#fff;transform:translateY(-2px)}
+.art-nav a.next{text-align:right}
+.art-nav .n{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--gold);margin-bottom:8px}
+.art-nav .t{display:block;font-family:var(--serif);font-size:16px;line-height:1.5;color:var(--ink)}
+.art-nav .empty{display:block}
+@media(max-width:640px){.art-nav{grid-template-columns:1fr;gap:10px}.art-nav a.next{text-align:left}}

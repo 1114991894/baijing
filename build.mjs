@@ -107,13 +107,18 @@ function copyV2Site() {
    样式/脚本改名为 *-v3.*，避免覆盖 v2 遗留页（stories/article 等）的资源。
    ------------------------------------------------------------------ */
 const V3_PAGES = ['index.html', 'products.html', 'articles.html', 'article.html'];
-function copyV3Site() {
+function copyV3Site(articles = []) {
   for (const f of V3_PAGES) {
     const src = join(V3, f);
     if (!existsSync(src)) throw new Error(`v3 页面缺失：${f}（构建中止，避免线上白页）`);
     let html = readFileSync(src, 'utf8')
       .replace(/(href=")styles\.css(")/g, '$1styles-v3.css$2')
       .replace(/(src=")booking\.js(")/g, '$1booking-v3.js$2');
+    if (f === 'article.html') {
+      // v3 精修文章页对应的是首篇（"你公司不是缺 AI"），按 sort_order 注入上下篇导航
+      const cur = articles.find(a => articleHref(a) === '/article.html') || articles[0];
+      html = html.replace('<!--ART_NAV-->', articleNavHtml(cur, articles));
+    }
     writeFileSync(join(DIST, f), html);
   }
   copyFileSync(join(V3, 'styles.css'), join(DIST, 'styles-v3.css'));
@@ -250,9 +255,40 @@ function copyStaticFiles() {
 }
 
 /* ------------------------------------------------------------------
+   文章导航：上一篇 / 下一篇。排序与资讯页一致（sort_order 越大越靠前）。
+   首篇仍用 v3 精修静态版 article.html，其余走构建生成的 /article/{id}.html
+   ------------------------------------------------------------------ */
+function articleHref(a) {
+  return (a.title && a.title.indexOf('你公司不是缺 AI') === 0)
+    ? '/article.html'
+    : '/article/' + encodeURIComponent(a.id) + '.html';
+}
+
+function articleNavHtml(current, articles) {
+  if (!current || !Array.isArray(articles) || articles.length < 2) return '';
+  const list = [...articles].sort((a, b) =>
+    (b.sort_order ?? 0) - (a.sort_order ?? 0) ||
+    new Date(b.created_at || 0) - new Date(a.created_at || 0)
+  );
+  const i = list.findIndex(a => a.id === current.id);
+  if (i < 0) return '';
+  const prev = i > 0 ? list[i - 1] : null;
+  const next = i < list.length - 1 ? list[i + 1] : null;
+  if (!prev && !next) return '';
+  const item = (a, kind) => '<a class="' + kind + '" href="' + articleHref(a) + '">'
+    + '<span class="n">' + (kind === 'prev' ? '← 上一篇' : '下一篇 →') + '</span>'
+    + '<span class="t">' + escapeHtml(a.title) + '</span></a>';
+  return '<nav class="art-nav" aria-label="文章导航">'
+    + (prev ? item(prev, 'prev') : '<span class="empty"></span>')
+    + (next ? item(next, 'next') : '<span class="empty"></span>')
+    + '</nav>';
+}
+
+/* ------------------------------------------------------------------
    文章静态页：布局换成 v2 视觉（原模板还是 Tailwind 深蓝，与新版割裂）
    ------------------------------------------------------------------ */
-function generateArticleHtml(article) {
+function generateArticleHtml(article, articles) {
+  const artNav = articleNavHtml(article, articles);
   const cover = article.cover_url && !article.cover_url.startsWith('data:') ? article.cover_url : '';
   const excerpt = article.excerpt || '';
   const createdAt = formatDate(article.created_at);
@@ -317,7 +353,7 @@ ${cover ? `<meta property="og:image" content="${escapeHtml(cover)}">` : ''}
     <p class="art-meta">${createdAt} · ${escapeHtml(author)}</p>
 ${excerpt ? `    <p class="lead" style="margin-top:18px;">${escapeHtml(excerpt)}</p>\n` : ''}${cover ? `    <img src="${escapeHtml(cover)}" alt="${escapeHtml(article.title)}" style="width:100%;height:auto;margin-top:26px;border:1px solid var(--line);border-radius:3px;">\n` : ''}
     <div class="art-body">${article.content || ''}</div>
-
+${artNav ? `    ${artNav}\n` : ''}
     <div class="art-cta" id="wechat">
       <figure class="stamp"><img src="/assets/qr.jpg" alt="刘诠案的微信二维码"></figure>
       <div>
@@ -478,7 +514,7 @@ async function main() {
 
   // 2) v2 站点（遗留页兼容）→ v3 站点（新主体，覆盖同名页面）
   copyV2Site();
-  copyV3Site();
+  copyV3Site(articles);
 
   // 2.5) 翻车实录索引（数据源 v2/_data/stories.json）
   const stories = loadStories().items || [];
@@ -490,7 +526,7 @@ async function main() {
     const articleDir = join(DIST, 'article');
     mkdirSync(articleDir, { recursive: true });
     for (const article of articles) {
-      writeFileSync(join(articleDir, `${article.id}.html`), generateArticleHtml(article));
+      writeFileSync(join(articleDir, `${article.id}.html`), generateArticleHtml(article, articles));
     }
     console.log(`✅ ${articles.length} 个文章页面已生成到 dist/article/`);
   }
