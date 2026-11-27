@@ -426,9 +426,9 @@
       var exLines = EXCERPT ? wrap(ctx, EXCERPT, maxW).slice(0, 3) : [];
 
       var titleEnd = cb + 140 + (titleLines.length - 1) * 54;   // 标题最后一行基线
-      var exEnd = exLines.length ? titleEnd + 26 + (exLines.length - 1) * 36 : titleEnd;
+      var exEnd = exLines.length ? titleEnd + 56 + (exLines.length - 1) * 36 : titleEnd;
       var dividerY = exEnd + (exLines.length ? 50 : 40);        // 金色分隔线（在摘要下方）
-      var qy = dividerY + 90;                                    // 二维码顶部（分隔线下方 90px ≈ 5 倍行距）
+      var qy = dividerY + 54;                                    // 二维码顶部（分隔线下方 54px = 3x）
       var H = qy + 190 + 60;
       cv.width = W; cv.height = H;
 
@@ -461,7 +461,7 @@
       if (exLines.length) {
         ctx.fillStyle = 'rgba(243,239,230,.6)';
         ctx.font = '24px "PingFang SC","Microsoft YaHei",sans-serif';
-        var ey = titleEnd + 26;
+        var ey = titleEnd + 56;
         exLines.forEach(function (ln) { ctx.fillText(ln, pad, ey); ey += 36; });
       }
 
